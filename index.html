@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CryptoJet</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #020617, #000814);
+    color: white;
+    overflow-x: hidden;
+}
+
+/* LOGO */
+.logo {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 900;
+    margin-top: 60px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* HERO RING */
+.hero-ring {
+    margin: 60px auto;
+    width: 90%;
+    max-width: 500px;
+    padding: 30px;
+    border-radius: 20px;
+    border: 2px solid #00f0ff;
+    box-shadow: 0 0 25px #00f0ff;
+    overflow: hidden;
+    position: relative;
+}
+
+/* MOVING TEXT */
+.hero-text {
+    font-size: 32px;
+    font-weight: bold;
+    white-space: nowrap;
+    display: inline-block;
+    animation: slideText 8s linear infinite;
+}
+
+@keyframes slideText {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+/* SUBTEXT */
+.sub {
+    text-align: center;
+    color: #9ca3af;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+/* BUTTON */
+.btn {
+    display: block;
+    margin: 30px auto;
+    padding: 16px 40px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #00ffcc, #00bfff);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+/* GUARANTEE SECTION */
+.section-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 80px;
+    letter-spacing: 2px;
+}
+
+/* CARDS */
+.features {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    font-size: 18px;
+    animation: fadeUp 1s ease forwards;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    margin-top: 80px;
+    padding: 30px;
+    color: #777;
+    font-size: 14px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- LOGO -->
+<div class="logo">CryptoJet</div>
+
+<!-- HERO -->
+<div class="hero-ring">
+    <div class="hero-text">
+        Fly Into The Future of Earning
+    </div>
+</div>
+
+<p class="sub">
+    Automated crypto mining powered by smart systems.
+</p>
+
+<!-- BUTTON -->
+<button class="btn" onclick="goToSignIn()">Get Started</button>
+
+<!-- GUARANTEE -->
+<div class="section-title">WHAT WE GUARANTEE</div>
+
+<div class="features">
+    <div class="card">⚡ Fast Earnings</div>
+    <div class="card">🔒 Secure System</div>
+    <div class="card">📈 Daily Profits</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    @CryptoJet <br>
+    Created 2025
+</footer>
+
+<script>
+
+// 🔥 CAPTURE REFERRAL CODE ONLY
+const params = new URLSearchParams(window.location.search);
+const ref = params.get("ref");
+
+if (ref) {
+  localStorage.setItem("referrer", ref);
+}
+
+function goToSignIn() {
+    window.location.href = "signin.html";
+}
+</script>
+
+</body>
+</html>
