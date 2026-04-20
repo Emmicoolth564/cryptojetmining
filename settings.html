@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings • CryptoJet</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+    --neon: #00f0ff;
+    --accent: #00ffcc;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg, #020617, #0a0f1c);
+    color: #e2e8f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+        flex-direction: column;
+}
+
+.header {
+    padding: 20px 16px;
+    background: rgba(15,23,42,0.95);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(0,240,255,0.15);
+}
+
+.back {
+    font-size: 28px;
+    color: var(--neon);
+    cursor: pointer;
+    padding: 4px 12px;
+}
+
+.title {
+    flex: 1;
+    text-align: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--neon);
+    text-shadow: 0 0 20px rgba(0,240,255,0.5);
+}
+
+.container {
+    padding: 20px 16px;
+    max-width: 420px;
+    margin: auto;
+}
+
+/* GLASS CARD */
+.card {
+    background: rgba(15,23,42,0.7);
+    border-radius: 24px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(0,240,255,0.2);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    backdrop-filter: blur(16px);
+}
+
+/* PROFILE */
+.profile {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.miner-id {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #00ffcc;
+    letter-spacing: 2px;
+    margin: 8px 0;
+}
+
+.name-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+#nameDisplay {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.edit-btn {
+    background: transparent;
+    border: 1px solid var(--neon);
+    color: var(--neon);
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* FORM */
+.input-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 6px;
+}
+
+input {
+    width: 100%;
+    padding: 16px 18px;
+    background: #1e2937;
+    border: 1px solid rgba(0,240,255,0.3);
+    border-radius: 16px;
+    color: white;
+    font-size: 16px;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--neon);
+    box-shadow: 0 0 0 3px rgba(0,240,255,0.2);
+}
+
+/* BUTTONS */
+.btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #00f0ff, #00ffcc);
+    color: #000;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+}
+
+/* TOAST */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #22c55e;
+    color: #022c22;
+    padding: 14px 28px;
+    border-radius: 9999px;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(34,197,94,0.4);
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.4s;
+}
+
+/* DANGER ZONE */
+.danger-zone {
+    border: 2px solid #ef4444;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 30px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="back" onclick="history.back()">←</div>
+    <div class="title">Account Settings</div>
+</div>
+
+<div class="container">
+
+    <!-- PROFILE CARD -->
+    <div class="card">
+        <div class="profile">
+            <div class="miner-id" id="minerIdDisplay">CJ-XXXX</div>
+            <div class="name-row">
+                <span id="nameDisplay" style="font-size:22px;font-weight:600;">Loading...</span>
+                <button class="edit-btn" onclick="toggleNameEdit()">✏️ Edit</button>
+            </div>
+            <div style="color:#22c55e;font-weight:600;">Active Account</div>
+        </div>
+
+        <!-- Edit Name -->
+        <div id="nameEditSection" style="display:none;margin-top:20px;">
+            <div class="input-group">
+                <label>New Display Name</label>
+                <input type="text" id="newNameInput" placeholder="Enter new name">
+            </div>
+            <button class="btn btn-primary" onclick="saveName()">Save Name</button>
+        </div>
+    </div>
+
+    <!-- ACCOUNT INFO -->
+    <div class="card">
+        <h3 style="margin-bottom:16px;color:var(--neon);">Account Overview</h3>
+        <div style="display:flex;justify-content:space-between;margin:12px 0;">
+            <div>Current Balance</div>
+            <div id="balanceDisplay" style="color:#00ffcc;font-weight:700;">$0.00</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin:12px 0;">
+            <div>Team Income</div>
+            <div id="teamIncomeDisplay" style="color:#22c55e;font-weight:700;">$0.00</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin:12px 0;">
+            <div>Points</div>
+            <div id="pointsDisplay" style="color:#a5b4fc;font-weight:700;">0</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin:12px 0;">
+            <div>Miner Level</div>
+            <div id="levelDisplay" style="color:#38bdf8;font-weight:700;">Novice Miner</div>
+        </div>
+    </div>
+
+    <!-- CHANGE PASSWORD -->
+    <div class="card">
+        <h3 style="margin-bottom:16px;color:var(--neon);">Change Password</h3>
+        
+        <div class="input-group">
+            <label>Old Password</label>
+            <input type="password" id="oldPassword" placeholder="Enter current password">
+        </div>
+        
+        <div class="input-group">
+            <label>New Password</label>
+            <input type="password" id="newPassword" placeholder="Enter new password">
+        </div>
+        
+        <div class="input-group">
+            <label>Confirm New Password</label>
+            <input type="password" id="confirmPassword" placeholder="Confirm new password">
+        </div>
+
+        <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+    </div>
+
+    <!-- DANGER ZONE / RESET OPTIONS -->
+    <div class="card danger-zone">
+        <h3 style="color:#ef4444;margin-bottom:16px;">⚠️ Security &amp; Reset</h3>
+        
+        <button class="btn btn-danger" onclick="resetPasswordOnly()" style="margin-bottom:12px;">
+            Reset Password Only
+        </button>
+        
+        <button class="btn btn-danger" onclick="confirmFullReset()" style="margin-bottom:12px;">
+            Reset All Miners &amp; Balance
+        </button>
+        
+        <button class="btn btn-danger" onclick="confirmLogout()">
+            Logout from All Devices
+        </button>
+        
+        <div style="font-size:12px;color:#64748b;margin-top:16px;">
+            These actions are permanent. You will be asked to confirm twice.
+        </div>
+    </div>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
+  authDomain: "cj-miner.firebaseapp.com",
+  databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "cj-miner"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const auth = firebase.auth();
+
+let uid = localStorage.getItem("uid");
+if (!uid) {
+    alert("Session expired");
+    window.location.href = "signin.html";
+}
+
+// Load user data
+async function loadUserData() {
+    const snap = await db.ref("users/" + uid).once("value");
+    const data = snap.val() || {};
+
+    document.getElementById("minerIdDisplay").textContent = data.minerId || "CJ-" + Math.floor(1000 + Math.random()*9000);
+    document.getElementById("nameDisplay").textContent = data.name || "CryptoJet User";
+    document.getElementById("balanceDisplay").textContent = "$" + Math.floor(data.balance || 0);
+    document.getElementById("teamIncomeDisplay").textContent = "$" + (data.team || 0);
+    document.getElementById("pointsDisplay").textContent = data.points || 0;
+    document.getElementById("levelDisplay").textContent = data.level || "Novice Miner";
+}
+loadUserData();
+
+// Toggle name edit
+function toggleNameEdit() {
+    const section = document.getElementById("nameEditSection");
+    section.style.display = section.style.display === "none" ? "block" : "none";
+}
+
+// Save name
+async function saveName() {
+    const newName = document.getElementById("newNameInput").value.trim();
+    if (!newName) return alert("Please enter a name");
+
+    await db.ref("users/" + uid).update({ name: newName });
+    document.getElementById("nameDisplay").textContent = newName;
+    document.getElementById("nameEditSection").style.display = "none";
+    document.getElementById("newNameInput").value = "";
+    showToast("Name updated successfully", "#22c55e");
+}
+
+// Change password with old password verification
+async function changePassword() {
+    const oldPass = document.getElementById("oldPassword").value;
+    const newPass = document.getElementById("newPassword").value;
+    const confirmPass = document.getElementById("confirmPassword").value;
+
+    if (!oldPass || !newPass || !confirmPass) return showToast("All fields are required", "#ef4444");
+    if (newPass !== confirmPass) return showToast("New passwords do not match", "#ef4444");
+    if (newPass.length < 6) return showToast("Password must be at least 6 characters", "#ef4444");
+
+    const user = auth.currentUser;
+    if (!user) return showToast("Please sign in again", "#ef4444");
+
+    try {
+        // Re-authenticate with old password
+        const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPass);
+        await user.reauthenticateWithCredential(credential);
+
+        // Update password
+        await user.updatePassword(newPass);
+        
+        // Clear fields
+        document.getElementById("oldPassword").value = "";
+        document.getElementById("newPassword").value = "";
+        document.getElementById("confirmPassword").value = "";
+
+        showToast("Password changed successfully!", "#22c55e");
+    } catch (err) {
+        showToast("Old password is incorrect or error occurred", "#ef4444");
+    }
+}
+
+// Reset functions
+function resetPasswordOnly() {
+    if (confirm("This will send a password reset link to your email.\nContinue?")) {
+        const user = auth.currentUser;
+        if (user && user.email) {
+            auth.sendPasswordResetEmail(user.email)
+                .then(() => showToast("Password reset link sent to your email", "#22c55e"))
+                .catch(() => showToast("Error sending reset link", "#ef4444"));
+        }
+    }
+}
+
+function confirmFullReset() {
+    if (confirm("⚠️ This will DELETE ALL your miners and reset balance to $0.\nAre you 100% sure?")) {
+        if (confirm("FINAL WARNING — This action cannot be undone.\nType YES to confirm:")) {
+            db.ref("users/" + uid).update({
+                miners: null,
+                minerUnlocked: null,
+                balance: 0
+            }).then(() => {
+                showToast("Account fully reset", "#22c55e");
+                setTimeout(() => location.reload(), 1500);
+            });
+        }
+    }
+}
+
+function confirmLogout() {
+    if (confirm("Logout from this device?")) {
+        localStorage.removeItem("uid");
+        window.location.href = "signin.html";
+    }
+}
+
+// Toast
+function showToast(msg, color) {
+    const toast = document.getElementById("toast");
+    toast.style.background = color;
+    toast.textContent = msg;
+    toast.style.opacity = "1";
+    setTimeout(() => toast.style.opacity = "0", 2800);
+}
+
+// Back button already works with history.back()
+</script>
+</body>
+</html>
