@@ -10,14 +10,31 @@ body{
     font-family:'Segoe UI',sans-serif;
     background: radial-gradient(circle at top,#020617,#000814);
     color:white;
-    overflow-y: auto;   /* ✅ allow vertical scroll */
+}
+.logo{
+  height:70px;   /* 👈 THIS IS THE MAGIC */
+  width:auto;
+  display:block;
+  margin:auto;
+
+  mix-blend-mode: screen;
+  opacity:0.95;
+}
+.logo{
+  filter: brightness(1.2);
 }
 
+/* 👇 ADD IT HERE */
+html, body{
+  height:100%;
+  overflow:hidden;
+}
 /* WRAPPER */
 .wrapper{
     max-width:420px;
     margin:auto;
-    padding:25px 15px 120px; /* increase this */
+    padding:10px 15px 100px;
+ /* increase this */
 }
 /* TITLE */
 .title{
@@ -189,6 +206,10 @@ body{
     color:#00ffcc;
     font-weight:bold;
 }
+#balance{
+  font-size:18px;
+  letter-spacing:1px;
+}
 /* MARKET */
 .market{ margin-top:25px; }
 .coin-card{
@@ -255,16 +276,6 @@ body{
 }
 
 /* NAV */
-.bottom-nav{
-    position:fixed;
-    bottom:0;
-    width:100%;
-    height:65px;
-    background:#020617;
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-}
 
 /* ✅ ICON NAV */
 .nav-item{
@@ -291,13 +302,13 @@ body{
     color:#00ffcc;
 }
 
-.logo-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 15px;
+.logo-container{
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
 }
-
 .logo-svg {
   width: 260px;
 }
@@ -384,70 +395,278 @@ body{
   border-radius: 15px;
 }
 
+/* GLASS NAV */
+.nav-glass{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:90%;
+  height:70px;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+
+  border-radius:25px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  border:1px solid rgba(255,255,255,0.08);
+  z-index:999;
+}
+
+/* ITEMS */
+.nav-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-size:11px;
+  color:#aaa;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.nav-item.active{
+  color:#00ffcc;
+}
+
+/* ICON BASE */
+.icon{
+  width:26px;
+  height:26px;
+  margin-bottom:4px;
+  position:relative;
+}
+
+/* HOME ICON */
+.icon.home::before{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:#aaa;
+  transform:rotate(45deg);
+  top:4px;
+  left:4px;
+  border-radius:3px;
+}
+
+.nav-item.active .home::before{
+  background:#00ffcc;
+}
+
+/* MINER ICON */
+.icon.miner::before{
+  content:"⚡";
+  font-size:20px;
+  position:absolute;
+  left:3px;
+  top:-2px;
+}
+
+.nav-item.active .miner::before{
+  color:#00ffcc;
+}
+
+/* ME ICON (CIRCLE PROFILE) */
+.icon.me{
+  background:#ffffff22;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.icon.me::before{
+  content:"👤";
+  font-size:14px;
+}
+
+.nav-item.active .me{
+  background:#00ffcc33;
+}
+
+/* TAP EFFECT */
+.nav-item:active{
+  transform:scale(0.9);
+}
+.page-content{
+  height:100%;
+  overflow-y:auto;
+  padding-bottom:90px;
+}
+.plane-line{
+  fill: none;
+  stroke: #00ffcc;
+  stroke-width: 3;
+
+  stroke-linecap: round;
+
+  filter: drop-shadow(0 0 6px #00ffcc)
+          drop-shadow(0 0 12px #00ffcc);
+
+  stroke-dasharray: 6 8; /* makes it look like motion trail */
+}
+.plane-head{
+  fill: #00ffcc;
+
+  filter: drop-shadow(0 0 6px #00ffcc)
+          drop-shadow(0 0 12px #00ffcc);
+}
+.plane-line{
+  animation: moveLine 2s linear infinite;
+}
+
+@keyframes moveLine{
+  from{
+    stroke-dashoffset: 0;
+  }
+  to{
+    stroke-dashoffset: -100;
+  }
+}
+#loader{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#000814;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.loader-content{
+  text-align:center;
+}
+
+.loader-logo{
+  font-size:32px;
+  font-weight:900;
+  color:#00ffcc;
+  margin-bottom:20px;
+  letter-spacing:2px;
+
+  animation: glow 1.5s infinite alternate;
+}
+
+.loader-bar{
+  width:180px;
+  height:4px;
+  background:#111;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.loader-fill{
+  width:0%;
+  height:100%;
+  background:#00ffcc;
+  animation: loadBar 2s ease forwards;
+}
+
+@keyframes loadBar{
+  to{
+    width:100%;
+  }
+}
+.page-content{
+  opacity:0;
+  transition:0.5s;
+}
+
+/* SVG Icon Styling */
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-bottom: 4px;
+}
+
+.nav-item {
+    color: #94a3b8; /* Muted color for inactive */
+}
+
+.nav-item.active {
+    color: #00ffcc; /* Brand color for active */
+}
+
 </style>
 </head>
 
 <body>
-<div class="wrapper">
-<div class="logo-container">
-  <div class="logo-wrap">
+<div id="loader">
+  <div class="loader-content">
+    
+    <div class="loader-logo">CryptoJet</div>
 
-    <svg viewBox="0 0 800 120" class="logo-svg">
-
-      <!-- TEXT -->
-      <text x="10" y="80" class="logo-text">CryptoJet</text>
-
-      <!-- ✈️ PLANE PATH (connected to end of text) -->
-      <path 
-        d="M350 75 
-           C480 60, 520 50, 560 60
-           L620 45 
-           L600 65 
-           L620 85 
-           L560 70 
-           C520 80, 480 85, 430 75"
-        class="plane-line"
-      />
-
-    </svg>
+    <div class="loader-bar">
+      <div class="loader-fill"></div>
+    </div>
 
   </div>
+</div>
+<div class="page-content">
+<div class="wrapper">
+<div class="logo-container">
+<div class="logo-wrap">
+
+<svg viewBox="0 0 500 120" class="logo-svg">
+  <text x="50%" y="70%" text-anchor="middle" class="logo-text">
+          CryptoJet
+  </text>
+
+  <!-- plane line -->
+<path class="plane-line"
+  d="M40 95 Q250 10 460 75"
+/>
+<circle cx="460" cy="75" r="4" class="plane-head"/>
+</svg>
+
+</div>
 </div>
 
 <div class="miner-card">
 
 <div class="miner-info">
-    <div class="miner-title">YOUR MINER CARD</div>
+    <div class="miner-title">VERIFIED USER CARD</div>
 
     <div>ID:</div>
-    <div id="userId" class="miner-id">Loading...</div>
+    <div id="userId" class="miner-id">----</div>
 
     <div class="miner-level">
-        Miner Level: <span id="minerLevel">Loading...</span>
+        Miner Level: <span id="minerLevel">Novice Miner</span>
     </div>
 
     <div class="badge">Active User</div>
 
+<!-- Dynamic Mining Status -->
 <div class="miner-status" id="minerStatus">
-    <span class="dot"></span>
-    Mining Active
+    <span class="dot" id="statusDot"></span>
+    <span id="statusText">status loading....</span>
 </div>
 </div>
-
+<!-- CLICKABLE: Coin = Settings, Bot = Chatbot -->
 <div class="visual">
-    <div class="coin"></div>
-    <div class="bot"></div>
+    <div class="coin" onclick="window.location.href='settings.html'" style="cursor:pointer;"></div>
+    <div class="bot" onclick="window.location.href='chatbot.html'" style="cursor:pointer;"></div>
 </div>
 
 </div>
-
 <div class="balance-card">
-    <div class="balance-item">
-        <div class="label">Balance</div>
-        <div class="value" id="balance">Loading...</div>
-    </div>
-
-    <div class="balance-item">
+<div class="balance-item">
+  <div class="label">Balance</div>
+  <div class="value" id="balance">0</div>
+</div>
+ <div class="balance-item">
         <div class="label">Team Income</div>
         <div class="value" id="teamIncome">0</div>
     </div>
@@ -468,27 +687,69 @@ body{
 <div class="market" id="market"></div>
 
 <div class="grid">
-    <div class="box" onclick="nav('miner.html')">Mining Power</div>
-
-    <div class="box" onclick="nav('reward.html')">Rewards</div>
-
-    <div class="box">Tasks</div>
-
-    <div class="box">Wallet</div>
+    <div class="box" onclick="nav('miner-power.html')">
+        <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+            <span>Mining Power</span>
+        </div>
+    </div>
+    
+    <div class="box" onclick="nav('reward.html')">
+        <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            <span>Rewards</span>
+        </div>
+    </div>
+     <div class="box" onclick="nav('tasks.html')">
+        <div
+style="display:flex;align-items:center;gap:10px;justify-content:center;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <path d="M14 2v6h6"></path>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <line x1="10" y1="9" x2="8" y2="9"></line>
+            </svg>
+            <span>Tasks</span>
+        </div>
+    </div>
+    
+    <div class="box" onclick="nav('feeds.html')">
+        <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 6h16"></path>
+                <path d="M4 12h16"></path>
+                <path d="M4 18h7"></path>
+                <circle cx="18" cy="18" r="3"></circle>
+            </svg>
+            <span>Feeds</span>
+        </div>
+    </div>
 </div>
 <!-- ✅ NAV WITH ICONS -->
-<div class="bottom-nav">
-    <div class="nav-item active" onclick="nav('dashboard.html')">
-        <img src="./home.png">Home
-    </div>
+<div class="nav-glass">
+  
+  <div class="nav-item active" onclick="nav('dashboard.html')">
+    <div class="icon home"></div>
+    <span>Home</span>
+  </div>
 
-    <div class="nav-item" onclick="nav('miner.html')">
-        <img src="./miner.png">Miner
-    </div>
+  <div class="nav-item" onclick="nav('miner.html')">
+    <div class="icon miner"></div>
+    <span>Miner</span>
+  </div>
 
-    <div class="nav-item" onclick="nav('me.html')">
-        <img src="./user.png">Me
-    </div>
+  <div class="nav-item" onclick="nav('me.html')">
+    <div class="icon me"></div>
+    <span>Me</span>
+  </div>
+
 </div>
 
 <script>
@@ -532,20 +793,22 @@ async function loadMarket(){
       let color = up ? "#00ffcc" : "#ff4d4d";
 
       html += `
-      <div class="coin-card">
-        <div class="coin-left">
-          <img src="${coin.img}" class="coin-icon">
-          <div>
-            <div>${coin.id.toUpperCase()}</div>
-            <small>${coin.id}/USD</small>
-          </div>
-        </div>
-        <div style="color:${color}">
-          $${price}
-        </div>
-      </div>
-      `;
-
+<div class="coin-card">
+  <div class="coin-left">
+    <img src="${coin.img}" class="coin-icon">
+    <div>
+      <div>${coin.id.toUpperCase()}</div>
+      <small>${coin.id}/USD</small>
+    </div>
+  </div>
+  <div class="coin-right">
+    <div class="coin-price">$${price.toLocaleString()}</div>
+    <div class="coin-change" style="color:${color}">
+      ${up ? "▲ Up" : "▼ Down"}
+    </div>
+  </div>
+</div>
+`;
       last[coin.id] = price;
     }
 
@@ -603,7 +866,18 @@ async function loadUser(){
     if(snapshot.exists()){
         const data = snapshot.val();
 
-        document.getElementById("userId").innerText = data.minerId || uid;
+        if(data.minerId){
+    document.getElementById("userId").innerText = data.minerId;
+} else {
+    // 🔥 AUTO FIX OLD USERS
+    let newId = "CJ" + Math.floor(1000 + Math.random() * 9000);
+
+    document.getElementById("userId").innerText = newId;
+
+    db.ref("users/" + uid).update({
+        minerId: newId
+    });
+}
         document.getElementById("minerLevel").innerText =
             data.level || "Novice Miner";
 
@@ -659,6 +933,82 @@ window.onload = () => {
     }
   });
 };
+</script>
+<script>
+let startX = 0;
+let endX = 0;
+
+const wrapper = document.querySelector(".wrapper");
+
+wrapper.addEventListener("touchstart", e => {
+  startX = e.touches[0].clientX;
+});
+
+wrapper.addEventListener("touchend", e => {
+  endX = e.changedTouches[0].clientX;
+
+  let diff = startX - endX;
+
+  if(diff > 80){
+    goNext();
+  }
+
+  if(diff < -80){
+    goPrev();
+  }
+});
+
+function goNext(){
+  if(window.location.pathname.includes("dashboard")){
+    window.location.href = "miner.html";
+  } else if(window.location.pathname.includes("miner")){
+    window.location.href = "me.html";
+  }
+}
+
+function goPrev(){
+  if(window.location.pathname.includes("me")){
+    window.location.href = "miner.html";
+  } else if(window.location.pathname.includes("miner")){
+    window.location.href = "dashboard.html";
+  }
+}
+</script>
+</script>
+
+<script>
+window.addEventListener("load", () => {
+
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+    document.querySelector(".page-content").style.opacity = "1";
+  }, 1500);
+
+});
+</script>
+<script>
+// Dynamic mining status - shows Active or Inactive
+db.ref("users/" + uid).on("value", snapshot => {
+    const data = snapshot.val() || {};
+    const isMining = data.mining === true || (data.miners && Object.keys(data.miners).length > 0);
+    
+    const statusText = document.getElementById("statusText");
+    const statusDot = document.getElementById("statusDot");
+    
+    if (isMining) {
+        statusText.textContent = "Mining Active";
+        statusDot.style.background = "#22c55e";
+        statusDot.style.boxShadow = "0 0 6px #22c55e";
+        document.getElementById("minerStatus").style.background = "rgba(34,197,94,0.1)";
+        document.getElementById("minerStatus").style.color = "#22c55e";
+    } else {
+        statusText.textContent = "Mining Inactive";
+        statusDot.style.background = "#ef4444";
+        statusDot.style.boxShadow = "0 0 6px #ef4444";
+        document.getElementById("minerStatus").style.background = "rgba(239,68,68,0.1)";
+        document.getElementById("minerStatus").style.color = "#ef4444";
+    }
+});
 </script>
 </body>
 </html>
