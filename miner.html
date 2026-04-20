@@ -3,263 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crypto Jet - Miner</title>
+<title>CryptoJet Miner</title>
 
 <style>
-body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background: radial-gradient(circle,#020617,#000814);
-  color:white;
-  padding-bottom:100px;
-  overflow-x:hidden;
-}
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
-/* HEADER */
-.header{
-  text-align:center;
-  font-size:26px;
-  font-weight:900;
-  color:#00ffcc;
-  margin-top:20px;
-  animation:glow 2s infinite alternate;
-}
+    :root { --neon: #00f0ff; --accent: #00ffcc; }
 
-@keyframes glow{
-  from{ text-shadow:0 0 5px #00ffcc;}
-  to{ text-shadow:0 0 25px #00ffcc;}
-}
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        font-family: 'Inter', system-ui, sans-serif;
+        background: #020617;
+        color: #e2e8f0;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
 
-/* BALANCE */
-.balance-box{
-  margin:15px;
-  padding:15px;
-  border-radius:15px;
-  background:#0f172a;
-  text-align:center;
-  box-shadow:0 0 20px #00ffcc22;
-  animation:fadeUp .6s ease;
-}
+    .header { padding: 30px 20px 20px; text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon); text-shadow: 0 0 30px rgba(0, 240, 255, 0.6); }
 
-/* TABS */
-.tabs{
-  display:flex;
-  margin:15px;
-  border-radius:12px;
-  overflow:hidden;
-  background:#0f172a;
-}
+    .balance-header {
+        text-align: center; margin: 10px 20px 30px; background: rgba(15,23,42,0.9);
+        border-radius: 20px; padding: 16px; box-shadow: 0 0 30px rgba(0,240,255,0.2);
+    }
+    .balance-label { font-size:13px; color:#94a3b8; }
+    .balance-amount { font-size:32px; font-weight:700; color:#00ffcc; }
 
-.tab{
-  flex:1;
-  padding:12px;
-  text-align:center;
-  color:#aaa;
-  transition:.3s;
-}
+    .tabs { display:flex; justify-content:center; gap:12px; margin:0 20px 20px; }
+    .tabs button {
+        padding:12px 28px; border:none; border-radius:9999px; background:#111827;
+        color:#00f0ff; font-weight:600; font-size:15px; cursor:pointer;
+    }
+    .tabs button.active { background:#00ffcc; color:#000; box-shadow:0 0 20px #00ffcc; }
 
-.tab.active{
-  color:#00ffcc;
-  box-shadow:0 0 15px #00ffcc;
-}
+    .container { padding:0 20px 100px; }
 
-/* CONTENT */
-.tab-content{
-  display:none;
-  animation:fadeUp .5s ease;
-}
-.tab-content.active{ display:block; }
+    .miner-card {
+        background: linear-gradient(145deg, #0f172a, #1e2937);
+        border-radius: 24px; padding: 24px; margin-bottom: 24px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6); border: 1px solid rgba(0,240,255,0.2);
+    }
 
-/* CARD */
-.card{
-  margin:15px;
-  padding:15px;
-  border-radius:15px;
-  background:linear-gradient(145deg,#020617,#0f172a);
-  box-shadow:0 0 15px #00ffcc22;
-  position:relative;
-  overflow:hidden;
-  transform:translateY(20px);
-  opacity:0;
-  animation:fadeUp .6s ease forwards;
-}
+    .miner-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+    .miner-img { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 0 20px #00f0ff); }
+    .miner-name { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: #00ffcc; }
 
-/* IMAGE */
-.card img{
-  width:100%;
-  height:160px;
-  object-fit:cover;
-  border-radius:10px;
-}
+    .stats-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
+    }
+    .stat-item {
+        background: rgba(2,6,23,0.6); border-radius: 16px; padding: 14px; text-align: center;
+    }
+    .stat-label { font-size:12px; color:#94a3b8; margin-bottom:4px; }
+    .stat-value { font-size:18px; font-weight:700; }
 
-/* GLOW LINE */
-.card::after{
-  content:"";
-  position:absolute;
-  width:100%;
-  height:2px;
-  background:#00ffcc;
-  bottom:0;
-  left:-100%;
-  animation:scan 3s infinite;
-}
+    .live-info {
+        margin-top: 16px; padding: 14px; background: rgba(0,240,255,0.1);
+        border-radius: 12px; font-size: 15px; text-align: center; color: #00f0ff;
+    }
 
-@keyframes scan{
-  100%{left:100%;}
-}
+    .live-dot {
+        display: inline-block; width: 10px; height: 10px; background: #00ff88;
+        border-radius: 50%; animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-/* BUTTONS */
-button{
-  padding:10px;
-  border:none;
-  border-radius:20px;
-  color:white;
-  cursor:pointer;
-  transition:.3s;
-}
+    .btn {
+        width:100%; padding:16px; border:none; border-radius:16px;
+        background:linear-gradient(90deg,#00f0ff,#00ffcc); color:#000;
+        font-weight:700; font-size:16px; cursor:pointer; margin-top:12px;
+        box-shadow:0 0 20px rgba(0,240,255,0.4);
+    }
 
-button:hover{
-  transform:scale(1.05);
-}
+    .nav-glass {
+        position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+        width:90%; height:70px; display:flex; justify-content:space-around;
+        align-items:center; background:rgba(255,255,255,0.05);
+        backdrop-filter:blur(20px); border-radius:25px;
+        box-shadow:0 8px 30px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08);
+        z-index:999;
+    }
+    .nav-item { text-align:center; color:#aaa; font-size:11px; }
+    .nav-item.active { color:#00ffcc; }
 
-.rent{ background:#00ffcc; color:#000; }
-.start{ background:#3b82f6; }
+    .icon { width:26px; height:26px; margin-bottom:4px; position:relative; }
+    .icon.home::before { content:""; position:absolute; width:18px; height:18px; background:#aaa; transform:rotate(45deg); top:4px; left:4px; border-radius:3px; }
+    .nav-item.active .home::before { background:#00ffcc; }
+    .icon.miner::before { content:"⚡"; font-size:20px; position:absolute; left:3px; top:-2px; }
+    .nav-item.active .miner::before { color:#00ffcc; }
+    .icon.me { background:#ffffff22; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .icon.me::before { content:"👤"; font-size:14px; }
+    .nav-item.active .me { background:#00ffcc33; }
 
-/* RUNNING TEXT */
-.running{
-  color:#00ff9d;
-}
-
-.dots span{
-  animation:blink 1.5s infinite;
-}
-.dots span:nth-child(2){animation-delay:.3s;}
-.dots span:nth-child(3){animation-delay:.6s;}
-
-@keyframes blink{
-  0%,100%{opacity:0.2;}
-  50%{opacity:1;}
-}
-
-/* ANIMATION */
-@keyframes fadeUp{
-  from{opacity:0; transform:translateY(20px);}
-  to{opacity:1; transform:translateY(0);}
-}
-
-/* NAV */
-.nav{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  height:65px;
-  background:#020617;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-}
-
-.nav-item{
-  text-align:center;
-  font-size:11px;
-  color:#aaa;
-}
-
-.nav-item img{
-  width:22px;
-  display:block;
-  margin:auto;
-  margin-bottom:4px;
-  filter:brightness(.6);
-}
-
-.nav-item.active img{
-  filter:brightness(1.5) drop-shadow(0 0 8px #00ffcc);
-}
-
-.nav-item.active{ color:#00ffcc; }
-
-.logo-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 15px;
-}
-
-.logo-svg {
-  width: 260px;
-}
-
-.logo-text {
-  font-size: 55px;
-  font-weight: 900;
-  fill: none;
-  stroke: #00ffcc;
-  stroke-width: 2;
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  animation: write 3s ease forwards;
-}
-
-@keyframes write {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
+    #loader {
+        position:fixed; top:0; left:0; width:100%; height:100%;
+        background:#020617; display:flex; align-items:center;
+        justify-content:center; z-index:9999; flex-direction:column;
+        color:#22c55e; font-size:18px;
+    }
+    .loader-logo { font-size:30px; font-weight:900; color:#00ffcc; margin-bottom:20px; animation:glow 1.5s infinite alternate; }
+    .loader-bar { width:180px; height:4px; background:#111; border-radius:10px; overflow:hidden; }
+    .loader-fill { width:0%; height:100%; background:#00ffcc; animation:loadBar 2s ease forwards; }
+    @keyframes loadBar { to { width:100%; } }
+    @keyframes glow { from { text-shadow:0 0 5px #00ffcc; } to { text-shadow:0 0 25px #00ffcc; } }
 </style>
 </head>
-
 <body>
 
-<div class="logo-container">
-  <svg viewBox="0 0 600 120" class="logo-svg">
-    <text x="10" y="80" class="logo-text">CryptoJet</text>
-  </svg>
+<div id="loader">
+  <div class="loader-content">
+    <div class="loader-logo">CryptoJet</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
 </div>
 
-<div class="balance-box">
-Balance: $<span id="balance">0.0000</span>
+<div class="header">CryptoJet Miner</div>
+
+<div class="balance-header">
+    <div class="balance-label">AVAILABLE BALANCE</div>
+    <div class="balance-amount" id="liveBalance">$0.00</div>
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('run')">Running</div>
-  <div class="tab" onclick="switchTab('buy')">Purchase</div>
+  <button id="runBtn" class="active" onclick="showTab('running')">Running</button>
+  <button id="shopBtn" onclick="showTab('shop')">Purchase</button>
 </div>
 
-<div id="run" class="tab-content active"></div>
-<div id="buy" class="tab-content"></div>
+<div id="runningTab" class="container"></div>
+<div id="shopTab" class="container" style="display:none;"></div>
 
-<!-- NAV -->
-<div class="nav">
-  <div class="nav-item" onclick="nav('dashboard.html')">
-    <img src="./home.png">Home
-  </div>
-  <div class="nav-item active">
-    <img src="./miner.png">Miner
-  </div>
-  <div class="nav-item" onclick="nav('me.html')">
-    <img src="./user.png">Me
-  </div>
+<div class="nav-glass">
+  <div class="nav-item" onclick="nav('dashboard.html')"><div class="icon home"></div><span>Home</span></div>
+  <div class="nav-item active" onclick="nav('miner.html')"><div class="icon miner"></div><span>Miner</span></div>
+  <div class="nav-item" onclick="nav('me.html')"><div class="icon me"></div><span>Me</span></div>
 </div>
 
-<script>
-function nav(p){ window.location.href=p; }
-
-function switchTab(tab){
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
-
-  if(tab==="run"){
-    document.querySelectorAll(".tab")[0].classList.add("active");
-    document.getElementById("run").classList.add("active");
-  }else{
-    document.querySelectorAll(".tab")[1].classList.add("active");
-    document.getElementById("buy").classList.add("active");
-  }
-}
-</script>
-
-<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -274,212 +151,285 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* =========================
-   UID + PREVIEW MODE
-========================= */
 let uid = localStorage.getItem("uid");
+if (!uid) { alert("Session expired"); window.location.href = "signin.html"; }
 
-/* FORCE PREVIEW IF YOU WANT */
-let preview = !uid;
+let userData = null;
 
-/* OPTIONAL: force preview manually */
-if(location.search.includes("preview")){
-  preview = true;
-}
-
-if(preview){
-  uid = "preview_user";
-}
-
-/* =========================
-   DATA
-========================= */
-let data = {
-  balance:0,
-  miners:{}
+// UPDATED MINER PLANS WITH CYCLE HOURS
+const miners = {
+  S244:  { name:"S-244",  speed:0.000005789, price:10,  duration:30, daily:0.5,   cycleHours:48, img:"purchase1.png" },
+  S500:  { name:"S-500",  speed:0.00001737,  price:30,  duration:30, daily:1.5,   cycleHours:48, img:"purchase2.png" },
+  S900:  { name:"S-900",  speed:0.0000233,   price:50,  duration:35, daily:2,     cycleHours:24, img:"purchase3.png" },
+  S1200: { name:"S-1200", speed:0.0000463,   price:120, duration:45, daily:4,     cycleHours:24, img:"purchase4.png" }
 };
 
-const userRef = db.ref("users/" + uid);
-
-/* =========================
-   PLANS
-========================= */
-let minersData = {};
-
-async function loadMiners(){
-  let snap = await db.ref("miners").once("value");
-  minersData = snap.val() || {};
+function showTab(tab) {
+  document.getElementById("runningTab").style.display = tab === "running" ? "block" : "none";
+  document.getElementById("shopTab").style.display = tab === "shop" ? "block" : "none";
+  document.getElementById("runBtn").classList.toggle("active", tab === "running");
+  document.getElementById("shopBtn").classList.toggle("active", tab === "shop");
 }
-/* =========================
-   LOAD
-========================= */
-if(!preview){
-  userRef.on("value", snap=>{
-    if(snap.exists()){
-      data = snap.val();
-      if(!data.miners) data.miners = {};
-      loadMiners().then(() => {
-  render();
-});
-    }else{
-      userRef.set(data);
+
+async function loadPage() {
+  const snap = await db.ref("users/" + uid).once("value");
+  userData = snap.val() || {};
+
+  catchUpMining();
+
+  renderRunning();
+  renderShop();
+  updateLiveBalance();
+}
+
+// Catch-up offline mining
+function catchUpMining() {
+  if (!userData.miners) return;
+
+  const now = Date.now();
+  let totalToAdd = 0;
+
+  const unlocked = userData.minerUnlocked || {};
+
+  Object.keys(unlocked).forEach(id => {
+    const count = unlocked[id];
+    for (let i = 1; i <= count; i++) {
+      const key = id === "S244" ? `${id}_${i}` : id;
+      let minerData = userData.miners[key];
+      if (!minerData) continue;
+
+      const cycleDays = miners[id].cycleHours / 24;
+      const timeSinceStart = (now - minerData.start) / (1000 * 3600 * 24);
+      if (timeSinceStart >= cycleDays) continue;
+
+      const secondsPassed = (now - minerData.lastUpdate) / 1000;
+      const increase = secondsPassed * miners[id].speed;
+
+      if (increase > 0) {
+        minerData.earned = (minerData.earned || 0) + increase;
+        minerData.lastUpdate = now;
+
+        const floor = Math.floor(minerData.earned);
+        if (floor > (minerData.lastAdded || 0)) {
+          totalToAdd += (floor - (minerData.lastAdded || 0));
+          minerData.lastAdded = floor;
+        }
+      }
     }
   });
-}else{
-  /* PREVIEW DATA */
-  data = {
-    balance:150,
-    miners:{
-      "Nano Miner":{running:true,last:Date.now(),daily:0.5}
-    }
-  };
-  render();
+
+  if (totalToAdd > 0) {
+    userData.balance = Math.floor((userData.balance || 0) + totalToAdd);
+  }
 }
 
-/* =========================
-   RENDER
-========================= */
-function render(){
-  let runHTML="";
-  let buyHTML="";
+function updateLiveBalance() {
+  document.getElementById("liveBalance").textContent = "$" + Math.floor(userData.balance || 0) + ".00";
+}
 
-  for(let n in minersData){
-  let p = minersData[n];
+/* RUNNING TAB */
+function renderRunning() {
+  const container = document.getElementById("runningTab");
+  container.innerHTML = "";
 
-    if(!data.miners[n]){
-      buyHTML+=`
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475">
+  const unlocked = userData.minerUnlocked || {};
+  const minersData = userData.miners || {};
 
-<h3>${n.replace(" Engine","")}</h3>
+  Object.keys(unlocked).forEach(id => {
+    const count = unlocked[id];
+    for (let i = 1; i <= count; i++) {
+      const key = id === "S244" ? `${id}_${i}` : id;
+      let data = minersData[key] || { earned: 0, start: Date.now(), lastUpdate: Date.now(), lastAdded: 0 };
 
-<p>⚡ Duration: ${p.duration} days</p>
-<p>💰 Earn: $${p.daily}/day</p>
-<p>💵 Price: $${p.price}</p>
+      const now = Date.now();
+      const cycleDays = miners[id].cycleHours / 24;
+      const timeSinceStart = (now - data.start) / (1000 * 3600 * 24);
+      const isActive = timeSinceStart < cycleDays;
 
-<button class="rent" onclick="rent('${n}')">
-  Buy - $${p.price}
-</button>
-      </div>`;
+      const expireDate = new Date(data.start + miners[id].duration * 24 * 60 * 60 * 1000);
+      const boughtDate = new Date(data.start);
+
+      const card = document.createElement("div");
+      card.className = "miner-card";
+      card.id = `card-${key}`;
+
+      card.innerHTML = `
+        <div class="miner-header">
+          <img src="${miners[id].img}" class="miner-img">
+          <div>
+            <div class="miner-name">${miners[id].name} #${i}</div>
+            <div style="color:#94a3b8;font-size:13px;">
+              Bought: ${boughtDate.toLocaleDateString('en-NG')}<br>
+              Expires: ${expireDate.toLocaleDateString('en-NG')}
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-label">DAILY</div>
+            <div class="stat-value" style="color:#00ff88;">$${miners[id].daily}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">DURATION LEFT</div>
+            <div class="stat-value">${Math.max(0, Math.ceil(miners[id].duration - timeSinceStart))} days</div>
+          </div>
+        </div>
+
+        <div class="live-info">
+          <strong>PER SECOND:</strong> ${miners[id].speed}<br>
+          LIVE EARNING: <span id="liveEarn_${key}">${data.earned.toFixed(6)}</span>
+        </div>
+
+        ${isActive ? `
+        <div style="margin-top:16px;text-align:center;color:#00ff88;">
+          <span class="live-dot"></span> LIVE MINING (${miners[id].cycleHours}h)
+        </div>` : `
+        <button class="btn" onclick="startMiner('${id}', ${i})">Start Mining (${miners[id].cycleHours}h)</button>`}
+      `;
+      container.appendChild(card);
     }
+  });
+
+  if (container.children.length === 0) {
+    container.innerHTML = `<p style="text-align:center;color:#64748b;padding:60px;">No active miners yet.<br>Buy from Purchase tab.</p>`;
+  }
+}
+/* PURCHASE TAB - unchanged */
+function renderShop() {
+  const container = document.getElementById("shopTab");
+  container.innerHTML = "";
+
+  Object.keys(miners).forEach(id => {
+    const m = miners[id];
+    const owned = (userData.minerUnlocked && userData.minerUnlocked[id]) || 0;
+
+    const card = document.createElement("div");
+    card.className = "miner-card";
+
+    let buttonHTML = `<button class="btn" onclick="buyMiner('${id}', ${m.price})">Buy for $${m.price}</button>`;
+
+    if (id === "S244" && owned >= 2) buttonHTML = `<button class="btn" style="background:#334155;color:white;">Maximum 2 Purchased</button>`;
+    else if (owned >= 1 && id !== "S244") buttonHTML = `<button class="btn" style="background:#334155;color:white;">Already Owned</button>`;
+
+    card.innerHTML = `
+      <div class="miner-header">
+        <img src="${m.img}" class="miner-img">
+        <div><div class="miner-name">${m.name}</div></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item"><div class="stat-label">PRICE</div><div class="stat-value">$${m.price}</div></div>
+        <div class="stat-item"><div class="stat-label">DAILY INCOME</div><div class="stat-value" style="color:#00ff88;">$${m.daily}</div></div>
+        <div class="stat-item"><div class="stat-label">PER SECOND</div><div class="stat-value">${m.speed}</div></div>
+        <div class="stat-item"><div class="stat-label">DURATION</div><div class="stat-value">${m.duration} days</div></div>
+      </div>
+
+      <div style="margin-top:12px;">${buttonHTML}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+/* BUY & START - UPDATED WITH REFERRAL POINTS */
+async function buyMiner(id, price) {
+  const snap = await db.ref("users/" + uid).once("value");
+  const data = snap.val() || {};
+  if ((data.balance || 0) < price) return alert("Not enough balance");
+
+  let unlocked = data.minerUnlocked || {};
+  let count = unlocked[id] || 0;
+
+  if (id === "S244" && count >= 2) return alert("You can only buy S-244 twice");
+  if (id !== "S244" && count >= 1) return alert("You already own this miner");
+
+  const instanceKey = id === "S244" ? `${id}_${count + 1}` : id;
+
+  // Calculate referral points for the referrer
+  let referralPoints = 0;
+  if (id === "S244") referralPoints = 100;
+  else if (id === "S500") referralPoints = 200;
+  else if (id === "S900") referralPoints = 300;
+  else if (id === "S1200") referralPoints = 400;
+
+  // Update buyer
+  db.ref("users/" + uid).update({
+    balance: (data.balance || 0) - price,
+    [`minerUnlocked/${id}`]: count + 1,
+    [`miners/${instanceKey}`]: { start: Date.now(), lastUpdate: Date.now(), earned: 0, lastAdded: 0 }
+  });
+
+  // Award points to referrer if any
+  const referrer = data.referredBy;
+  if (referrer && referralPoints > 0) {
+    db.ref("users/" + referrer).transaction(userData => {
+      if (!userData) return userData;
+      userData.pendingRewards = userData.pendingRewards || {};
+      userData.pendingRewards[id] = (userData.pendingRewards[id] || 0) + referralPoints;
+      return userData;
+    });
   }
 
-  for(let n in data.miners){
-    let m=data.miners[n];
+  loadPage();
+}
 
-    runHTML+=`
-    <div class="card">
-      <h3>${n.replace(" Engine","")}</h3>
-      <p>Earned: $<span id="e_${n}">0.0000</span></p>
-      ${
-        !m.running
-        ? `<button class="start" onclick="start('${n}')">Start Mining</button>`
-        : `<div class="running">Mining <span class="dots"><span>.</span><span>.</span><span>.</span></span></div>`
+function startMiner(id, instance) {
+  const key = id === "S244" ? `${id}_${instance}` : id;
+  const now = Date.now();
+  db.ref("users/" + uid + "/miners/" + key).update({ start: now, lastUpdate: now });
+  loadPage();
+}
+
+/* REAL-TIME MINING - now uses per-miner cycleHours */
+function startMining() {
+  setInterval(() => {
+    if (!userData) return;
+    const now = Date.now();
+    let totalToAdd = 0;
+
+    const unlocked = userData.minerUnlocked || {};
+    Object.keys(unlocked).forEach(id => {
+      const count = unlocked[id];
+      for (let i = 1; i <= count; i++) {
+        const key = id === "S244" ? `${id}_${i}` : id;
+        let minerData = userData.miners[key];
+        if (!minerData) return;
+
+        const cycleDays = miners[id].cycleHours / 24;
+        const timeSince = (now - minerData.start) / (1000 * 3600 * 24);
+        if (timeSince >= cycleDays) return;
+
+        minerData.earned = (minerData.earned || 0) + miners[id].speed;
+
+        const earnEl = document.getElementById(`liveEarn_${key}`);
+        if (earnEl) earnEl.textContent = minerData.earned.toFixed(6);
+
+        const floor = Math.floor(minerData.earned);
+        if (floor > (minerData.lastAdded || 0)) {
+          totalToAdd += (floor - (minerData.lastAdded || 0));
+          minerData.lastAdded = floor;
+        }
       }
-    </div>`;
-  }
+    });
 
-  document.getElementById("run").innerHTML=runHTML;
-  document.getElementById("buy").innerHTML=buyHTML;
-}
-
-/* =========================
-   ACTIONS
-========================= */
-window.rent=function(name){
-  let p = minersData[name];
-
-let balance = Number(data.balance);
-let price = Number(p.price);
-
-if(balance < price){
-  return alert("Insufficient balance ❌");
-}
-
-  data.balance-=p.price;
-  data.miners[name]={running:false,last:Date.now(),daily:p.daily};
-
-// 🔥 reward referrer
-db.ref("users/" + uid).once("value").then(snap=>{
-  let d = snap.val();
-  let ref = d.referredBy;
-
-  if(ref){
-    let reward = 0;
-
-    if(name.includes("S-244")) reward = 100;
-    if(name.includes("S-500")) reward = 200;
-    if(name.includes("S-900")) reward = 350;
-
-    if(reward > 0){
-      db.ref("users/" + ref + "/pendingRewards/" + name)
-        .transaction(val => (val || 0) + reward);
+    if (totalToAdd > 0) {
+      userData.balance = Math.floor((userData.balance || 0) + totalToAdd);
+      updateLiveBalance();
     }
-  }
-});  
-save();
+  }, 1000);
 }
 
-window.start=function(name){
-  data.miners[name].running=true;
-  data.miners[name].last=Date.now();
-  save();
-}
+setInterval(() => {
+  if (userData) db.ref("users/" + uid).update({ miners: userData.miners, balance: userData.balance });
+}, 8000);
 
-/* =========================
-   SAVE
-========================= */
-function save(){
-  if(!preview){
-    userRef.set(data);
-  }
-}
+function nav(page) { window.location.href = page; }
 
-/* =========================
-   ENGINE
-========================= */
-setInterval(()=>{
-  let now=Date.now();
-  let changed=false;
-
-  for(let n in data.miners){
-    let m=data.miners[n];
-    if(m.running){
-      let sec = (now - m.last) / 1000;
-let earn = sec * (m.daily / 86400);
-
-// store hidden earnings
-m.temp = (m.temp || 0) + earn;
-
-// only convert to real balance when >= 1
-if(m.temp >= 1){
-  let whole = Math.floor(m.temp);
-  data.balance += whole;
-  m.temp -= whole;
-}
-
-// update last time
-m.last = now;
-
-// track total earned
-m.total = (m.total || 0) + earn;
-
-// display total earned
-let el = document.getElementById("e_" + n);
-if(el){
-  el.innerText = Math.floor(m.total);
-}
-
-changed = true;
-    }
-  }
-
-  if(changed) save();
-
-document.getElementById("balance").innerText = data.balance.toFixed(2);
-}, 1000);
+window.addEventListener("load", () => {
+  loadPage();
+  startMining();
+  setTimeout(() => document.getElementById("loader").style.display = "none", 1200);
+});
 </script>
-</script>
-
 </body>
 </html>
