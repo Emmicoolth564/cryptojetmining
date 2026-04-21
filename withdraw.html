@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Withdraw • CryptoJet</title>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+    :root { --green: #22c55e; --dark: #020617; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #020617; color: #e2e8f0; min-height: 100vh; }
+    .header { padding: 20px 16px; display: flex; align-items: center; background: rgba(2,6,23,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(34,197,94,0.15); }
+    .back { font-size:28px; color:#22c55e; cursor:pointer; }
+    .header h3 { flex:1; text-align:center; font-size:20px; font-weight:600; }
+    .balance-box { background: #0f172a; margin: 16px; padding: 24px; border-radius: 24px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+    .balance-label { font-size:14px; color:#64748b; }
+    .balance-amount { font-size:32px; font-weight:700; color:#22c55e; margin-top:6px; }
+    .tabs { display:flex; background:#0f172a; border-radius:9999px; padding:6px; margin:0 16px 16px; }
+    .tab { flex:1; padding:14px; text-align:center; font-weight:600; border-radius:9999px; cursor:pointer; color:#94a3b8; }
+    .tab.active { background:#22c55e; color:#022c22; box-shadow:0 4px 15px rgba(34,197,94,0.4); }
+    .content-wrapper { padding:0 16px 30px; }
+    .card { background:#0f172a; border-radius:24px; padding:28px 24px; box-shadow:0 10px 30px rgba(0,0,0,0.4); margin-bottom:20px; }
+    input, select { width:100%; padding:16px 18px; margin-top:12px; background:#1e2937; border:2px solid transparent; border-radius:16px; color:white; font-size:16px; }
+    input:focus, select:focus { border-color:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,0.2); outline:none; }
+    .saved-bank { background:#1e2937; border-radius:16px; padding:18px; margin-bottom:24px; }
+    .saved-bank .bank-name { color:#22c55e; font-weight:600; font-size:17px; }
+    .fee-info { font-size:14px; color:#94a3b8; margin:12px 0; text-align:center; }
+    .button { width:100%; padding:16px; margin-top:20px; background:#22c55e; color:#022c22; font-weight:700; font-size:17px; border:none; border-radius:16px; cursor:pointer; box-shadow:0 8px 25px rgba(34,197,94,0.3); }
+    .loader { position: fixed; inset: 0; background: rgba(2,6,23,0.92); display: none; align-items: center; justify-content: center; z-index: 99999; }
+    .spinner { width: 56px; height: 56px; border: 6px solid rgba(34,197,94,0.2); border-top: 6px solid #22c55e; border-radius: 50%; animation: spin 0.9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#22c55e; color:#022c22; padding:14px 28px; border-radius:9999px; font-weight:600; box-shadow:0 10px 30px rgba(34,197,94,0.4); opacity:0; transition:all 0.3s; z-index:100000; }
+    .weekend-notice { text-align:center; color:#f87171; font-size:15px; padding:20px; background:#1e2937; border-radius:16px; margin:16px; }
+    .password-modal { position:fixed; inset:0; background:rgba(2,6,23,0.9); display:none; align-items:center; justify-content:center; z-index:10000; }
+    .password-box { background:#0f172a; width:90%; max-width:380px; border-radius:24px; padding:28px; text-align:center; }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="back" onclick="history.back()">←</div>
+    <h3>Withdraw</h3>
+</div>
+
+<div class="balance-box">
+    <div class="balance-label">AVAILABLE BALANCE</div>
+    <div class="balance-amount" id="balance">$0.00</div>
+</div>
+
+<div class="tabs">
+    <div class="tab active" id="tab-bank" onclick="switchTab('bank')">Bank Transfer</div>
+    <div class="tab" id="tab-usdt" onclick="switchTab('usdt')">USDT</div>
+</div>
+
+<div id="content" class="content-wrapper"></div>
+
+<div class="loader" id="loader">
+    <div class="spinner"></div>
+</div>
+
+<div class="password-modal" id="passwordModal">
+    <div class="password-box">
+        <h3 style="margin-bottom:20px;">Enter Withdrawal Password</h3>
+        <input id="withdrawPass" type="password" placeholder="Withdrawal Password" style="margin-bottom:20px;">
+        <button onclick="verifyPassword()" class="button" style="margin-bottom:12px;">Confirm</button>
+        <button onclick="hidePasswordModal()" style="background:#334155;color:white;width:100%;padding:14px;border-radius:16px;">Cancel</button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
+  authDomain: "cj-miner.firebaseapp.com",
+  databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "cj-miner"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const uid = localStorage.getItem("uid");
+if (!uid) {
+    alert("Please sign in first");
+    window.location.href = "signin.html";
+}
+
+let currentBalance = 0;
+let savedBank = null;
+let withdrawalPassword = null;
+let pendingAmount = 0;
+let pendingMethod = "";
+
+const BOT_TOKEN = "8688577357:AAHt9nAPIESkZiDZFDGRmyaJmzxogrpY3PY";
+const ADMIN_CHAT_ID = 8632260150;
+
+db.ref("users/" + uid).on("value", snap => {
+    const d = snap.val() || {};
+    currentBalance = d.balance || 0;
+    savedBank = d.bank || null;
+    withdrawalPassword = d.withdrawalPassword || null;
+
+    document.getElementById("balance").innerText = "$" + currentBalance.toFixed(2);
+    renderCurrentTab();
+});
+
+function switchTab(tab) {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    if (tab === "bank") document.getElementById("tab-bank").classList.add("active");
+    else document.getElementById("tab-usdt").classList.add("active");
+    renderCurrentTab();
+}
+
+function renderCurrentTab() {
+    const content = document.getElementById("content");
+    const isBank = document.querySelector(".tab.active").id.includes("bank");
+
+    const today = new Date().getDay();
+    if (today === 0 || today === 6) {  // Monday=1 ... Friday=5
+        content.innerHTML = `<div class="weekend-notice"><strong>Withdrawal is only available Monday to Friday.</strong><br>Please come back on a weekday.</div>`;
+        return;
+    }
+
+    if (isBank) {
+        content.innerHTML = `
+        <div class="card">
+            <h3 style="margin-bottom:20px;font-size:20px;font-weight:600;">Bank Withdrawal</h3>
+            
+            ${savedBank ? `
+            <div class="saved-bank">
+                <div class="bank-name">${savedBank.bank || 'Bank'}</div>
+                <p style="margin:8px 0 4px"><strong>Account Name:</strong> ${savedBank.name || '—'}</p>
+                <p><strong>Account Number:</strong> ${savedBank.number || '—'}</p>
+                <button onclick="goToBankSettings()" style="margin-top:16px;background:#334155;color:white;width:100%;padding:12px;border-radius:12px;">Edit Bank Details</button>
+            </div>` : `
+            <p style="color:#f87171;text-align:center;padding:20px;">No bank account saved yet.<br><a href="bank.html" style="color:#22c55e">Go to Bank Settings →</a></p>`}
+            
+            <input id="amountBank" type="number" placeholder="Withdrawal amount" style="margin-top:20px;">
+            <div id="feeInfo" class="fee-info"></div>
+            
+            <button onclick="startWithdraw('bank')" class="button">Request Withdrawal</button>
+            <p style="text-align:center;font-size:13px;color:#64748b;margin-top:12px;">Processing time: 5–30 minutes • Mon–Fri only</p>
+        </div>`;
+    } else {
+        content.innerHTML = `
+        <div class="card">
+            <h3 style="margin-bottom:20px;font-size:20px;font-weight:600;">USDT Withdrawal</h3>
+            <p style="text-align:center;color:#f87171;padding:40px 20px;">Coming Soon</p>
+        </div>`;
+    }
+
+    const amountInput = document.getElementById("amountBank");
+    const feeDiv = document.getElementById("feeInfo");
+    if (amountInput) {
+        amountInput.addEventListener("input", () => {
+            const amt = parseFloat(amountInput.value) || 0;
+            const charge = amt * 0.18;
+            const receive = amt - charge;
+            feeDiv.innerHTML = `18% charge: <strong>$${charge.toFixed(2)}</strong><br>You will receive: <strong>$${receive.toFixed(2)}</strong>`;
+        });
+    }
+}
+
+function goToBankSettings() { window.location.href = "bank.html"; }
+
+function startWithdraw(method) {
+    const amountInput = document.getElementById("amountBank");
+    const amount = parseFloat(amountInput.value);
+
+    if (!amount || amount <= 0) return toast("Enter a valid amount");
+    if (amount > currentBalance) return toast("Insufficient balance");
+
+    pendingAmount = amount;
+    pendingMethod = method;
+
+    if (!withdrawalPassword) {
+        toast("You need to set a withdrawal password first");
+        setTimeout(() => window.location.href = "bank.html", 1800);
+        return;
+    }
+
+    document.getElementById("passwordModal").style.display = "flex";
+    document.getElementById("withdrawPass").focus();
+}
+
+function verifyPassword() {
+    const entered = document.getElementById("withdrawPass").value.trim();
+    if (entered === withdrawalPassword) {
+        hidePasswordModal();
+        proceedWithWithdrawal();
+    } else {
+        toast("Incorrect withdrawal password");
+        document.getElementById("withdrawPass").value = "";
+    }
+}
+
+function hidePasswordModal() {
+    document.getElementById("passwordModal").style.display = "none";
+    document.getElementById("withdrawPass").value = "";
+}
+
+async function proceedWithWithdrawal() {
+    const loader = document.getElementById("loader");
+    loader.style.display = "flex";
+
+    const charge = pendingAmount * 0.18;
+    const finalAmount = pendingAmount - charge;
+
+    const txRef = db.ref("transactions").push();
+    txRef.set({
+        uid: uid,
+        type: "withdraw",
+        method: "bank",
+        amount: pendingAmount,
+        charge: charge,
+        finalAmount: finalAmount,
+        status: "pending",
+        date: Date.now(),
+        ...(savedBank || {})
+    });
+
+    // Send to Telegram bot
+    const minerId = await getMinerId();
+    const caption = `🔥 Withdrawal Request\nUser: ${uid}\nMiner ID: ${minerId}\nAmount: $${pendingAmount}\nFee: $${charge.toFixed(2)}\nReceive: $${finalAmount.toFixed(2)}\nBank: ${savedBank ? savedBank.bank : 'N/A'}\nAccount: ${savedBank ? savedBank.number : 'N/A'}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: caption, reply_markup: { inline_keyboard: [[{ text: "✅ Approve", callback_data: `approve_withdraw_${txRef.key}` }, { text: "❌ Reject", callback_data: `reject_withdraw_${txRef.key}` }]] } })
+    });
+
+    loader.style.display = "none";
+    toast("Withdraw is under processing • Sent to Financial Department");
+
+    setTimeout(() => renderCurrentTab(), 1800);
+}
+
+async function getMinerId() {
+    return new Promise(resolve => {
+        db.ref("users/" + uid).once("value", snap => resolve((snap.val() || {}).minerId || "N/A"));
+    });
+}
+
+function toast(msg) {
+    const t = document.getElementById("toast");
+    t.innerText = msg;
+    t.style.opacity = 1;
+    setTimeout(() => t.style.opacity = 0, 3000);
+}
+</script>
+</body>
+</html>
