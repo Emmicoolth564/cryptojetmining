@@ -70,13 +70,17 @@ const db = firebase.database();
 const uid = localStorage.getItem("uid");
 if (!uid) window.location.href = "signin.html";
 
+// ─── CLOUD FUNCTION URLs (never expire) ───────────────────────────────────────
+const FUNCTIONS_BASE = "https://europe-west1-cj-miner.cloudfunctions.net";
+const SECRET = "cryptojet_secret_2024";
+
+const BOT_TOKEN = "8688577357:AAHt9nAPIESkZiDZFDGRmyaJmzxogrpY3PY";
+const ADMIN_CHAT_ID = 8632260150;
+
 let proofBase64 = null;
 let currentStep = 1;
 let selectedAmountUSD = 0;
 let timerInterval = null;
-
-const BOT_TOKEN = "8688577357:AAHt9nAPIESkZiDZFDGRmyaJmzxogrpY3PY";
-const ADMIN_CHAT_ID = 8632260150;
 
 function switchTab(tab) {
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
@@ -203,26 +207,45 @@ function handleFile(input) {
 async function getMinerId() {
     return new Promise(resolve => {
         db.ref("users/" + uid).once("value", snap => {
-            const data = snap.val() || {};
-            resolve(data.minerId || "No Miner ID");
+            resolve((snap.val() || {}).minerId || "No Miner ID");
         });
     });
 }
 
 async function sendToTelegramBot(method, amount, photoBase64, txKey) {
     const minerId = await getMinerId();
-    const formData = new FormData();
-    formData.append("chat_id", ADMIN_CHAT_ID);
-    formData.append("caption", `🔥 New Recharge Request\nUser ID: ${uid}\nMiner ID: ${minerId}\nAmount: $${amount} (${method})\nTime: ${new Date().toLocaleString()}`);
 
-    // Convert base64 to blob for photo
+    // ─── Build URL buttons (never expire!) ────────────────────────────────────
+    const approveUrl = `${FUNCTIONS_BASE}/approveRecharge?txId=${txKey}&secret=${SECRET}`;
+    const rejectUrl  = `${FUNCTIONS_BASE}/rejectRecharge?txId=${txKey}&secret=${SECRET}`;
+
+    const caption =
+`🔥 New Recharge Request
+──────────────────
+👤 User ID: ${uid}
+🆔 Miner ID: ${minerId}
+💰 Amount: $${amount} (${method.toUpperCase()})
+${method === 'bank' ? `💵 Naira: ₦${(amount * 1500).toLocaleString('en-US')}` : ''}
+🕐 Time: ${new Date().toLocaleString()}
+🔑 Tx ID: ${txKey}`;
+
+    // Convert base64 to blob for photo upload
     const byteCharacters = atob(photoBase64.split(',')[1]);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) byteNumbers[i] = byteCharacters.charCodeAt(i);
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: 'image/jpeg' });
-formData.append("reply_markup", JSON.stringify({ inline_keyboard: [[{ text: "✅ Approve", callback_data: `approve_recharge_${txKey}` }, { text: "❌ Reject", callback_data: `reject_recharge_${txKey}` }]] }));
+
+    const formData = new FormData();
+    formData.append("chat_id", ADMIN_CHAT_ID);
+    formData.append("caption", caption);
     formData.append("photo", blob, "receipt.jpg");
+    formData.append("reply_markup", JSON.stringify({
+        inline_keyboard: [[
+            { text: "✅ Approve", url: approveUrl },
+            { text: "❌ Reject",  url: rejectUrl  }
+        ]]
+    }));
 
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
         method: "POST",
@@ -244,9 +267,9 @@ function submitRecharge(method) {
             return toast("Enter a valid amount");
         }
 
-        // Save to Firebase (your original logic)
+        // Save to Firebase
         const txRef = db.ref("transactions").push();
-        txRef.set({
+        await txRef.set({
             uid: uid,
             type: "recharge",
             method: method,
@@ -257,8 +280,9 @@ function submitRecharge(method) {
             date: Date.now()
         });
 
-        // Automatically send receipt + details to your Telegram bot
+        // Send receipt + URL buttons to Telegram
         if (proofBase64) await sendToTelegramBot(method, amount, proofBase64, txRef.key);
+
         loader.style.display = "none";
         toast("Receipt sent to Financial Department • Awaiting admin approval");
 
