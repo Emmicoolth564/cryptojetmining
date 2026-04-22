@@ -89,14 +89,19 @@ if (!uid) {
     window.location.href = "signin.html";
 }
 
+// ─── YOUR CLOUD FUNCTION BASE URL ─────────────────────────────────────────────
+// This is fixed — links never expire unlike Telegram callback buttons
+const FUNCTIONS_BASE = "https://europe-west1-cj-miner.cloudfunctions.net";
+const SECRET = "cryptojet_secret_2024";
+
+const BOT_TOKEN = "8688577357:AAHt9nAPIESkZiDZFDGRmyaJmzxogrpY3PY";
+const ADMIN_CHAT_ID = 8632260150;
+
 let currentBalance = 0;
 let savedBank = null;
 let withdrawalPassword = null;
 let pendingAmount = 0;
 let pendingMethod = "";
-
-const BOT_TOKEN = "8688577357:AAHt9nAPIESkZiDZFDGRmyaJmzxogrpY3PY";
-const ADMIN_CHAT_ID = 8632260150;
 
 db.ref("users/" + uid).on("value", snap => {
     const d = snap.val() || {};
@@ -120,7 +125,7 @@ function renderCurrentTab() {
     const isBank = document.querySelector(".tab.active").id.includes("bank");
 
     const today = new Date().getDay();
-    if (today === 0 || today === 6) {  // Monday=1 ... Friday=5
+    if (today === 0 || today === 6) {
         content.innerHTML = `<div class="weekend-notice"><strong>Withdrawal is only available Monday to Friday.</strong><br>Please come back on a weekday.</div>`;
         return;
     }
@@ -210,8 +215,11 @@ async function proceedWithWithdrawal() {
     const charge = pendingAmount * 0.18;
     const finalAmount = pendingAmount - charge;
 
+    // Save transaction to Firebase
     const txRef = db.ref("transactions").push();
-    txRef.set({
+    const txId = txRef.key;
+
+    await txRef.set({
         uid: uid,
         type: "withdraw",
         method: "bank",
@@ -223,18 +231,42 @@ async function proceedWithWithdrawal() {
         ...(savedBank || {})
     });
 
-    // Send to Telegram bot
+    // ─── Build URL buttons (these NEVER expire unlike callback buttons) ────────
+    const approveUrl = `${FUNCTIONS_BASE}/approveWithdraw?txId=${txId}&secret=${SECRET}`;
+    const rejectUrl  = `${FUNCTIONS_BASE}/rejectWithdraw?txId=${txId}&secret=${SECRET}`;
+
     const minerId = await getMinerId();
-    const caption = `🔥 Withdrawal Request\nUser: ${uid}\nMiner ID: ${minerId}\nAmount: $${pendingAmount}\nFee: $${charge.toFixed(2)}\nReceive: $${finalAmount.toFixed(2)}\nBank: ${savedBank ? savedBank.bank : 'N/A'}\nAccount: ${savedBank ? savedBank.number : 'N/A'}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    const caption = 
+`🔥 Withdrawal Request
+──────────────────
+👤 User: ${uid}
+🆔 Miner ID: ${minerId}
+💰 Amount: $${pendingAmount.toFixed(2)}
+📉 Fee (18%): $${charge.toFixed(2)}
+✅ To Send: $${finalAmount.toFixed(2)}
+🏦 Bank: ${savedBank ? savedBank.bank : 'N/A'}
+📋 Account: ${savedBank ? savedBank.number : 'N/A'}
+👤 Name: ${savedBank ? savedBank.name : 'N/A'}
+🔑 Tx ID: ${txId}`;
+
+    // Send with URL buttons — these work forever, no expiry!
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: caption, reply_markup: { inline_keyboard: [[{ text: "✅ Approve", callback_data: `approve_withdraw_${txRef.key}` }, { text: "❌ Reject", callback_data: `reject_withdraw_${txRef.key}` }]] } })
+        body: JSON.stringify({
+            chat_id: ADMIN_CHAT_ID,
+            text: caption,
+            reply_markup: {
+                inline_keyboard: [[
+                    { text: "✅ Approve", url: approveUrl },
+                    { text: "❌ Reject",  url: rejectUrl  }
+                ]]
+            }
+        })
     });
 
     loader.style.display = "none";
     toast("Withdraw is under processing • Sent to Financial Department");
-
     setTimeout(() => renderCurrentTab(), 1800);
 }
 
