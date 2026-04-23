@@ -4,363 +4,609 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Miner Power • CryptoJet</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+:root {
+    --neon:    #00f0ff;
+    --accent:  #00ffcc;
+    --gold:    #f59e0b;
+    --bg:      #020617;
+    --s1:      #0a1628;
+    --s2:      #0f1e30;
+    --border:  rgba(0,240,255,0.12);
+}
 
-    :root {
-        --neon: #00f0ff;
-        --accent: #00ffcc;
-        --dark: #020617;
-    }
+* { margin:0; padding:0; box-sizing:border-box; }
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: #e2e8f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
 
-    body {
-        font-family: 'Inter', sans-serif;
-        background: #020617;
-        color: #e2e8f0;
-        min-height: 100vh;
-        overflow-x: hidden;
-        background: radial-gradient(circle at 50% 30%, #1a2338 0%, #020617 70%);
-    }
+/* ── CANVAS BG ─────────────────────────────── */
+#bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.35;
+}
 
-    /* HEADER */
-    .header {
-        padding: 30px 20px 20px;
-        text-align: center;
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 28px;
-        font-weight: 700;
-        color: var(--neon);
-        text-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
-        letter-spacing: 2px;
-    }
+/* ── HEADER ────────────────────────────────── */
+.header {
+    position: sticky; top:0; z-index:200;
+    padding: 18px 20px;
+    display: flex; align-items:center;
+    background: rgba(2,6,23,0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+}
+.back { font-size:26px; color:var(--neon); cursor:pointer; margin-right:12px; }
+.header-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 22px; font-weight:700;
+    letter-spacing: 3px;
+    color: var(--neon);
+    text-shadow: 0 0 20px rgba(0,240,255,0.5);
+    flex:1; text-align:center;
+}
+.header-right { width:38px; }
 
-    .container {
-        padding: 0 20px 40px;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
+/* ── HERO STRIP ────────────────────────────── */
+.hero {
+    position: relative; z-index:1;
+    padding: 40px 20px 20px;
+    text-align:center;
+}
+.hero-label {
+    font-family:'Rajdhani',sans-serif;
+    font-size:12px; letter-spacing:5px; font-weight:600;
+    color:#475569; text-transform:uppercase; margin-bottom:10px;
+}
+.hero-title {
+    font-family:'Rajdhani',sans-serif;
+    font-size:38px; font-weight:700;
+    line-height:1.1;
+    background: linear-gradient(90deg, var(--neon), var(--accent), #fff);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    margin-bottom:12px;
+}
+.hero-sub {
+    font-size:15px; color:#64748b; max-width:340px; margin:0 auto;
+    font-weight:300;
+}
 
-    .miner-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 24px;
-    }
+/* ── CARDS ─────────────────────────────────── */
+.cards-wrap {
+    position:relative; z-index:1;
+    padding: 24px 16px 80px;
+    display:flex; flex-direction:column; gap:32px;
+    max-width:600px; margin:0 auto;
+}
 
-    .miner-card {
-        background: rgba(15, 23, 42, 0.95);
-        border-radius: 24px;
-        overflow: hidden;
-        position: relative;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-        transition: all 0.4s ease;
-        border: 1px solid rgba(0, 240, 255, 0.15);
-    }
+.miner-card {
+    background: var(--s1);
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: cardIn 0.6s ease both;
+}
+.miner-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 80px rgba(0,240,255,0.12);
+    border-color: rgba(0,240,255,0.3);
+}
+@keyframes cardIn {
+    from { opacity:0; transform:translateY(30px); }
+    to   { opacity:1; transform:none; }
+}
+.miner-card:nth-child(1) { animation-delay:0.05s; }
+.miner-card:nth-child(2) { animation-delay:0.15s; }
+.miner-card:nth-child(3) { animation-delay:0.25s; }
+.miner-card:nth-child(4) { animation-delay:0.35s; }
 
-    .miner-card:hover {
-        transform: translateY(-12px);
-        box-shadow: 0 30px 60px rgba(0, 240, 255, 0.25);
-        border-color: var(--neon);
-    }
+/* ── CARD VISUAL ───────────────────────────── */
+.card-visual {
+    height:200px;
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+}
+.card-visual::before {
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(circle at 50% 60%, var(--card-glow) 0%, transparent 65%);
+    opacity:0.25;
+}
+.scan-line {
+    position:absolute; left:0; right:0;
+    height:2px;
+    background:linear-gradient(90deg,transparent,var(--neon),transparent);
+    animation:scanDown 3s linear infinite;
+    opacity:0.4;
+}
+@keyframes scanDown {
+    0%  { top:0%;   opacity:0; }
+    10% { opacity:0.4; }
+    90% { opacity:0.4; }
+    100%{ top:100%; opacity:0; }
+}
+.grid-overlay {
+    position:absolute; inset:0;
+    background-image:
+        linear-gradient(rgba(0,240,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,240,255,0.04) 1px, transparent 1px);
+    background-size:30px 30px;
+}
+.miner-img {
+    width:130px; height:130px; object-fit:contain; position:relative; z-index:2;
+    filter: drop-shadow(0 0 20px var(--card-glow));
+    animation: floatUp 4s ease-in-out infinite;
+}
+@keyframes floatUp {
+    0%,100% { transform:translateY(0); }
+    50%     { transform:translateY(-12px); }
+}
+.tier-badge {
+    position:absolute; top:16px; left:16px; z-index:3;
+    font-family:'Rajdhani',sans-serif;
+    font-size:11px; font-weight:700; letter-spacing:2px;
+    padding:5px 12px; border-radius:6px;
+    background:rgba(0,240,255,0.1);
+    border:1px solid rgba(0,240,255,0.25);
+    color:var(--neon);
+}
+.price-badge {
+    position:absolute; top:16px; right:16px; z-index:3;
+    font-family:'Rajdhani',sans-serif;
+    font-size:15px; font-weight:700;
+    color:var(--gold);
+    text-shadow:0 0 10px rgba(245,158,11,0.5);
+}
 
-    /* Miner Image Container */
-    .miner-visual {
-        height: 180px;
-        background: linear-gradient(135deg, #1e2937, #0f172a);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
+/* ── CARD BODY ─────────────────────────────── */
+.card-body { padding:24px; }
 
-    .miner-img {
-        width: 140px;
-        height: 140px;
-        object-fit: contain;
-        filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.7));
-        animation: floatMiner 3s ease-in-out infinite;
-    }
+.miner-name {
+    font-family:'Rajdhani',sans-serif;
+    font-size:32px; font-weight:700;
+    color:var(--accent);
+    letter-spacing:1px;
+    margin-bottom:4px;
+}
+.miner-tagline {
+    font-size:13px; color:#64748b;
+    font-weight:300; font-style:italic;
+    margin-bottom:20px;
+}
 
-    @keyframes floatMiner {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-15px); }
-    }
+/* Stats row */
+.stats-row {
+    display:grid; grid-template-columns:1fr 1fr 1fr;
+    gap:10px; margin-bottom:20px;
+}
+.stat-box {
+    background:var(--s2);
+    border-radius:14px; padding:12px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,0.05);
+}
+.stat-val {
+    font-family:'Rajdhani',sans-serif;
+    font-size:20px; font-weight:700; color:var(--neon);
+    line-height:1;
+}
+.stat-key {
+    font-size:10px; color:#475569; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.08em;
+    margin-top:4px;
+}
 
-    /* Electric Arc Overlay */
-    .electric-arc {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        opacity: 0.15;
-        background: repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 10px,
-            rgba(0, 240, 255, 0.6) 10px,
-            rgba(0, 240, 255, 0.6) 12px
-        );
-        animation: arcMove 1.5s linear infinite;
-    }
+/* Power bar */
+.bar-wrap { margin-bottom:16px; }
+.bar-label {
+    display:flex; justify-content:space-between;
+    font-size:11px; font-weight:600; color:#475569;
+    text-transform:uppercase; letter-spacing:0.07em;
+    margin-bottom:6px;
+}
+.bar-track {
+    height:6px; background:#1e2937; border-radius:999px; overflow:hidden;
+}
+.bar-fill {
+    height:100%; border-radius:999px;
+    box-shadow:0 0 8px var(--bar-color);
+    background:var(--bar-color);
+    transition:width 1.5s cubic-bezier(0.16,1,0.3,1);
+}
 
-    @keyframes arcMove {
-        0% { background-position: 0 0; }
-        100% { background-position: 100px 100px; }
-    }
+/* Divider */
+.divider {
+    height:1px; background:var(--border);
+    margin:20px 0;
+}
 
-    .card-content {
-        padding: 24px;
-    }
+/* Detail sections */
+.detail-section { margin-bottom:18px; }
+.detail-heading {
+    font-family:'Rajdhani',sans-serif;
+    font-size:13px; font-weight:700; letter-spacing:2px;
+    color:var(--neon); text-transform:uppercase;
+    margin-bottom:10px;
+    display:flex; align-items:center; gap:8px;
+}
+.detail-heading::after {
+    content:''; flex:1; height:1px;
+    background:linear-gradient(90deg,var(--border),transparent);
+}
+.detail-text {
+    font-size:14px; color:#94a3b8; line-height:1.7; font-weight:300;
+}
+.detail-list {
+    list-style:none; display:flex; flex-direction:column; gap:7px; margin-top:4px;
+}
+.detail-list li {
+    display:flex; align-items:flex-start; gap:9px;
+    font-size:13px; color:#94a3b8; line-height:1.5;
+}
+.detail-list li::before {
+    content:'▸';
+    color:var(--accent); font-size:10px; flex-shrink:0; margin-top:2px;
+}
 
-    .title {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 24px;
-        font-weight: 700;
-        margin-bottom: 16px;
-        color: var(--accent);
-    }
-
-    /* Power Bar */
-    .stat {
-        margin-bottom: 20px;
-    }
-    .stat-label {
-        font-size: 13px;
-        color: #94a3b8;
-        margin-bottom: 6px;
-        display: flex;
-        justify-content: space-between;
-    }
-    .power-bar {
-        height: 8px;
-        background: #1e2937;
-        border-radius: 9999px;
-        overflow: hidden;
-        position: relative;
-    }
-    .power-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #00f0ff, #00ffcc);
-        transition: width 1.2s ease;
-        box-shadow: 0 0 15px #00f0ff;
-    }
-
-    /* Heat Indicator */
-    .heat-bar {
-        height: 6px;
-        border-radius: 9999px;
-        margin-top: 6px;
-    }
-
-    /* Speed Dots */
-    .speed-container {
-        display: flex;
-        gap: 6px;
-        margin-top: 8px;
-    }
-    .speed-dot {
-        width: 10px;
-        height: 10px;
-        background: #00ffcc;
-        border-radius: 50%;
-        animation: speedPulse 1.2s infinite ease-in-out;
-    }
-    .speed-dot:nth-child(2) { animation-delay: 0.2s; }
-    .speed-dot:nth-child(3) { animation-delay: 0.4s; }
-    .speed-dot:nth-child(4) { animation-delay: 0.6s; }
-    .speed-dot:nth-child(5) { animation-delay: 0.8s; }
-
-    @keyframes speedPulse {
-        0%, 100% { transform: scale(0.8); opacity: 0.4; }
-        50% { transform: scale(1.4); opacity: 1; }
-    }
-
-    .desc {
-        font-size: 14px;
-        line-height: 1.6;
-        color: #94a3b8;
-        margin-top: 16px;
-    }
-
-    /* Tier Labels */
-    .tier {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: rgba(0, 240, 255, 0.15);
-        color: var(--neon);
-        font-size: 12px;
-        padding: 4px 12px;
-        border-radius: 9999px;
-        font-weight: 600;
-        border: 1px solid rgba(0, 240, 255, 0.3);
-    }
+/* CTA */
+.cta-btn {
+    width:100%; padding:16px;
+    background:linear-gradient(135deg,var(--neon),var(--accent));
+    color:#000; font-family:'Rajdhani',sans-serif;
+    font-size:17px; font-weight:700; letter-spacing:2px;
+    border:none; border-radius:16px; cursor:pointer;
+    box-shadow:0 8px 30px rgba(0,240,255,0.3);
+    transition:all 0.2s; margin-top:4px;
+    text-transform:uppercase;
+}
+.cta-btn:hover { transform:scale(1.02); box-shadow:0 12px 40px rgba(0,240,255,0.45); }
+.cta-btn:active { transform:scale(0.98); }
 </style>
 </head>
 <body>
 
-<div class="header">MINER POWER ⚡</div>
+<canvas id="bg-canvas"></canvas>
 
-<div class="container">
-    <div class="miner-grid">
+<div class="header">
+    <div class="back" onclick="history.back()">←</div>
+    <div class="header-title">MINER POWER</div>
+    <div class="header-right"></div>
+</div>
 
-        <!-- S-244 -->
-        <div class="miner-card">
-            <div class="miner-visual">
-                <div class="electric-arc"></div>
-                <img src="purchase1.png" class="miner-img" alt="S-244">
-                <div class="tier">ENTRY</div>
-            </div>
-            <div class="card-content">
-                <div class="title">S-244</div>
-                
-                <div class="stat">
-                    <div class="stat-label">POWER <span>24%</span></div>
-                    <div class="power-bar"><div class="power-fill" style="width:24%"></div></div>
-                </div>
+<div class="hero">
+    <div class="hero-label">CryptoJet Mining Series</div>
+    <div class="hero-title">Next-Gen<br>Hash Machines</div>
+    <div class="hero-sub">Industrial-grade performance engineered for maximum passive yield</div>
+</div>
 
-                <div class="stat">
-                    <div class="stat-label">HEAT <span>LOW</span></div>
-                    <div class="heat-bar" style="background:linear-gradient(90deg,#38bdf8,#00ffcc);width:20%"></div>
-                </div>
+<div class="cards-wrap">
 
-                <div class="stat">
-                    <div class="stat-label">SPEED</div>
-                    <div class="speed-container">
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                    </div>
-                </div>
-
-                <div class="desc">Stable entry-level miner. Low power draw and reliable performance.</div>
-            </div>
+    <!-- ══ S-244 ════════════════════════════════════════════════ -->
+    <div class="miner-card" style="--card-glow:#38bdf8">
+        <div class="card-visual" style="background:linear-gradient(160deg,#0a1e2e,#0f172a)">
+            <div class="grid-overlay"></div>
+            <div class="scan-line"></div>
+            <img src="purchase1.png" class="miner-img" alt="S-244">
+            <div class="tier-badge">ENTRY LEVEL</div>
+            <div class="price-badge">$10</div>
         </div>
+        <div class="card-body">
+            <div class="miner-name">S-244</div>
+            <div class="miner-tagline">"The steady foundation of every miner's journey"</div>
 
-        <!-- S-500 -->
-        <div class="miner-card">
-            <div class="miner-visual">
-                <div class="electric-arc"></div>
-                <img src="purchase2.png" class="miner-img" alt="S-500">
-                <div class="tier">BALANCED</div>
+            <div class="stats-row">
+                <div class="stat-box"><div class="stat-val">$0.5</div><div class="stat-key">Daily</div></div>
+                <div class="stat-box"><div class="stat-val">30</div><div class="stat-key">Days</div></div>
+                <div class="stat-box"><div class="stat-val">24%</div><div class="stat-key">Power</div></div>
             </div>
-            <div class="card-content">
-                <div class="title">S-500</div>
-                
-                <div class="stat">
-                    <div class="stat-label">POWER <span>52%</span></div>
-                    <div class="power-bar"><div class="power-fill" style="width:52%"></div></div>
-                </div>
 
-                <div class="stat">
-                    <div class="stat-label">HEAT <span>MEDIUM</span></div>
-                    <div class="heat-bar" style="background:linear-gradient(90deg,#84cc16,#facc15);width:45%"></div>
-                </div>
-
-                <div class="stat">
-                    <div class="stat-label">SPEED</div>
-                    <div class="speed-container">
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                    </div>
-                </div>
-
-                <div class="desc">Balanced performance with improved efficiency and output.</div>
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Hashrate Power</span><span>24%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:24%;--bar-color:#38bdf8"></div></div>
             </div>
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Thermal Load</span><span>LOW</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:18%;--bar-color:#00ffcc"></div></div>
+            </div>
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Efficiency Score</span><span>92%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:92%;--bar-color:#4ade80"></div></div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="detail-section">
+                <div class="detail-heading">How It Works</div>
+                <div class="detail-text">The S-244 operates on a distributed cloud hashrate model. Your investment activates a dedicated mining slice on CryptoJet's server cluster, which continuously mines BTC and stablecoins. Earnings are calculated every 48 hours and credited directly to your balance.</div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-heading">Maintenance</div>
+                <ul class="detail-list">
+                    <li>Zero hardware maintenance — fully managed cloud infrastructure</li>
+                    <li>Automatic firmware updates applied during off-peak hours</li>
+                    <li>Thermal throttling system prevents overload at this tier</li>
+                    <li>99.4% uptime guarantee backed by redundant server nodes</li>
+                </ul>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-heading">Best For</div>
+                <div class="detail-text">New miners starting out who want reliable daily returns with zero risk of volatility from hardware costs. Ideal for building consistency before upgrading.</div>
+            </div>
+
+            <button class="cta-btn" onclick="goToMiner('S-244')">Check It Out ⚡</button>
         </div>
-
-        <!-- S-900 -->
-        <div class="miner-card">
-            <div class="miner-visual">
-                <div class="electric-arc"></div>
-                <img src="purchase3.png" class="miner-img" alt="S-900">
-                <div class="tier">HIGH</div>
-            </div>
-            <div class="card-content">
-                <div class="title">S-900</div>
-                
-                <div class="stat">
-                    <div class="stat-label">POWER <span>78%</span></div>
-                    <div class="power-bar"><div class="power-fill" style="width:78%"></div></div>
-                </div>
-
-                <div class="stat">
-                    <div class="stat-label">HEAT <span>HIGH</span></div>
-                    <div class="heat-bar" style="background:linear-gradient(90deg,#fb923c,#ef4444);width:70%"></div>
-                </div>
-
-                <div class="stat">
-                    <div class="stat-label">SPEED</div>
-                    <div class="speed-container">
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                    </div>
-                </div>
-
-                <div class="desc">High-performance miner delivering strong consistent output.</div>
-            </div>
-        </div>
-
-        <!-- S-1200 -->
-        <div class="miner-card">
-            <div class="miner-visual">
-                <div class="electric-arc"></div>
-                <img src="purchase4.png" class="miner-img" alt="S-1200">
-                <div class="tier">ULTIMATE</div>
-            </div>
-            <div class="card-content">
-                <div class="title">S-1200</div>
-                
-                <div class="stat">
-                    <div class="stat-label">POWER <span>98%</span></div>
-                    <div class="power-bar"><div class="power-fill" style="width:98%"></div></div>
-                </div>
-
-                <div class="stat">
-                    <div class="stat-label">HEAT <span>EXTREME</span></div>
-                    <div class="heat-bar" style="background:linear-gradient(90deg,#a855f7,#ff00cc);width:95%"></div>
-                </div>
-
-                <div class="stat">
-                    <div class="stat-label">SPEED</div>
-                    <div class="speed-container">
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                        <div class="speed-dot"></div>
-                    </div>
-                </div>
-
-                <div class="desc">Ultimate mining beast. Maximum speed and extreme power output.</div>
-            </div>
-        </div>
-
     </div>
+
+    <!-- ══ S-500 ════════════════════════════════════════════════ -->
+    <div class="miner-card" style="--card-glow:#84cc16">
+        <div class="card-visual" style="background:linear-gradient(160deg,#0f2010,#0f172a)">
+            <div class="grid-overlay"></div>
+            <div class="scan-line"></div>
+            <img src="purchase2.png" class="miner-img" alt="S-500">
+            <div class="tier-badge">BALANCED</div>
+            <div class="price-badge">$30</div>
+        </div>
+        <div class="card-body">
+            <div class="miner-name">S-500</div>
+            <div class="miner-tagline">"Where performance meets efficiency"</div>
+
+            <div class="stats-row">
+                <div class="stat-box"><div class="stat-val">$1.5</div><div class="stat-key">Daily</div></div>
+                <div class="stat-box"><div class="stat-val">30</div><div class="stat-key">Days</div></div>
+                <div class="stat-box"><div class="stat-val">52%</div><div class="stat-key">Power</div></div>
+            </div>
+
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Hashrate Power</span><span>52%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:52%;--bar-color:#84cc16"></div></div>
+            </div>
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Thermal Load</span><span>MEDIUM</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:45%;--bar-color:#facc15"></div></div>
+            </div>
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Efficiency Score</span><span>88%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:88%;--bar-color:#4ade80"></div></div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="detail-section">
+                <div class="detail-heading">How It Works</div>
+                <div class="detail-text">The S-500 runs on a dual-pool mining strategy — simultaneously allocating hashrate across BTC and high-yield altcoin pools. A smart routing algorithm shifts load between pools based on real-time profitability, maximising your daily return automatically.</div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-heading">Maintenance</div>
+                <ul class="detail-list">
+                    <li>Dynamic load balancing keeps thermal levels in the safe range</li>
+                    <li>Weekly automated pool re-calibration for optimal earnings</li>
+                    <li>Dedicated mid-tier server rack with isolated cooling zones</li>
+                    <li>Real-time performance monitoring with 48 hours manual restart on fault</li>
+                </ul>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-heading">Best For</div>
+                <div class="detail-text">Miners who've outgrown the entry tier and want meaningfully higher returns without stepping into high-heat territory. A smart long-term hold.</div>
+            </div>
+
+            <button class="cta-btn" onclick="goToMiner('S-500')">Check It Out ⚡</button>
+        </div>
+    </div>
+
+    <!-- ══ S-900 ════════════════════════════════════════════════ -->
+    <div class="miner-card" style="--card-glow:#fb923c">
+        <div class="card-visual" style="background:linear-gradient(160deg,#1f1008,#0f172a)">
+            <div class="grid-overlay"></div>
+            <div class="scan-line"></div>
+            <img src="purchase3.png" class="miner-img" alt="S-900">
+            <div class="tier-badge">HIGH POWER</div>
+            <div class="price-badge">$50</div>
+        </div>
+        <div class="card-body">
+            <div class="miner-name">S-900</div>
+            <div class="miner-tagline">"Serious output for serious miners"</div>
+
+            <div class="stats-row">
+                <div class="stat-box"><div class="stat-val">$2</div><div class="stat-key">Daily</div></div>
+                <div class="stat-box"><div class="stat-val">35</div><div class="stat-key">Days</div></div>
+                <div class="stat-box"><div class="stat-val">78%</div><div class="stat-key">Power</div></div>
+            </div>
+
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Hashrate Power</span><span>78%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:78%;--bar-color:#fb923c"></div></div>
+            </div>
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Thermal Load</span><span>HIGH</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:72%;--bar-color:#ef4444"></div></div>
+            </div>
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Efficiency Score</span><span>85%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:85%;--bar-color:#4ade80"></div></div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="detail-section">
+                <div class="detail-heading">How It Works</div>
+                <div class="detail-text">The S-900 leverages a tri-pool configuration — BTC, ETH equivalent assets, and high-frequency stablecoin yield protocols. It operates at near-peak hashrate with a proprietary burst-mode that activates during peak network profitability windows, pushing earnings significantly above baseline.</div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-heading">Maintenance</div>
+                <ul class="detail-list">
+                    <li>Advanced liquid-cooled simulation layer manages high thermal output</li>
+                    <li>Burst-mode auto-cutoff prevents overrun during extended high-load periods</li>
+                    <li>Priority server placement — dedicated high-performance rack space</li>
+                    <li>Daily self-diagnostic checks with instant alerts to operations team</li>
+                    <li>99.7% uptime SLA with instant failover to backup nodes</li>
+                </ul>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-heading">Best For</div>
+                <div class="detail-text">Experienced miners who understand the value of compounding returns. At this tier, daily earnings start to become a meaningful income stream when reinvested consistently.</div>
+            </div>
+
+            <button class="cta-btn" onclick="goToMiner('S-900')">Check It Out ⚡</button>
+        </div>
+    </div>
+
+    <!-- ══ S-1200 ═══════════════════════════════════════════════ -->
+    <div class="miner-card" style="--card-glow:#a855f7">
+        <div class="card-visual" style="background:linear-gradient(160deg,#150a20,#0f172a)">
+            <div class="grid-overlay"></div>
+            <div class="scan-line"></div>
+            <img src="purchase4.png" class="miner-img" alt="S-1200">
+            <div class="tier-badge" style="background:rgba(168,85,247,0.15);border-color:rgba(168,85,247,0.4);color:#c084fc;">ULTIMATE</div>
+            <div class="price-badge" style="color:#c084fc;text-shadow:0 0 10px rgba(168,85,247,0.5)">$1200</div>
+        </div>
+        <div class="card-body">
+            <div class="miner-name" style="color:#c084fc;">S-1200</div>
+            <div class="miner-tagline">"The pinnacle of cloud mining technology"</div>
+
+            <div class="stats-row">
+                <div class="stat-box"><div class="stat-val" style="color:#c084fc">$4</div><div class="stat-key">Daily</div></div>
+                <div class="stat-box"><div class="stat-val" style="color:#c084fc">45</div><div class="stat-key">Days</div></div>
+                <div class="stat-box"><div class="stat-val" style="color:#c084fc">98%</div><div class="stat-key">Power</div></div>
+            </div>
+
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Hashrate Power</span><span>98%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:98%;--bar-color:#a855f7"></div></div>
+            </div>
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Thermal Load</span><span>EXTREME</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:95%;--bar-color:#ec4899"></div></div>
+            </div>
+            <div class="bar-wrap">
+                <div class="bar-label"><span>Efficiency Score</span><span>96%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:96%;--bar-color:#4ade80"></div></div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="detail-section">
+                <div class="detail-heading">How It Works</div>
+                <div class="detail-text">The S-1200 is CryptoJet's flagship — running on an exclusive quad-pool architecture with AI-assisted profit switching. The system monitors 12+ mining pools in real time and dynamically reallocates hashrate every 4 hours to whichever pool yields the highest return, ensuring you are always earning at peak capacity.</div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-heading">Maintenance</div>
+                <ul class="detail-list">
+                    <li>AI-managed thermal regulation — 24 hours manual intervention required</li>
+                    <li>Immersion-cooled server environment sustains extreme continuous load</li>
+                    <li>Quad-redundant failover: if any node drops, 3 backups activate instantly</li>
+                    <li>Hourly health reports with dedicated VIP operations monitoring</li>
+                    <li>Isolated high-bandwidth network pipeline — no shared throughput</li>
+                    <li>100% uptime commitment backed by CryptoJet infrastructure guarantee</li>
+                </ul>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-heading">Best For</div>
+                <div class="detail-text">Power users who want the maximum possible return from a single miner. The S-1200 is built for those treating crypto mining as a primary passive income strategy, not a side experiment.</div>
+            </div>
+
+            <button class="cta-btn" style="background:linear-gradient(135deg,#a855f7,#ec4899);box-shadow:0 8px 30px rgba(168,85,247,0.35)" onclick="goToMiner('S-1200')">Check It Out ⚡</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
-// Random electric flash effect
-setInterval(() => {
-    const cards = document.querySelectorAll('.miner-card');
-    const randomCard = cards[Math.floor(Math.random() * cards.length)];
-    randomCard.style.boxShadow = '0 0 60px #00f0ff';
-    setTimeout(() => {
-        randomCard.style.boxShadow = '0 20px 40px rgba(0,0,0,0.6)';
-    }, 180);
-}, 2800);
-</script>
+// ── Navigate to miner.html purchase tab ────────────────────────
+function goToMiner(minerName) {
+    // Store which miner to highlight, then go to miner.html
+    localStorage.setItem("openMiner", minerName);
+    window.location.href = "miner.html?tab=purchase&miner=" + encodeURIComponent(minerName);
+}
 
+// ── Animated particle canvas background ───────────────────────
+const canvas  = document.getElementById("bg-canvas");
+const ctx     = canvas.getContext("2d");
+let particles = [];
+
+function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+for (let i = 0; i < 60; i++) {
+    particles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 1.5 + 0.3,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        alpha: Math.random() * 0.6 + 0.1
+    });
+}
+
+function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,240,255,${p.alpha})`;
+        ctx.fill();
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+    });
+
+    // Draw faint connection lines between nearby particles
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i+1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 100) {
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = `rgba(0,240,255,${0.06 * (1 - dist/100)})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
+        }
+    }
+    requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── Random flash on cards ──────────────────────────────────────
+setInterval(() => {
+    const cards = document.querySelectorAll(".miner-card");
+    const c = cards[Math.floor(Math.random() * cards.length)];
+    const orig = c.style.borderColor;
+    c.style.borderColor = "rgba(0,240,255,0.6)";
+    c.style.boxShadow   = "0 0 40px rgba(0,240,255,0.15)";
+    setTimeout(() => {
+        c.style.borderColor = "";
+        c.style.boxShadow   = "";
+    }, 200);
+}, 3000);
+</script>
 </body>
 </html>
