@@ -10,7 +10,6 @@
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Inter',system-ui,sans-serif; background:#020617; color:#e2e8f0; min-height:100vh; overflow-x:hidden; }
 
-    /* LOADER */
     #loader { position:fixed; top:0; left:0; width:100%; height:100%; background:#020617; display:flex; align-items:center; justify-content:center; z-index:9999; flex-direction:column; }
     .loader-logo { font-size:30px; font-weight:900; color:#00ffcc; margin-bottom:20px; animation:glow 1.5s infinite alternate; }
     .loader-bar  { width:180px; height:4px; background:#111; border-radius:10px; overflow:hidden; }
@@ -30,29 +29,17 @@
 
     .container { padding:0 20px 100px; }
 
-    /* ── MINER CARD ─────────────────────────────── */
-    .miner-card {
-        background:linear-gradient(145deg,#0f172a,#1e2937);
-        border-radius:24px; padding:24px; margin-bottom:24px;
-        box-shadow:0 20px 40px rgba(0,0,0,0.6);
-        border:1px solid rgba(0,240,255,0.2);
-    }
-
+    .miner-card { background:linear-gradient(145deg,#0f172a,#1e2937); border-radius:24px; padding:24px; margin-bottom:24px; box-shadow:0 20px 40px rgba(0,0,0,0.6); border:1px solid rgba(0,240,255,0.2); }
     .miner-header { display:flex; align-items:center; gap:16px; margin-bottom:20px; }
 
-    /* Progress ring around image */
     .ring-wrap { position:relative; width:88px; height:88px; flex-shrink:0; }
     .ring-svg { position:absolute; top:0; left:0; width:88px; height:88px; transform:rotate(-90deg); }
     .ring-bg   { fill:none; stroke:#1e2937; stroke-width:5; }
-    .ring-fill { fill:none; stroke:#00ffcc; stroke-width:5; stroke-linecap:round;
-                 stroke-dasharray:251.2; stroke-dashoffset:251.2;
-                 transition:stroke-dashoffset 60s linear; }
+    .ring-fill { fill:none; stroke:#00ffcc; stroke-width:5; stroke-linecap:round; stroke-dasharray:251.2; stroke-dashoffset:251.2; transition:stroke-dashoffset 1s linear; }
     .ring-fill.paused { stroke:#ef4444; }
-    .miner-img { width:72px; height:72px; object-fit:contain;
-                 filter:drop-shadow(0 0 14px #00f0ff);
-                 position:absolute; top:8px; left:8px; }
+    .miner-img { width:72px; height:72px; object-fit:contain; filter:drop-shadow(0 0 14px #00f0ff); position:absolute; top:8px; left:8px; }
 
-    .miner-name { font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:700; color:#00ffcc; }
+    .miner-name  { font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:700; color:#00ffcc; }
     .miner-dates { color:#94a3b8; font-size:13px; margin-top:4px; line-height:1.6; }
 
     .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
@@ -60,25 +47,14 @@
     .stat-label { font-size:12px; color:#94a3b8; margin-bottom:4px; }
     .stat-value { font-size:18px; font-weight:700; }
 
-    /* ── STATUS BOX ─────────────────────────────── */
-    .status-box {
-        border-radius:14px; padding:16px 18px; margin-top:4px;
-        display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
+    .status-box { border-radius:14px; padding:16px 18px; margin-top:4px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
     .status-box.active   { background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); }
     .status-box.paused   { background:rgba(239,68,68,0.08);  border:1px solid rgba(239,68,68,0.25); }
     .status-box.inactive { background:rgba(100,116,139,0.1); border:1px solid rgba(100,116,139,0.2); }
 
     .status-left { flex:1; }
-
-    .status-badge {
-        display:inline-flex; align-items:center; gap:6px;
-        font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
-        margin-bottom:6px;
-    }
-    .badge-dot {
-        width:8px; height:8px; border-radius:50%;
-    }
+    .status-badge { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
+    .badge-dot { width:8px; height:8px; border-radius:50%; }
     .badge-dot.green { background:#00ff88; animation:pulse 1.2s infinite; }
     .badge-dot.red   { background:#ef4444; animation:pulse 0.8s infinite; }
     @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
@@ -90,16 +66,13 @@
     .time-remaining { font-size:13px; color:#64748b; text-align:right; }
     .time-val { font-size:16px; font-weight:700; color:#e2e8f0; margin-top:2px; }
 
-    /* START BUTTON */
     .btn { width:100%; padding:16px; border:none; border-radius:16px; background:linear-gradient(90deg,#00f0ff,#00ffcc); color:#000; font-weight:700; font-size:16px; cursor:pointer; margin-top:14px; box-shadow:0 0 20px rgba(0,240,255,0.4); }
 
-    /* PURCHASE CARD */
     .shop-card { background:linear-gradient(145deg,#0f172a,#1e2937); border-radius:24px; padding:24px; margin-bottom:24px; box-shadow:0 20px 40px rgba(0,0,0,0.6); border:1px solid rgba(0,240,255,0.15); }
     .shop-header { display:flex; align-items:center; gap:16px; margin-bottom:16px; }
     .shop-img { width:72px; height:72px; object-fit:contain; filter:drop-shadow(0 0 14px #00f0ff); }
     .shop-name { font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#00ffcc; }
 
-    /* NAV */
     .nav-glass { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:90%; height:70px; display:flex; justify-content:space-around; align-items:center; background:rgba(255,255,255,0.05); backdrop-filter:blur(20px); border-radius:25px; box-shadow:0 8px 30px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08); z-index:999; }
     .nav-item { text-align:center; color:#aaa; font-size:11px; cursor:pointer; }
     .nav-item.active { color:#00ffcc; }
@@ -158,16 +131,19 @@ if (!uid) { alert("Session expired"); window.location.href = "signin.html"; }
 let userData = null;
 
 // ── MINER CONFIG ──────────────────────────────────────────────
-// cycleHours    = full cycle duration (when earning stops, user must restart)
-// creditHours   = when balance is actually credited
-// displayDaily  = what "Earned" shows at the 24hr mark for 48hr miners
-// totalEarn     = what gets credited to balance at creditHours
 const MINERS = {
-  S244:  { name:"S-244",  price:10,  daily:0.5, cycleHours:48, creditHours:48, img:"purchase1.png", duration:30 },
-  S500:  { name:"S-500",  price:30,  daily:1.5, cycleHours:48, creditHours:48, img:"purchase2.png", duration:30 },
-  S900:  { name:"S-900",  price:50,  daily:2,   cycleHours:24, creditHours:24, img:"purchase3.png", duration:35 },
-  S1200: { name:"S-1200", price:120, daily:4,   cycleHours:24, creditHours:24, img:"purchase4.png", duration:45 }
+  S244:  { name:"S-244",  price:10,  daily:0.5, cycleHours:48, img:"purchase1.png", duration:30 },
+  S500:  { name:"S-500",  price:30,  daily:1.5, cycleHours:48, img:"purchase2.png", duration:30 },
+  S900:  { name:"S-900",  price:50,  daily:2,   cycleHours:24, img:"purchase3.png", duration:35 },
+  S1200: { name:"S-1200", price:120, daily:4,   cycleHours:24, img:"purchase4.png", duration:45 }
 };
+
+// ── REFERRAL LEVELS & PERCENTAGES ────────────────────────────
+const REFERRAL_LEVELS = [
+  { level: 1, pct: 0.10 },  // Level 1 direct referrer → 10%
+  { level: 2, pct: 0.04 },  // Level 2 → 4%
+  { level: 3, pct: 0.02 }   // Level 3 → 2%
+];
 
 // ── HELPERS ───────────────────────────────────────────────────
 function fmtTime(ms) {
@@ -182,41 +158,75 @@ function fmtDate(ts) {
   return new Date(ts).toLocaleDateString("en-NG");
 }
 
-// Compute what "Earned" should display right now — pure math, no stored state
-// Returns { displayEarned, pct, isComplete, phase }
 function computeEarned(id, minerData) {
   const cfg     = MINERS[id];
   const now     = Date.now();
-  const elapsed = now - minerData.start; // ms
+  const elapsed = now - minerData.start;
   const cycleMs = cfg.cycleHours * 3600000;
   const dayMs   = 24 * 3600000;
 
   if (elapsed >= cycleMs) {
-    // Cycle complete
     const totalEarn = cfg.daily * (cfg.cycleHours / 24);
     return { displayEarned: totalEarn, pct: 100, isComplete: true, phase: "done", timeLeft: 0 };
   }
 
-  const pct     = (elapsed / cycleMs) * 100;
+  const pct      = (elapsed / cycleMs) * 100;
   const timeLeft = cycleMs - elapsed;
 
   if (cfg.cycleHours === 24) {
-    // S-900 / S-1200: linear from 0 → daily over 24hrs
     const earned = (elapsed / dayMs) * cfg.daily;
     return { displayEarned: Math.min(earned, cfg.daily), pct, isComplete: false, phase: "active", timeLeft };
   } else {
-    // S-244 / S-500: 48hr cycle
     if (elapsed < dayMs) {
-      // First 24hrs: linear 0 → daily
       const earned = (elapsed / dayMs) * cfg.daily;
       return { displayEarned: earned, pct, isComplete: false, phase: "first24", timeLeft };
     } else {
-      // 24-48hrs: show daily (locked, not yet in balance), continue toward 2× daily
-      const extraElapsed = elapsed - dayMs;
-      const totalTarget  = cfg.daily * 2;
-      const earned       = cfg.daily + (extraElapsed / dayMs) * cfg.daily;
-      return { displayEarned: Math.min(earned, totalTarget), pct, isComplete: false, phase: "second24", timeLeft };
+      const extra  = elapsed - dayMs;
+      const earned = cfg.daily + (extra / dayMs) * cfg.daily;
+      return { displayEarned: Math.min(earned, cfg.daily * 2), pct, isComplete: false, phase: "second24", timeLeft };
     }
+  }
+}
+
+// ── CREDIT REFERRAL CHAIN ─────────────────────────────────────
+// When a user's miner cycle completes, walk up 3 levels of referrers
+// and credit the right % of earned amount into their `team` balance
+async function creditReferralChain(earnerUid, earnedAmount, minerName) {
+  let currentUid  = earnerUid;
+  let earnerMiner = null;
+
+  // Get earner's minerId for the record
+  const earnerSnap = await db.ref(`users/${earnerUid}/minerId`).once("value");
+  earnerMiner = earnerSnap.val() || earnerUid.substring(0, 8);
+
+  for (const { level, pct } of REFERRAL_LEVELS) {
+    // Get the referrer of currentUid
+    const refSnap    = await db.ref(`users/${currentUid}/referredBy`).once("value");
+    const referrerUid = refSnap.val();
+    if (!referrerUid) break; // no more referrers in chain
+
+    const teamCredit = parseFloat((earnedAmount * pct).toFixed(4));
+    if (teamCredit <= 0) { currentUid = referrerUid; continue; }
+
+    // Add to referrer's team balance
+    const teamSnap    = await db.ref(`users/${referrerUid}/team`).once("value");
+    const currentTeam = teamSnap.val() || 0;
+    await db.ref(`users/${referrerUid}/team`).set(
+      parseFloat((currentTeam + teamCredit).toFixed(4))
+    );
+
+    // Record in teamIncome for history
+    await db.ref(`teamIncome/${referrerUid}`).push({
+      fromUid:   earnerUid,
+      fromMiner: earnerMiner,
+      amount:    teamCredit,
+      level:     level,
+      miner:     minerName,
+      pct:       pct * 100,
+      timestamp: Date.now()
+    });
+
+    currentUid = referrerUid; // move up the chain
   }
 }
 
@@ -259,9 +269,6 @@ function renderRunning() {
       card.className = "miner-card";
       card.id = "card-" + key;
 
-      const boughtStr = mData ? fmtDate(mData.start)  : "—";
-      const expireStr = mData ? fmtDate(expireTs)       : "—";
-
       card.innerHTML = `
         <div class="miner-header">
           <div class="ring-wrap">
@@ -274,12 +281,11 @@ function renderRunning() {
           <div>
             <div class="miner-name">${cfg.name}${unlocked[id] > 1 ? ` #${i}` : ""}</div>
             <div class="miner-dates">
-              Bought: ${boughtStr}<br>
-              Expires: ${expireStr}
+              Bought: ${mData ? fmtDate(mData.start) : "—"}<br>
+              Expires: ${expireTs ? fmtDate(expireTs) : "—"}
             </div>
           </div>
         </div>
-
         <div class="stats-grid">
           <div class="stat-item">
             <div class="stat-label">DAILY INCOME</div>
@@ -290,10 +296,8 @@ function renderRunning() {
             <div class="stat-value">${cfg.cycleHours}h</div>
           </div>
         </div>
-
         <div id="statusbox-${key}"></div>
       `;
-
       container.appendChild(card);
       refreshCard(id, key, mData);
     }
@@ -304,14 +308,13 @@ function renderRunning() {
   }
 }
 
-// ── REFRESH A SINGLE CARD (called every second) ───────────────
+// ── REFRESH SINGLE CARD (every second) ───────────────────────
 function refreshCard(id, key, mData) {
   const box = document.getElementById("statusbox-" + key);
   if (!box) return;
 
   const cfg = MINERS[id];
 
-  // No cycle started yet
   if (!mData || !mData.start) {
     box.innerHTML = `
       <div class="status-box inactive">
@@ -323,26 +326,22 @@ function refreshCard(id, key, mData) {
 
   const { displayEarned, pct, isComplete, phase, timeLeft } = computeEarned(id, mData);
 
-  // Update progress ring
+  // Update ring
   const ring = document.getElementById("ring-" + key);
   if (ring) {
-    const circumference = 2 * Math.PI * 40; // 251.2
-    const offset = circumference - (pct / 100) * circumference;
-    ring.style.strokeDasharray  = circumference;
+    const circ   = 2 * Math.PI * 40;
+    const offset = circ - (pct / 100) * circ;
+    ring.style.strokeDasharray  = circ;
     ring.style.strokeDashoffset = offset;
     ring.style.transition       = "stroke-dashoffset 1s linear";
-    if (isComplete) ring.classList.add("paused");
-    else            ring.classList.remove("paused");
+    isComplete ? ring.classList.add("paused") : ring.classList.remove("paused");
   }
 
-  const totalEarn  = cfg.daily * (cfg.cycleHours / 24);
-  const isLocked   = phase === "second24"; // shown but not yet credited for 48hr miners
-  const earnedStr  = "$" + displayEarned.toFixed(2);
+  const totalEarn = cfg.daily * (cfg.cycleHours / 24);
+  const isLocked  = phase === "second24";
 
   if (isComplete) {
-    // Cycle done — check if we need to credit
     checkAndCredit(id, key, mData);
-
     box.innerHTML = `
       <div class="status-box paused">
         <div class="status-left">
@@ -362,7 +361,7 @@ function refreshCard(id, key, mData) {
             <span class="badge-dot green"></span> Actively Earning
           </div>
           <div class="earned-row">Earned this cycle${isLocked ? ' <span style="color:#f59e0b;font-size:11px;">(pending balance)</span>' : ''}:</div>
-          <div class="earned-val ${isLocked ? 'locked' : ''}">${earnedStr}</div>
+          <div class="earned-val ${isLocked ? 'locked' : ''}">$${displayEarned.toFixed(2)}</div>
         </div>
         <div style="text-align:right;">
           <div class="time-remaining">Time left</div>
@@ -372,23 +371,24 @@ function refreshCard(id, key, mData) {
   }
 }
 
-// ── CREDIT BALANCE AT CYCLE END ───────────────────────────────
-const _credited = {}; // prevent double-crediting in same session
+// ── CREDIT BALANCE + REFERRAL CHAIN ON CYCLE END ──────────────
+const _credited = {};
 async function checkAndCredit(id, key, mData) {
   if (_credited[key]) return;
-  if (mData.credited)  return; // already credited in Firebase
+  if (mData.credited)  return;
 
   _credited[key] = true;
+
   const cfg       = MINERS[id];
   const totalEarn = cfg.daily * (cfg.cycleHours / 24);
   const now       = Date.now();
 
-  // Mark as credited in Firebase
+  // Mark credited
   await db.ref(`users/${uid}/miners/${key}`).update({ credited: true });
 
-  // Add to balance
-  const snap    = await db.ref(`users/${uid}/balance`).once("value");
-  const balance = snap.val() || 0;
+  // Add to user's own balance
+  const balSnap = await db.ref(`users/${uid}/balance`).once("value");
+  const balance = balSnap.val() || 0;
   await db.ref(`users/${uid}/balance`).set(balance + totalEarn);
 
   // Record in miningRecords
@@ -398,22 +398,23 @@ async function checkAndCredit(id, key, mData) {
     timestamp: now
   });
 
-  // Update local
+  // Update local display
   userData.balance = balance + totalEarn;
   document.getElementById("liveBalance").textContent = "$" + Math.floor(userData.balance) + ".00";
+
+  // ── CREDIT REFERRAL CHAIN (10% / 4% / 2%) ────────────────
+  // Runs in background — doesn't block the UI
+  creditReferralChain(uid, totalEarn, cfg.name).catch(console.error);
 }
 
 // ── START MINER ───────────────────────────────────────────────
 async function startMiner(id, key) {
-  const now = Date.now();
-  await db.ref(`users/${uid}/miners/${key}`).set({
-    start:      now,
-    lastUpdate: now,
-    credited:   false
-  });
-  // Update local
+  const now     = Date.now();
+  const newData = { start: now, lastUpdate: now, credited: false };
+  await db.ref(`users/${uid}/miners/${key}`).set(newData);
   if (!userData.miners) userData.miners = {};
-  userData.miners[key] = { start: now, lastUpdate: now, credited: false };
+  userData.miners[key] = newData;
+  delete _credited[key]; // allow re-crediting on next cycle
   renderRunning();
 }
 
@@ -463,11 +464,11 @@ async function buyMiner(id, price) {
   if (id === "S244" && count >= 2) return alert("You can only buy S-244 twice");
   if (id !== "S244" && count >= 1) return alert("You already own this miner");
 
-  const instanceKey = id === "S244" ? `${id}_${count + 1}` : id;
-  const deductFromTeam    = Math.min(price, data.team || 0);
-  const deductFromBalance = price - deductFromTeam;
+  const instanceKey    = id === "S244" ? `${id}_${count + 1}` : id;
+  const deductTeam     = Math.min(price, data.team || 0);
+  const deductBalance  = price - deductTeam;
 
-  // Referral points
+  // Referral points for referrer
   const refPoints = { S244:100, S500:200, S900:300, S1200:400 };
   const referrer  = data.referredBy;
   if (referrer && refPoints[id]) {
@@ -480,16 +481,16 @@ async function buyMiner(id, price) {
   }
 
   await db.ref("users/" + uid).update({
-    balance: Math.max(0, (data.balance || 0) - deductFromBalance),
-    team:    Math.max(0, (data.team    || 0) - deductFromTeam),
-    [`minerUnlocked/${id}`]:       count + 1,
-    [`miners/${instanceKey}`]:     { start: Date.now(), lastUpdate: Date.now(), credited: false }
+    balance: Math.max(0, (data.balance || 0) - deductBalance),
+    team:    Math.max(0, (data.team    || 0) - deductTeam),
+    [`minerUnlocked/${id}`]:   count + 1,
+    [`miners/${instanceKey}`]: { start: Date.now(), lastUpdate: Date.now(), credited: false }
   });
 
   loadPage();
 }
 
-// ── TICK — runs every second, updates display only ────────────
+// ── TICK — display update every second ───────────────────────
 function startTick() {
   setInterval(() => {
     if (!userData || !userData.miners) return;
@@ -498,19 +499,10 @@ function startTick() {
       const count = unlocked[id];
       for (let i = 1; i <= count; i++) {
         const key   = id === "S244" ? `${id}_${i}` : id;
-        const mData = userData.miners[key];
-        refreshCard(id, key, mData);
+        refreshCard(id, key, userData.miners[key]);
       }
     });
   }, 1000);
-}
-
-// ── PERIODIC FIREBASE SYNC (every 5 mins, not every second) ──
-function startSync() {
-  setInterval(() => {
-    if (!userData || !userData.miners) return;
-    db.ref(`users/${uid}/lastSeen`).set(Date.now());
-  }, 300000);
 }
 
 function nav(page) { window.location.href = page; }
@@ -518,14 +510,9 @@ function nav(page) { window.location.href = page; }
 window.addEventListener("load", async () => {
   await loadPage();
   startTick();
-  startSync();
   setTimeout(() => document.getElementById("loader").style.display = "none", 1500);
-
-  // Handle URL param from minerpower.html
   const params = new URLSearchParams(window.location.search);
-  if (params.get("tab") === "purchase") {
-    showTab("shop");
-  }
+  if (params.get("tab") === "purchase") showTab("shop");
 });
 </script>
 </body>

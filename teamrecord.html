@@ -4,189 +4,235 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Team Income • CryptoJet</title>
-
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-
-    :root { --neon: #00f0ff; --accent: #00ffcc; }
-
+    :root { --neon:#00f0ff; --accent:#00ffcc; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-        font-family: 'Inter', system-ui, sans-serif;
-        background: #020617;
-        color: #e2e8f0;
-        min-height: 100vh;
-    }
+    body { font-family:'Inter',system-ui,sans-serif; background:#020617; color:#e2e8f0; min-height:100vh; }
 
-    .header {
-        padding: 20px 16px;
-        display: flex;
-        align-items: center;
-        background: rgba(2,6,23,0.95);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(34,197,94,0.15);
-    }
-    .back { font-size:28px; color:#22c55e; cursor:pointer; }
+    .header { padding:20px 16px; display:flex; align-items:center; background:rgba(2,6,23,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(0,255,204,0.15); position:sticky; top:0; z-index:100; }
+    .back { font-size:28px; color:#00ffcc; cursor:pointer; }
     .header h3 { flex:1; text-align:center; font-size:20px; font-weight:600; }
 
-    .tabs {
-        display:flex;
-        background:#0f172a;
-        border-radius:9999px;
-        padding:6px;
-        margin:20px 16px 16px;
-    }
-    .tab {
-        flex:1;
-        padding:12px;
-        text-align:center;
-        font-weight:600;
-        border-radius:9999px;
-        cursor:pointer;
-        color:#94a3b8;
-        font-size:14px;
-    }
-    .tab.active {
-        background:#00ffcc;
-        color:#000;
-        box-shadow:0 4px 15px rgba(0,255,204,0.4);
-    }
+    /* PAGE LOADER */
+    .page-loader { position:fixed; inset:0; background:#020617; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:99999; gap:18px; transition:opacity 0.4s; }
+    .page-loader.hidden { opacity:0; pointer-events:none; }
+    .spinner { width:48px; height:48px; border:4px solid rgba(0,255,204,0.15); border-top:4px solid #00ffcc; border-radius:50%; animation:spin 0.9s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg);} }
 
-    .content-wrapper { padding:0 16px 30px; }
+    /* SUMMARY BOXES */
+    .summary { display:flex; gap:10px; padding:16px; }
+    .sum-box { flex:1; background:#0f172a; border-radius:16px; padding:14px; text-align:center; border:1px solid rgba(0,255,204,0.1); }
+    .sum-val { font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#00ffcc; }
+    .sum-label { font-size:11px; color:#64748b; margin-top:3px; text-transform:uppercase; letter-spacing:0.07em; font-weight:600; }
 
-    .stat-row {
-        display:flex;
-        gap:12px;
-        margin-bottom:20px;
-    }
-    .stat-box {
-        flex:1;
-        background:#0f172a;
-        border-radius:16px;
-        padding:16px;
-        text-align:center;
-    }
-    .stat-number { font-size:28px; font-weight:700; color:#00ffcc; }
-    .stat-label { font-size:13px; color:#94a3b8; }
+    /* TABS */
+    .tabs { display:flex; background:#0f172a; border-radius:9999px; padding:5px; margin:0 16px 16px; gap:4px; }
+    .tab { flex:1; padding:11px; text-align:center; font-weight:600; font-size:13px; border-radius:9999px; cursor:pointer; color:#64748b; transition:all 0.2s; }
+    .tab.active { background:#00ffcc; color:#000; box-shadow:0 4px 12px rgba(0,255,204,0.35); }
 
+    /* LEVEL FILTER */
+    .level-tabs { display:flex; gap:6px; padding:0 16px 14px; overflow-x:auto; scrollbar-width:none; }
+    .level-tabs::-webkit-scrollbar { display:none; }
+    .lvl-tab { flex-shrink:0; padding:6px 14px; border-radius:9999px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid rgba(255,255,255,0.08); color:#64748b; background:#0f172a; transition:all 0.2s; }
+    .lvl-tab.active { background:rgba(0,255,204,0.1); border-color:#00ffcc; color:#00ffcc; }
+
+    .content { padding:0 16px 80px; }
+
+    /* RECORD CARD */
     .record-card {
-        background:#0f172a;
-        border-radius:20px;
-        padding:20px;
-        margin-bottom:16px;
-        box-shadow:0 10px 30px rgba(0,0,0,0.4);
+        background:#0f172a; border-radius:18px; padding:18px 20px;
+        margin-bottom:12px; border:1px solid rgba(255,255,255,0.06);
+        display:flex; justify-content:space-between; align-items:center;
+        animation:fadeIn 0.25s ease;
     }
-    .record-header {
-        display:flex;
-        justify-content:space-between;
-        margin-bottom:12px;
-    }
-    .pts { color:#00ffcc; font-weight:700; font-size:22px; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(4px);} to{opacity:1;transform:none;} }
 
-    .empty {
-        text-align:center;
-        padding:80px 20px;
-        color:#64748b;
+    .rec-left { flex:1; min-width:0; }
+    .rec-from { font-size:15px; font-weight:700; color:#e2e8f0; margin-bottom:3px; }
+    .rec-miner { font-size:12px; color:#64748b; margin-bottom:3px; }
+    .rec-date  { font-size:12px; color:#475569; }
+
+    .rec-right { text-align:right; flex-shrink:0; margin-left:12px; }
+    .rec-amount { font-size:20px; font-weight:700; color:#00ffcc; margin-bottom:4px; }
+
+    .level-badge {
+        display:inline-block; padding:3px 10px; border-radius:8px;
+        font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
     }
+    .lvl-1 { background:rgba(0,255,204,0.15); color:#00ffcc; }
+    .lvl-2 { background:rgba(245,158,11,0.15); color:#f59e0b; }
+    .lvl-3 { background:rgba(168,85,247,0.15); color:#c084fc; }
+
+    .empty { display:flex; align-items:center; justify-content:center; padding:80px 20px; }
+    .mini-spin { width:32px; height:32px; border:3px solid rgba(0,255,204,0.1); border-top:3px solid #00ffcc; border-radius:50%; animation:spin 0.9s linear infinite; }
+
+    /* HOW IT WORKS BOX */
+    .how-box {
+        background:#0c1628; border:1px solid rgba(0,255,204,0.12);
+        border-radius:16px; padding:16px 18px; margin:0 16px 16px;
+    }
+    .how-title { font-size:13px; font-weight:700; color:#00ffcc; margin-bottom:10px; }
+    .how-row { display:flex; gap:10px; align-items:center; margin-bottom:7px; font-size:13px; color:#94a3b8; }
+    .how-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 </style>
 </head>
 <body>
 
+<div class="page-loader" id="pageLoader">
+    <div class="spinner"></div>
+</div>
+
 <div class="header">
     <div class="back" onclick="history.back()">←</div>
-    <h3>Team Income Record</h3>
+    <h3>Team Income</h3>
+    <div style="width:28px"></div>
 </div>
 
-<div class="tabs">
-    <div class="tab active" onclick="setFilter('all')">All</div>
-    <div class="tab" onclick="setFilter('today')">Today</div>
-    <div class="tab" onclick="setFilter('week')">Week</div>
+<!-- HOW IT WORKS -->
+<div class="how-box">
+    <div class="how-title">⚡ How Team Income Works</div>
+    <div class="how-row"><div class="how-dot" style="background:#00ffcc"></div>Level 1 (direct referrals): earn <strong style="color:#00ffcc">10%</strong> of their mining cycle</div>
+    <div class="how-row"><div class="how-dot" style="background:#f59e0b"></div>Level 2 (their referrals): earn <strong style="color:#f59e0b">4%</strong> of their mining cycle</div>
+    <div class="how-row"><div class="how-dot" style="background:#c084fc"></div>Level 3: earn <strong style="color:#c084fc">2%</strong> of their mining cycle</div>
+    <div class="how-row"><div class="how-dot" style="background:#64748b"></div>All earnings go to your Team balance — withdraw anytime</div>
 </div>
 
-<div id="content" class="content-wrapper"></div>
+<!-- SUMMARY -->
+<div class="summary" id="summary" style="display:none">
+    <div class="sum-box"><div class="sum-val" id="totalEarned">$0.00</div><div class="sum-label">Total Earned</div></div>
+    <div class="sum-box"><div class="sum-val" id="todayEarned">$0.00</div><div class="sum-label">Today</div></div>
+    <div class="sum-box"><div class="sum-val" id="weekEarned">$0.00</div><div class="sum-label">This Week</div></div>
+</div>
+
+<!-- TIME FILTER TABS -->
+<div class="tabs" id="timeTabs" style="display:none">
+    <div class="tab active" onclick="setTimeFilter('all',this)">All</div>
+    <div class="tab" onclick="setTimeFilter('today',this)">Today</div>
+    <div class="tab" onclick="setTimeFilter('week',this)">Week</div>
+</div>
+
+<!-- LEVEL FILTER -->
+<div class="level-tabs" id="levelTabs" style="display:none">
+    <div class="lvl-tab active" onclick="setLevelFilter(0,this)">All Levels</div>
+    <div class="lvl-tab" onclick="setLevelFilter(1,this)">Level 1 · 10%</div>
+    <div class="lvl-tab" onclick="setLevelFilter(2,this)">Level 2 · 4%</div>
+    <div class="lvl-tab" onclick="setLevelFilter(3,this)">Level 3 · 2%</div>
+</div>
+
+<div class="content" id="content">
+    <div class="empty"><div class="mini-spin"></div></div>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
-  authDomain: "cj-miner.firebaseapp.com",
-  databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "cj-miner"
+    apiKey: "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
+    authDomain: "cj-miner.firebaseapp.com",
+    databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "cj-miner"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let uid = localStorage.getItem("uid");
+const uid = localStorage.getItem("uid");
 if (!uid) window.location.href = "signin.html";
 
-let filterType = "all";
+let allRecords   = [];
+let timeFilter   = "all";
+let levelFilter  = 0;
 
-function setFilter(type) {
-    filterType = type;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    loadRecords();
+function setTimeFilter(f, el) {
+    timeFilter = f;
+    document.querySelectorAll(".tabs .tab").forEach(t => t.classList.remove("active"));
+    el.classList.add("active");
+    render();
 }
 
-function loadRecords() {
-    db.ref("teamPoints/" + uid).once("value").then(snap => {
-        const data = snap.val() || {};
-        let records = Object.values(data);
-        let total = 0, today = 0, week = 0;
-
-        const now = Date.now();
-        const content = document.getElementById("content");
-        content.innerHTML = "";
-
-        records.forEach(r => {
-            total += r.points || 0;
-            if (now - r.time < 86400000) today += r.points || 0;
-            if (now - r.time < 604800000) week += r.points || 0;
-        });
-
-        // Filter
-        let filtered = records.filter(r => {
-            if (filterType === "today") return now - r.time < 86400000;
-            if (filterType === "week") return now - r.time < 604800000;
-            return true;
-        });
-
-        filtered.sort((a,b) => b.time - a.time);
-
-        content.innerHTML = `
-            <div class="stat-row">
-                <div class="stat-box"><div class="stat-number">${total}</div><div class="stat-label">Total</div></div>
-                <div class="stat-box"><div class="stat-number">${today}</div><div class="stat-label">Today</div></div>
-                <div class="stat-box"><div class="stat-number">${week}</div><div class="stat-label">Week</div></div>
-            </div>`;
-
-        if (filtered.length === 0) {
-            content.innerHTML += `<div class="empty">No team income records yet</div>`;
-            return;
-        }
-
-        filtered.forEach(r => {
-            const date = new Date(r.time);
-            const row = document.createElement("div");
-            row.className = "record-card";
-            row.innerHTML = `
-                <div class="record-header">
-                    <div>
-                        <strong>${r.from || "Referral"}</strong><br>
-                        <small>Level ${r.level || 1}</small>
-                    </div>
-                    <div class="pts">+${r.points} pts</div>
-                </div>
-                <small style="color:#94a3b8;">${date.toLocaleDateString('en-NG')} • ${date.toLocaleTimeString('en-NG', {hour:'numeric', minute:'2-digit'})}</small>
-            `;
-            content.appendChild(row);
-        });
-    });
+function setLevelFilter(l, el) {
+    levelFilter = l;
+    document.querySelectorAll(".lvl-tab").forEach(t => t.classList.remove("active"));
+    el.classList.add("active");
+    render();
 }
 
-window.onload = loadRecords;
+function formatDate(ts) {
+    const d = new Date(ts);
+    const day  = d.getDate();
+    const mon  = d.toLocaleString("en-NG", { month:"short" });
+    const yr   = d.getFullYear();
+    let   hr   = d.getHours();
+    const min  = d.getMinutes().toString().padStart(2,"0");
+    const ampm = hr >= 12 ? "PM" : "AM";
+    hr = hr % 12 || 12;
+    return `${day} ${mon} ${yr} · ${hr}:${min} ${ampm}`;
+}
+
+// Real-time listener — updates when new team income arrives
+db.ref("teamIncome/" + uid).on("value", snap => {
+    const data = snap.val() || {};
+    allRecords  = Object.entries(data)
+        .map(([key, r]) => ({ key, ...r }))
+        .sort((a, b) => b.timestamp - a.timestamp);
+
+    updateSummary();
+    document.getElementById("pageLoader").classList.add("hidden");
+    document.getElementById("summary").style.display = "flex";
+    document.getElementById("timeTabs").style.display = "flex";
+    document.getElementById("levelTabs").style.display = "flex";
+    render();
+});
+
+function updateSummary() {
+    const now     = Date.now();
+    const dayMs   = 86400000;
+    const weekMs  = 604800000;
+
+    const total = allRecords.reduce((s, r) => s + (r.amount || 0), 0);
+    const today = allRecords.filter(r => now - r.timestamp < dayMs).reduce((s, r) => s + (r.amount || 0), 0);
+    const week  = allRecords.filter(r => now - r.timestamp < weekMs).reduce((s, r) => s + (r.amount || 0), 0);
+
+    document.getElementById("totalEarned").textContent = "$" + total.toFixed(2);
+    document.getElementById("todayEarned").textContent = "$" + today.toFixed(2);
+    document.getElementById("weekEarned").textContent  = "$" + week.toFixed(2);
+}
+
+function render() {
+    const content = document.getElementById("content");
+    const now     = Date.now();
+
+    let filtered = allRecords;
+
+    // Time filter
+    if (timeFilter === "today") filtered = filtered.filter(r => now - r.timestamp < 86400000);
+    if (timeFilter === "week")  filtered = filtered.filter(r => now - r.timestamp < 604800000);
+
+    // Level filter
+    if (levelFilter > 0) filtered = filtered.filter(r => r.level === levelFilter);
+
+    if (filtered.length === 0) {
+        content.innerHTML = `<div class="empty"><div class="mini-spin"></div></div>`;
+        return;
+    }
+
+    const lvlClass   = { 1:"lvl-1", 2:"lvl-2", 3:"lvl-3" };
+    const lvlLabel   = { 1:"Level 1 · 10%", 2:"Level 2 · 4%", 3:"Level 3 · 2%" };
+
+    content.innerHTML = filtered.map(r => `
+        <div class="record-card">
+            <div class="rec-left">
+                <div class="rec-from">Miner ${r.fromMiner || "Unknown"}</div>
+                <div class="rec-miner">⛏ ${r.miner || "Mining cycle"}</div>
+                <div class="rec-date">${formatDate(r.timestamp)}</div>
+            </div>
+            <div class="rec-right">
+                <div class="rec-amount">+$${Number(r.amount).toFixed(4)}</div>
+                <div class="level-badge ${lvlClass[r.level] || 'lvl-1'}">${lvlLabel[r.level] || "Level 1"}</div>
+            </div>
+        </div>
+    `).join("");
+}
 </script>
 </body>
 </html>
