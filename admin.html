@@ -16,13 +16,6 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-/* LOADER */
-#loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:20px;transition:opacity 0.4s;}
-#loader.hidden{opacity:0;pointer-events:none;}
-.loader-ring{width:56px;height:56px;border:5px solid rgba(0,240,255,0.15);border-top:5px solid var(--neon);border-radius:50%;animation:spin 0.9s linear infinite;}
-.loader-logo{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--neon);}
-@keyframes spin{to{transform:rotate(360deg);}}
-
 /* HEADER */
 .header{padding:18px 20px;background:rgba(2,6,23,0.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;}
 .header-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--neon);letter-spacing:1px;}
@@ -102,23 +95,28 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .sec-val{font-weight:600;color:var(--text);}
 .sec-title{font-size:13px;font-weight:700;color:var(--neon);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
 
-/* REFERRAL TREE */
-.ref-person{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--s2);border-radius:12px;margin-bottom:8px;}
+/* REFERRAL */
+.ref-person{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--s2);border-radius:12px;margin-bottom:8px;cursor:pointer;}
 .ref-avatar{width:36px;height:36px;border-radius:50%;background:rgba(0,255,204,0.1);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--neon);flex-shrink:0;}
 .ref-id{font-size:14px;font-weight:700;color:var(--text);}
 .ref-meta{font-size:11px;color:var(--muted);}
 
 /* BALANCE ADJUST */
-.adjust-form{background:var(--s1);border-radius:16px;padding:18px;border:1px solid var(--border);}
+.adjust-form{background:var(--s1);border-radius:16px;padding:18px;border:1px solid var(--border);margin-bottom:12px;}
 .adj-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;margin-top:14px;display:block;}
+.adj-label:first-of-type{margin-top:0;}
 .adj-input{width:100%;padding:12px 14px;background:var(--s2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;transition:border-color 0.2s;}
 .adj-input:focus{outline:none;border-color:var(--neon);}
-.adj-btns{display:flex;gap:10px;margin-top:14px;}
-.adj-btn{flex:1;padding:13px;border:none;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.2s;}
+.adj-btns{display:flex;gap:10px;margin-top:16px;}
+.adj-btn{flex:1;padding:14px;border:none;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
 .adj-btn.add{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3);}
 .adj-btn.add:hover{background:var(--green);color:#000;}
 .adj-btn.deduct{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3);}
 .adj-btn.deduct:hover{background:var(--red);color:#000;}
+.adj-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* SUCCESS FLASH */
+.adj-success{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--green);font-weight:600;display:none;margin-top:12px;text-align:center;}
 
 /* MINI RECORD */
 .mini-rec{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;}
@@ -132,19 +130,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 /* TOAST */
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--green);color:#022c22;padding:12px 24px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;transition:opacity 0.3s;z-index:9999;pointer-events:none;white-space:nowrap;}
 
-/* LEVEL BADGE */
-.lvl-sel{width:100%;padding:12px 14px;background:var(--s2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;margin-top:6px;cursor:pointer;}
-
+.lvl-sel{width:100%;padding:12px 14px;background:var(--s2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;}
 .empty{text-align:center;padding:60px 20px;color:var(--muted);}
+@keyframes spin{to{transform:rotate(360deg);}}
 .empty-spin{width:32px;height:32px;border:3px solid rgba(0,240,255,0.1);border-top:3px solid var(--neon);border-radius:50%;animation:spin 0.9s linear infinite;margin:0 auto 12px;}
 </style>
 </head>
 <body>
-
-<div id="loader">
-  <div class="loader-ring"></div>
-  <div class="loader-logo">Admin Panel</div>
-</div>
 
 <!-- HEADER -->
 <div class="header">
@@ -172,13 +164,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="search-wrap">
     <input class="search-input" id="searchInput" placeholder="🔍 Search by Miner ID or name..." oninput="filterUsers(this.value)">
   </div>
-  <div class="users-grid" id="usersGrid"></div>
+  <div class="users-grid" id="usersGrid">
+    <div class="empty"><div class="empty-spin"></div></div>
+  </div>
 </div>
+<div id="view-pending" style="display:none"><div class="tx-list" id="pendingList"></div></div>
+<div id="view-all-tx"  style="display:none"><div class="tx-list" id="allTxList"></div></div>
 
-<div id="view-pending"  style="display:none"><div class="tx-list" id="pendingList"></div></div>
-<div id="view-all-tx"   style="display:none"><div class="tx-list" id="allTxList"></div></div>
-
-<!-- USER DETAIL PANEL (full screen overlay) -->
+<!-- USER DETAIL PANEL -->
 <div class="detail-panel" id="detailPanel">
   <div class="dp-header">
     <div class="dp-back" onclick="closeDetail()">←</div>
@@ -193,10 +186,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
 const firebaseConfig = {
-  apiKey:       "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
-  authDomain:   "cj-miner.firebaseapp.com",
-  databaseURL:  "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId:    "cj-miner"
+  apiKey:      "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
+  authDomain:  "cj-miner.firebaseapp.com",
+  databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:   "cj-miner"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
@@ -207,15 +200,13 @@ if (myUid !== ADMIN_UID) { alert("Access denied"); window.location.href = "signi
 
 let allUsers        = {};
 let allTransactions = {};
-let currentTab      = "users";
+let currentOpenUid  = null;
 
 // ── BOOT ──────────────────────────────────────────────────────
 window.addEventListener("load", async () => {
   await Promise.all([ loadUsers(), loadTransactions() ]);
-  document.getElementById("loader").classList.add("hidden");
-
-  // Telegram deep-link: ?uid=XXXXX opens that user automatically
-  const params = new URLSearchParams(window.location.search);
+  // Telegram deep-link: ?uid=XXX opens that user directly
+  const params  = new URLSearchParams(window.location.search);
   const deepUid = params.get("uid");
   if (deepUid && allUsers[deepUid]) openDetail(deepUid, allUsers[deepUid]);
 });
@@ -229,7 +220,7 @@ async function loadUsers() {
 }
 
 async function loadTransactions() {
-  const snap    = await db.ref("transactions").once("value");
+  const snap      = await db.ref("transactions").once("value");
   allTransactions = snap.val() || {};
   updatePendingBadge();
 }
@@ -241,9 +232,9 @@ function updatePendingBadge() {
 }
 
 function updateStripStats() {
-  const users    = Object.values(allUsers);
-  const total    = users.reduce((s, u) => s + (u.balance || 0), 0);
-  const miners   = users.reduce((s, u) => s + Object.keys(u.minerUnlocked || {}).length, 0);
+  const users  = Object.values(allUsers);
+  const total  = users.reduce((s, u) => s + (u.balance || 0), 0);
+  const miners = users.reduce((s, u) => s + Object.keys(u.minerUnlocked || {}).length, 0);
   document.getElementById("statUsers").textContent   = users.length;
   document.getElementById("statBalance").textContent = "$" + Math.floor(total);
   document.getElementById("statMiners").textContent  = miners;
@@ -251,7 +242,6 @@ function updateStripStats() {
 
 // ── TAB SWITCH ────────────────────────────────────────────────
 function switchTab(name, el) {
-  currentTab = name;
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
   if (el) el.classList.add("active");
   document.getElementById("view-users").style.display   = name === "users"   ? "block" : "none";
@@ -268,72 +258,58 @@ function renderUsers(filter = "") {
   Object.entries(allUsers).forEach(([uid, u]) => {
     const id = u.minerId || "N/A";
     if (filter && !id.toLowerCase().includes(filter.toLowerCase()) && !(u.name||"").toLowerCase().includes(filter.toLowerCase())) return;
-
     const teamSize = Object.values(allUsers).filter(x => x.referredBy === uid).length;
-    const card = document.createElement("div");
+    const card     = document.createElement("div");
     card.className = "user-card";
-    card.onclick = () => openDetail(uid, u);
+    card.onclick   = () => openDetail(uid, u);
     card.innerHTML = `
       <div class="uc-header">
         <div class="uc-id">${id}</div>
         <div class="uc-level">${u.level || "Novice"}</div>
       </div>
-      <div class="uc-row"><span class="uc-lbl">Name</span><span class="uc-val">${u.name || "—"}</span></div>
+      <div class="uc-row"><span class="uc-lbl">Name</span><span class="uc-val">${u.name||"—"}</span></div>
       <div class="uc-row"><span class="uc-lbl">Balance</span><span class="uc-val green">$${Math.floor(u.balance||0)}</span></div>
       <div class="uc-row"><span class="uc-lbl">Team Income</span><span class="uc-val gold">$${(u.team||0).toFixed(2)}</span></div>
       <div class="uc-row"><span class="uc-lbl">Team Size</span><span class="uc-val">${teamSize} members</span></div>
-      <div class="uc-row"><span class="uc-lbl">Points</span><span class="uc-val">${u.points||0}</span></div>
-      <div class="uc-row"><span class="uc-lbl">Referred By</span><span class="uc-val">${getReferrerName(u.referredBy)}</span></div>
-    `;
+      <div class="uc-row"><span class="uc-lbl">Referred By</span><span class="uc-val">${getReferrerName(u.referredBy)}</span></div>`;
     grid.appendChild(card);
   });
   if (!grid.children.length) grid.innerHTML = `<div class="empty">No users found</div>`;
 }
 
 function filterUsers(v) { renderUsers(v); }
-
 function getReferrerName(refUid) {
   if (!refUid) return "None";
-  const ref = allUsers[refUid];
-  return ref ? (ref.minerId || "Unknown") : "Unknown";
+  return (allUsers[refUid] && allUsers[refUid].minerId) || "Unknown";
 }
 
-// ── RENDER PENDING ─────────────────────────────────────────────
+// ── PENDING & ALL TX ──────────────────────────────────────────
 function renderPending() {
-  const list = document.getElementById("pendingList");
-  list.innerHTML = "";
+  const list    = document.getElementById("pendingList");
   const entries = Object.entries(allTransactions).filter(([,t]) => t.status === "pending");
-  if (!entries.length) { list.innerHTML = `<div class="empty">No pending transactions</div>`; return; }
-  entries.forEach(([txId, tx]) => {
-    const u = allUsers[tx.uid] || {};
-    list.appendChild(buildTxCard(txId, tx, u, true));
-  });
+  list.innerHTML = entries.length ? "" : `<div class="empty">No pending transactions</div>`;
+  entries.forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, true)));
 }
 
-// ── RENDER ALL TX ──────────────────────────────────────────────
 function renderAllTx() {
-  const list = document.getElementById("allTxList");
-  list.innerHTML = "";
-  const entries = Object.entries(allTransactions).sort((a,b) => (b[1].date||0)-(a[1].date||0));
-  if (!entries.length) { list.innerHTML = `<div class="empty">No transactions</div>`; return; }
-  entries.slice(0, 100).forEach(([txId, tx]) => {
-    const u = allUsers[tx.uid] || {};
-    list.appendChild(buildTxCard(txId, tx, u, false));
-  });
+  const list    = document.getElementById("allTxList");
+  const entries = Object.entries(allTransactions).sort((a,b)=>(b[1].date||0)-(a[1].date||0));
+  list.innerHTML = entries.length ? "" : `<div class="empty">No transactions</div>`;
+  entries.slice(0, 100).forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, false)));
 }
 
 function buildTxCard(txId, tx, u, showUser) {
-  const card = document.createElement("div");
+  const card  = document.createElement("div");
   card.className = "tx-card";
   const date  = tx.date ? new Date(tx.date).toLocaleString("en-NG") : "—";
   const color = tx.type === "recharge" ? "color:#22c55e" : "color:#f87171";
   const pref  = tx.type === "recharge" ? "+" : "−";
   card.innerHTML = `
-    <div class="tx-info" style="cursor:${showUser?'pointer':'default'}" onclick="${showUser && u.minerId ? `openDetail('${tx.uid}',null)` : ''}">
-      <div class="tx-type">${(tx.type||"tx").toUpperCase()} ${showUser ? `· <span style="color:var(--neon)">${u.minerId||tx.uid.slice(0,8)}</span>` : ""}</div>
+    <div class="tx-info" style="cursor:${showUser?'pointer':'default'}" ${showUser&&u.minerId?`onclick="openDetail('${tx.uid}',null)"`:""}> 
+      <div class="tx-type">${(tx.type||"tx").toUpperCase()} ${showUser?`· <span style="color:var(--neon)">${u.minerId||tx.uid.slice(0,8)}</span>`:""}</div>
       <div class="tx-date">${date} · ${tx.method||"—"}</div>
-      ${tx.bank ? `<div class="tx-date">🏦 ${tx.bank} · ${tx.number||""}</div>` : ""}
-      ${tx.walletAddress ? `<div class="tx-date">💎 ${tx.walletAddress.slice(0,16)}...</div>` : ""}
+      ${tx.bank?`<div class="tx-date">🏦 ${tx.bank} · ${tx.number||""}</div>`:""}
+      ${tx.walletAddress?`<div class="tx-date">💎 ${tx.walletAddress.slice(0,20)}...</div>`:""}
     </div>
     <div style="text-align:right;flex-shrink:0;margin-left:10px;">
       <div class="tx-amount" style="${color}">${pref}$${tx.amount}</div>
@@ -345,38 +321,38 @@ function buildTxCard(txId, tx, u, showUser) {
 // ── OPEN USER DETAIL ──────────────────────────────────────────
 function openDetail(uid, userData) {
   if (!userData) userData = allUsers[uid] || {};
+  currentOpenUid = uid;
   document.getElementById("dpTitle").textContent = userData.minerId || "User Detail";
-  document.getElementById("dpBody").innerHTML = buildDetailHTML(uid, userData);
+  document.getElementById("dpTitle").dataset.uid = uid;
+  document.getElementById("dpBody").innerHTML    = buildDetailHTML(uid, userData);
   document.getElementById("detailPanel").classList.add("open");
   showDpTab("overview", document.querySelector(".dp-tab"));
 }
 
 function closeDetail() {
   document.getElementById("detailPanel").classList.remove("open");
+  currentOpenUid = null;
 }
 
 function buildDetailHTML(uid, u) {
-  const referrer    = u.referredBy ? (allUsers[u.referredBy]?.minerId || u.referredBy.slice(0,8)) : "None";
-  const referrals   = Object.entries(allUsers).filter(([,x]) => x.referredBy === uid);
-  const teamSize    = referrals.length;
-  const joined      = u.createdAt ? new Date(u.createdAt).toLocaleDateString("en-NG") : "—";
-  const userTxs     = Object.entries(allTransactions).filter(([,t]) => t.uid === uid).sort((a,b)=>(b[1].date||0)-(a[1].date||0));
-  const approved    = userTxs.filter(([,t]) => t.type==="recharge" && t.status==="approved").reduce((s,[,t])=>s+(t.amount||0),0);
-  const withdrawn   = userTxs.filter(([,t]) => t.type==="withdraw" && t.status==="approved").reduce((s,[,t])=>s+(t.amount||0),0);
+  const referrer  = u.referredBy ? (allUsers[u.referredBy]?.minerId || u.referredBy.slice(0,8)) : "None";
+  const referrals = Object.entries(allUsers).filter(([,x]) => x.referredBy === uid);
+  const joined    = u.createdAt ? new Date(u.createdAt).toLocaleDateString("en-NG") : "—";
+  const userTxs   = Object.entries(allTransactions).filter(([,t]) => t.uid === uid).sort((a,b)=>(b[1].date||0)-(a[1].date||0));
+  const approved  = userTxs.filter(([,t]) => t.type==="recharge"&&t.status==="approved").reduce((s,[,t])=>s+(t.amount||0),0);
+  const withdrawn = userTxs.filter(([,t]) => t.type==="withdraw"&&t.status==="approved").reduce((s,[,t])=>s+(t.amount||0),0);
 
   return `
-  <!-- HERO -->
   <div class="dp-hero">
-    <div class="dp-name">${u.minerId || "Unknown"}</div>
+    <div class="dp-name">${u.minerId||"Unknown"}</div>
     <div class="dp-uid">UID: ${uid}</div>
     <div class="dp-stats">
-      <div class="dp-stat"><div class="dp-stat-val">$${Math.floor(u.balance||0)}</div><div class="dp-stat-lbl">Balance</div></div>
-      <div class="dp-stat"><div class="dp-stat-val">$${(u.team||0).toFixed(2)}</div><div class="dp-stat-lbl">Team</div></div>
-      <div class="dp-stat"><div class="dp-stat-val">${u.points||0}</div><div class="dp-stat-lbl">Points</div></div>
+      <div class="dp-stat"><div class="dp-stat-val" id="live-balance">${Math.floor(u.balance||0)}</div><div class="dp-stat-lbl">Balance ($)</div></div>
+      <div class="dp-stat"><div class="dp-stat-val" id="live-team">${(u.team||0).toFixed(2)}</div><div class="dp-stat-lbl">Team ($)</div></div>
+      <div class="dp-stat"><div class="dp-stat-val" id="live-points">${u.points||0}</div><div class="dp-stat-lbl">Points</div></div>
     </div>
   </div>
 
-  <!-- SUB TABS -->
   <div class="dp-tabs">
     <div class="dp-tab active" onclick="showDpTab('overview',this)">Overview</div>
     <div class="dp-tab" onclick="showDpTab('transactions',this)">Transactions</div>
@@ -385,7 +361,7 @@ function buildDetailHTML(uid, u) {
     <div class="dp-tab" onclick="showDpTab('adjust',this)">⚙️ Adjust</div>
   </div>
 
-  <!-- OVERVIEW TAB -->
+  <!-- OVERVIEW -->
   <div id="dp-overview" class="dp-content">
     <div class="sec-card">
       <div class="sec-title">Profile</div>
@@ -404,33 +380,23 @@ function buildDetailHTML(uid, u) {
       <div class="sec-row"><span class="sec-lbl">Total Transactions</span><span class="sec-val">${userTxs.length}</span></div>
     </div>
     <div class="sec-card">
-      <div class="sec-title">Mining Summary</div>
-      ${Object.entries(u.minerUnlocked||{}).map(([id,count]) => {
-        const key    = id === "S244" ? `${id}_1` : id;
-        const mData  = u.miners?.[key] || {};
-        const status = mData.start ? (mData.credited ? "Paused" : "Active") : "Not started";
-        return `<div class="sec-row"><span class="sec-lbl">${id} ×${count}</span><span class="sec-val">${status}</span></div>`;
-      }).join("") || '<div class="sec-row"><span class="sec-lbl">No miners owned</span></div>'}
-    </div>
-    <div class="sec-card">
       <div class="sec-title">Bank Details</div>
       <div class="sec-row"><span class="sec-lbl">Bank</span><span class="sec-val">${u.bank||"—"}</span></div>
-      <div class="sec-row"><span class="sec-lbl">Account Name</span><span class="sec-val">${u.name||"—"}</span></div>
       <div class="sec-row"><span class="sec-lbl">Account Number</span><span class="sec-val">${u.number||"—"}</span></div>
     </div>
   </div>
 
-  <!-- TRANSACTIONS TAB -->
+  <!-- TRANSACTIONS -->
   <div id="dp-transactions" class="dp-content" style="display:none">
-    ${userTxs.length === 0 ? '<div class="empty">No transactions</div>' :
-      userTxs.map(([txId,tx]) => `
+    ${userTxs.length===0?'<div class="empty">No transactions</div>':
+      userTxs.map(([txId,tx])=>`
       <div class="sec-card" style="margin-bottom:10px;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div>
             <div style="font-size:14px;font-weight:700;color:var(--neon);margin-bottom:2px;">${(tx.type||"tx").toUpperCase()} · ${tx.method||"—"}</div>
-            <div style="font-size:12px;color:var(--muted);">${tx.date ? new Date(tx.date).toLocaleString("en-NG") : "—"}</div>
-            ${tx.bank ? `<div style="font-size:12px;color:var(--subtle);">🏦 ${tx.bank} · ${tx.number||""}</div>` : ""}
-            ${tx.walletAddress ? `<div style="font-size:12px;color:var(--subtle);">💎 ${tx.walletAddress}</div>` : ""}
+            <div style="font-size:12px;color:var(--muted);">${tx.date?new Date(tx.date).toLocaleString("en-NG"):"—"}</div>
+            ${tx.bank?`<div style="font-size:12px;color:var(--subtle);">🏦 ${tx.bank} · ${tx.number||""}</div>`:""}
+            ${tx.walletAddress?`<div style="font-size:12px;color:var(--subtle);">💎 ${tx.walletAddress}</div>`:""}
           </div>
           <div style="text-align:right;">
             <div style="font-size:16px;font-weight:700;${tx.type==="recharge"?"color:var(--green)":"color:var(--red)"}">
@@ -442,51 +408,47 @@ function buildDetailHTML(uid, u) {
       </div>`).join("")}
   </div>
 
-  <!-- MINING TAB -->
+  <!-- MINING -->
   <div id="dp-mining" class="dp-content" style="display:none">
-    ${Object.keys(u.miners||{}).length === 0 ? '<div class="empty">No mining data</div>' :
-      Object.entries(u.miners||{}).map(([key, m]) => {
-        const start   = m.start ? new Date(m.start).toLocaleDateString("en-NG") : "—";
-        const elapsed = m.start ? Math.floor((Date.now()-m.start)/3600000) : 0;
-        return `
-        <div class="sec-card" style="margin-bottom:10px;">
+    ${Object.keys(u.miners||{}).length===0?'<div class="empty">No mining data</div>':
+      Object.entries(u.miners||{}).map(([key,m])=>{
+        const elapsed = m.start?Math.floor((Date.now()-m.start)/3600000):0;
+        return `<div class="sec-card" style="margin-bottom:10px;">
           <div class="sec-title">${key}</div>
-          <div class="sec-row"><span class="sec-lbl">Started</span><span class="sec-val">${start}</span></div>
+          <div class="sec-row"><span class="sec-lbl">Started</span><span class="sec-val">${m.start?new Date(m.start).toLocaleDateString("en-NG"):"—"}</span></div>
           <div class="sec-row"><span class="sec-lbl">Running</span><span class="sec-val">${elapsed}h elapsed</span></div>
           <div class="sec-row"><span class="sec-lbl">Credited</span><span class="sec-val">${m.credited?"✅ Yes":"⏳ Not yet"}</span></div>
         </div>`;
       }).join("")}
     <div class="sec-card">
       <div class="sec-title">Mining Records</div>
-      ${Object.values(u.miningRecords||{}).reverse().slice(0,20).map(r => `
+      ${Object.values(u.miningRecords||{}).reverse().slice(0,20).map(r=>`
         <div class="mini-rec">
           <span class="mini-lbl">${r.miner||"Mining"} · ${new Date(r.timestamp).toLocaleDateString("en-NG")}</span>
           <span class="mini-val pos">+$${r.amount}</span>
-        </div>`).join("") || '<div style="color:var(--muted);font-size:13px;padding:8px 0">No records yet</div>'}
+        </div>`).join("")||'<div style="color:var(--muted);font-size:13px;padding:8px 0">No records yet</div>'}
     </div>
   </div>
 
-  <!-- TEAM TAB -->
+  <!-- TEAM -->
   <div id="dp-team" class="dp-content" style="display:none">
     <div class="sec-card">
       <div class="sec-title">Referred By</div>
-      ${u.referredBy ? `
-      <div class="ref-person">
-        <div class="ref-avatar">${(allUsers[u.referredBy]?.minerId||"?").slice(0,2)}</div>
-        <div>
-          <div class="ref-id">${allUsers[u.referredBy]?.minerId||u.referredBy.slice(0,8)}</div>
-          <div class="ref-meta">${allUsers[u.referredBy]?.name||"Unknown"}</div>
-        </div>
-      </div>` : '<div style="color:var(--muted);font-size:13px;">Not referred by anyone</div>'}
+      ${u.referredBy?`
+        <div class="ref-person" onclick="openDetail('${u.referredBy}',null)">
+          <div class="ref-avatar">${(allUsers[u.referredBy]?.minerId||"?").slice(0,2)}</div>
+          <div>
+            <div class="ref-id">${allUsers[u.referredBy]?.minerId||u.referredBy.slice(0,8)}</div>
+            <div class="ref-meta">${allUsers[u.referredBy]?.name||"Unknown"}</div>
+          </div>
+        </div>`:'<div style="color:var(--muted);font-size:13px;">Not referred by anyone</div>'}
     </div>
-
     <div class="sec-card">
-      <div class="sec-title">Direct Referrals (Level 1) · ${teamSize} members</div>
-      ${referrals.length === 0 ? '<div style="color:var(--muted);font-size:13px;">No referrals yet</div>' :
-        referrals.map(([rUid, rUser]) => {
-          const l2 = Object.values(allUsers).filter(x => x.referredBy === rUid).length;
-          return `
-          <div class="ref-person" onclick="openDetail('${rUid}',null)" style="cursor:pointer;">
+      <div class="sec-title">Direct Referrals · ${referrals.length} members</div>
+      ${referrals.length===0?'<div style="color:var(--muted);font-size:13px;">No referrals yet</div>':
+        referrals.map(([rUid,rUser])=>{
+          const l2=Object.values(allUsers).filter(x=>x.referredBy===rUid).length;
+          return `<div class="ref-person" onclick="openDetail('${rUid}',null)">
             <div class="ref-avatar">${(rUser.minerId||"?").slice(0,2)}</div>
             <div style="flex:1">
               <div class="ref-id">${rUser.minerId||"Unknown"}</div>
@@ -496,28 +458,27 @@ function buildDetailHTML(uid, u) {
           </div>`;
         }).join("")}
     </div>
-
     <div class="sec-card">
       <div class="sec-title">Team Income Records</div>
       <div id="teamIncomeRecords-${uid}"><div class="empty-spin"></div></div>
     </div>
   </div>
 
-  <!-- ADJUST TAB -->
+  <!-- ADJUST -->
   <div id="dp-adjust" class="dp-content" style="display:none">
     <div class="adjust-form">
-      <div class="sec-title">Manual Balance Adjustment</div>
-      <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--gold);margin-bottom:14px;">
-        ⚠️ All adjustments are recorded with timestamp and reason
+      <div class="sec-title" style="margin-bottom:16px;">Manual Balance Adjustment</div>
+      <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--gold);margin-bottom:16px;">
+        ⚠️ All adjustments are saved permanently to Firebase and logged with timestamp
       </div>
 
-      <label class="adj-label">Adjustment Amount ($)</label>
-      <input class="adj-input" type="number" id="adjAmount" placeholder="e.g. 50">
+      <label class="adj-label">Amount ($)</label>
+      <input class="adj-input" type="number" id="adjAmount" placeholder="e.g. 50" min="0.01" step="0.01">
 
       <label class="adj-label">Reason / Note</label>
-      <input class="adj-input" type="text" id="adjReason" placeholder="e.g. Bonus, Manual correction...">
+      <input class="adj-input" type="text" id="adjReason" placeholder="e.g. Bonus reward, Manual correction...">
 
-      <label class="adj-label">Adjust</label>
+      <label class="adj-label">Apply To</label>
       <select class="adj-input lvl-sel" id="adjTarget">
         <option value="balance">Balance (main wallet)</option>
         <option value="team">Team Income</option>
@@ -525,24 +486,26 @@ function buildDetailHTML(uid, u) {
       </select>
 
       <div class="adj-btns">
-        <button class="adj-btn add"    onclick="adjustBalance('${uid}','add')">➕ Add</button>
-        <button class="adj-btn deduct" onclick="adjustBalance('${uid}','deduct')">➖ Deduct</button>
+        <button class="adj-btn add"    id="adjAddBtn"    onclick="adjustBalance('${uid}','add')">➕ Add</button>
+        <button class="adj-btn deduct" id="adjDeductBtn" onclick="adjustBalance('${uid}','deduct')">➖ Deduct</button>
       </div>
+
+      <div class="adj-success" id="adjSuccessMsg"></div>
     </div>
 
-    <div class="sec-card" style="margin-top:14px;">
+    <div class="sec-card">
       <div class="sec-title">Change User Level</div>
       <select class="adj-input lvl-sel" id="lvlSelect">
-        <option value="Novice Miner">Novice Miner</option>
-        <option value="Junior Miner">Junior Miner</option>
-        <option value="Pro Miner">Pro Miner</option>
-        <option value="Elite Miner">Elite Miner</option>
-        <option value="Legend Miner">Legend Miner</option>
+        <option value="Novice Miner"  ${(u.level||"")==="Novice Miner"  ?"selected":""}>Novice Miner</option>
+        <option value="Junior Miner"  ${(u.level||"")==="Junior Miner"  ?"selected":""}>Junior Miner</option>
+        <option value="Pro Miner"     ${(u.level||"")==="Pro Miner"     ?"selected":""}>Pro Miner</option>
+        <option value="Elite Miner"   ${(u.level||"")==="Elite Miner"   ?"selected":""}>Elite Miner</option>
+        <option value="Legend Miner"  ${(u.level||"")==="Legend Miner"  ?"selected":""}>Legend Miner</option>
       </select>
-      <button class="adj-btn add" style="margin-top:10px;width:100%" onclick="updateLevel('${uid}')">Update Level</button>
+      <button class="adj-btn add" style="margin-top:12px;width:100%;" onclick="updateLevel('${uid}')">Update Level</button>
     </div>
 
-    <div class="sec-card" style="margin-top:14px;">
+    <div class="sec-card">
       <div class="sec-title">Adjustment History</div>
       <div id="adjHistory-${uid}"><div class="empty-spin"></div></div>
     </div>
@@ -556,32 +519,22 @@ function showDpTab(name, el) {
   document.querySelectorAll("[id^='dp-']").forEach(d => d.style.display = "none");
   const target = document.getElementById("dp-" + name);
   if (target) target.style.display = "block";
-
-  // Lazy load team income when team tab opened
-  if (name === "team") {
-    const uid = document.getElementById("dpTitle").dataset.uid;
-    loadTeamIncomeForUser();
-  }
+  if (name === "team")   loadTeamIncome();
   if (name === "adjust") loadAdjHistory();
 }
 
-function loadTeamIncomeForUser() {
-  // Find the uid from a data attribute set on dpTitle
-  const uid = document.getElementById("dpTitle").dataset.uid;
-  if (!uid) return;
+function loadTeamIncome() {
+  const uid       = document.getElementById("dpTitle").dataset.uid;
   const container = document.getElementById("teamIncomeRecords-" + uid);
   if (!container || container.dataset.loaded) return;
   container.dataset.loaded = "1";
-
   db.ref("teamIncome/" + uid).orderByChild("timestamp").limitToLast(20).once("value", snap => {
-    const data = snap.val() || {};
-    const records = Object.values(data).sort((a,b) => b.timestamp - a.timestamp);
-    if (!records.length) { container.innerHTML = '<div style="color:var(--muted);font-size:13px;">No team income yet</div>'; return; }
-    const lvlColor = { 1:"var(--neon)", 2:"var(--gold)", 3:"var(--purple)" };
-    container.innerHTML = records.map(r => `
+    const recs = Object.values(snap.val()||{}).sort((a,b)=>b.timestamp-a.timestamp);
+    if (!recs.length) { container.innerHTML = '<div style="color:var(--muted);font-size:13px;">No team income yet</div>'; return; }
+    container.innerHTML = recs.map(r=>`
       <div class="mini-rec">
         <div>
-          <div style="font-size:13px;color:var(--subtle);">${r.fromMiner||"?"} · L${r.level}</div>
+          <div style="font-size:13px;color:var(--subtle);">${r.fromMiner||"?"} · Level ${r.level||1}</div>
           <div style="font-size:11px;color:var(--muted);">${new Date(r.timestamp).toLocaleDateString("en-NG")}</div>
         </div>
         <span class="mini-val team">+$${Number(r.amount).toFixed(4)}</span>
@@ -590,36 +543,23 @@ function loadTeamIncomeForUser() {
 }
 
 function loadAdjHistory() {
-  const uid = document.getElementById("dpTitle").dataset.uid;
-  if (!uid) return;
+  const uid       = document.getElementById("dpTitle").dataset.uid;
   const container = document.getElementById("adjHistory-" + uid);
-  if (!container || container.dataset.loaded) return;
-  container.dataset.loaded = "1";
-
-  db.ref("balanceAdjustments/" + uid).orderByChild("timestamp").limitToLast(20).once("value", snap => {
-    const data = snap.val() || {};
-    const recs  = Object.values(data).sort((a,b) => b.timestamp - a.timestamp);
+  if (!container) return;
+  container.dataset.loaded = "";
+  container.innerHTML = '<div class="empty-spin"></div>';
+  db.ref("balanceAdjustments/" + uid).orderByChild("timestamp").limitToLast(30).once("value", snap => {
+    const recs = Object.values(snap.val()||{}).sort((a,b)=>b.timestamp-a.timestamp);
     if (!recs.length) { container.innerHTML = '<div style="color:var(--muted);font-size:13px;">No adjustments yet</div>'; return; }
-    container.innerHTML = recs.map(r => `
+    container.innerHTML = recs.map(r=>`
       <div class="mini-rec">
         <div>
           <div style="font-size:13px;color:var(--subtle);">${r.reason||"No reason"} · ${r.field}</div>
-          <div style="font-size:11px;color:var(--muted);">${new Date(r.timestamp).toLocaleDateString("en-NG")}</div>
+          <div style="font-size:11px;color:var(--muted);">${new Date(r.timestamp).toLocaleDateString("en-NG")} · Before: $${r.before} → After: $${r.after}</div>
         </div>
-        <span class="mini-val ${r.type==='add'?'pos':'neg'}">${r.type==='add'?'+':'−'}${r.amount}</span>
+        <span class="mini-val ${r.type==="add"?"pos":"neg"}">${r.type==="add"?"+":"−"}$${r.amount}</span>
       </div>`).join("");
   });
-}
-
-// Override openDetail to also set data-uid
-const _origOpen = openDetail;
-function openDetail(uid, userData) {
-  if (!userData) userData = allUsers[uid] || {};
-  document.getElementById("dpTitle").textContent  = userData.minerId || "User Detail";
-  document.getElementById("dpTitle").dataset.uid  = uid;
-  document.getElementById("dpBody").innerHTML = buildDetailHTML(uid, userData);
-  document.getElementById("detailPanel").classList.add("open");
-  showDpTab("overview", document.querySelector(".dp-tab"));
 }
 
 // ── MANUAL BALANCE ADJUSTMENT ─────────────────────────────────
@@ -630,40 +570,84 @@ async function adjustBalance(uid, type) {
 
   if (!amount || amount <= 0) return toast("Enter a valid amount");
 
-  const snap    = await db.ref(`users/${uid}`).once("value");
-  const u       = snap.val() || {};
-  const current = u[field] || 0;
-  const newVal  = type === "add" ? current + amount : Math.max(0, current - amount);
+  // Disable buttons while saving
+  const addBtn    = document.getElementById("adjAddBtn");
+  const deductBtn = document.getElementById("adjDeductBtn");
+  const successEl = document.getElementById("adjSuccessMsg");
+  if (addBtn)    addBtn.disabled    = true;
+  if (deductBtn) deductBtn.disabled = true;
 
-  await db.ref(`users/${uid}/${field}`).set(parseFloat(newVal.toFixed(4)));
+  try {
+    // Read fresh from Firebase — not cache — so value is always accurate
+    const snap    = await db.ref(`users/${uid}/${field}`).once("value");
+    const current = snap.val() || 0;
+    const newVal  = type === "add"
+      ? parseFloat((current + amount).toFixed(4))
+      : parseFloat(Math.max(0, current - amount).toFixed(4));
 
-  // Record the adjustment
-  await db.ref(`balanceAdjustments/${uid}`).push({
-    type, field, amount, reason,
-    adminUid:  myUid,
-    before:    current,
-    after:     newVal,
-    timestamp: Date.now()
-  });
+    // ── SAVE to Firebase ──────────────────────────────────────
+    await db.ref(`users/${uid}/${field}`).set(newVal);
 
-  // Refresh local cache
-  allUsers[uid] = { ...allUsers[uid], [field]: newVal };
+    // ── LOG the adjustment ────────────────────────────────────
+    await db.ref(`balanceAdjustments/${uid}`).push({
+      type, field, amount,
+      reason,
+      before:    current,
+      after:     newVal,
+      adminUid:  myUid,
+      timestamp: Date.now()
+    });
 
-  // Clear history cache so it reloads
-  const container = document.getElementById("adjHistory-" + uid);
-  if (container) { container.dataset.loaded = ""; container.innerHTML = '<div class="empty-spin"></div>'; }
-  loadAdjHistory();
+    // ── Update local cache ────────────────────────────────────
+    allUsers[uid] = { ...(allUsers[uid]||{}), [field]: newVal };
 
-  toast(`✅ ${type === "add" ? "Added" : "Deducted"} $${amount} ${type === "add" ? "to" : "from"} ${field}`);
-  document.getElementById("adjAmount").value  = "";
-  document.getElementById("adjReason").value  = "";
+    // ── Update the live stat boxes at the top of detail view ──
+    if (field === "balance") {
+      const el = document.getElementById("live-balance");
+      if (el) el.textContent = Math.floor(newVal);
+    }
+    if (field === "team") {
+      const el = document.getElementById("live-team");
+      if (el) el.textContent = newVal.toFixed(2);
+    }
+    if (field === "points") {
+      const el = document.getElementById("live-points");
+      if (el) el.textContent = newVal;
+    }
+
+    // ── Update the strip stats ────────────────────────────────
+    updateStripStats();
+
+    // ── Show success message ──────────────────────────────────
+    const label = type === "add" ? "Added" : "Deducted";
+    if (successEl) {
+      successEl.textContent = `✅ ${label} $${amount} ${type==="add"?"to":"from"} ${field}. New value: $${newVal}`;
+      successEl.style.display = "block";
+      setTimeout(() => { successEl.style.display = "none"; }, 4000);
+    }
+
+    // ── Reload adjustment history ─────────────────────────────
+    loadAdjHistory();
+
+    // ── Clear inputs ──────────────────────────────────────────
+    document.getElementById("adjAmount").value = "";
+    document.getElementById("adjReason").value = "";
+
+    toast(`✅ ${label} $${amount} ${type==="add"?"to":"from"} ${field}`);
+
+  } catch (err) {
+    toast("❌ Error: " + err.message);
+  } finally {
+    if (addBtn)    addBtn.disabled    = false;
+    if (deductBtn) deductBtn.disabled = false;
+  }
 }
 
 // ── UPDATE USER LEVEL ─────────────────────────────────────────
 async function updateLevel(uid) {
   const level = document.getElementById("lvlSelect").value;
   await db.ref(`users/${uid}/level`).set(level);
-  allUsers[uid] = { ...allUsers[uid], level };
+  allUsers[uid] = { ...(allUsers[uid]||{}), level };
   toast("✅ Level updated to " + level);
 }
 
