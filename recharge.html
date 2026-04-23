@@ -70,10 +70,8 @@ const db = firebase.database();
 const uid = localStorage.getItem("uid");
 if (!uid) window.location.href = "signin.html";
 
-// ─── CLOUD FUNCTION URLs (never expire) ───────────────────────────────────────
 const FUNCTIONS_BASE = "https://europe-west1-cj-miner.cloudfunctions.net";
 const SECRET = "cryptojet_secret_2024";
-
 const BOT_TOKEN = "8688577357:AAHt9nAPIESkZiDZFDGRmyaJmzxogrpY3PY";
 const ADMIN_CHAT_ID = 8632260150;
 
@@ -92,7 +90,6 @@ function switchTab(tab) {
 
 function renderTab(tab) {
     const content = document.getElementById("content");
-    
     if (tab === "bank") {
         if (currentStep === 1) {
             content.innerHTML = `
@@ -102,7 +99,6 @@ function renderTab(tab) {
                 <div id="ngnPreview" class="ngn-rate">You will pay: ₦0.00</div>
                 <button onclick="confirmAmount('bank')" class="button">Continue</button>
             </div>`;
-            
             const input = document.getElementById("usdAmount");
             const preview = document.getElementById("ngnPreview");
             input.addEventListener("input", () => {
@@ -113,13 +109,12 @@ function renderTab(tab) {
             content.innerHTML = `
             <div class="card">
                 <h3 style="margin-bottom:20px;font-size:20px;font-weight:600;">Complete Bank Deposit</h3>
-                
                 <div class="bank-card" style="position:relative;background:#1e2937;border-radius:20px;padding:24px;margin-bottom:24px;">
                     <div class="timer" id="countdown">30:00.00</div>
                     <p><strong>Bank:</strong> Opay</p>
                     <p><strong>Account Name:</strong> Tomiwa Tosin Adeniyi</p>
                     <p style="display:flex;align-items:center;">
-                        <strong>Account Number:</strong> 
+                        <strong>Account Number:</strong>
                         <span id="accNumber">8115667110</span>
                         <button onclick="copyAccount()" class="copy-btn">Copy</button>
                     </p>
@@ -127,13 +122,11 @@ function renderTab(tab) {
                         Amount to pay: <strong>₦${(selectedAmountUSD * 1500).toLocaleString('en-US')}</strong>
                     </div>
                 </div>
-
                 <div class="upload-area" onclick="document.getElementById('proofFile').click()">
                     📸 Tap to upload payment receipt
                     <input type="file" id="proofFile" accept="image/*" style="display:none" onchange="handleFile(this)">
                     <img id="preview" alt="Receipt preview">
                 </div>
-                
                 <button onclick="submitRecharge('bank')" class="button">I Have Paid • Submit Proof</button>
             </div>`;
             startCountdown();
@@ -146,23 +139,19 @@ function renderTab(tab) {
                 <p><strong>Network:</strong> TRC20</p>
                 <p><strong>Address:</strong> TXY72hshsjsjsjsjsjss</p>
             </div>
-            
             <input id="usdAmountUSDT" type="number" placeholder="Amount in USD">
-            
             <div class="upload-area" onclick="document.getElementById('proofFileUSDT').click()">
                 📸 Tap to upload transaction screenshot
                 <input type="file" id="proofFileUSDT" accept="image/*" style="display:none" onchange="handleFile(this)">
                 <img id="previewUSDT" alt="Receipt preview">
             </div>
-            
             <button onclick="submitRecharge('usdt')" class="button">I Have Paid • Submit Proof</button>
         </div>`;
     }
 }
 
 function confirmAmount(tab) {
-    const amountInput = document.getElementById("usdAmount");
-    const amount = parseFloat(amountInput.value);
+    const amount = parseFloat(document.getElementById("usdAmount").value);
     if (!amount || amount <= 0) return toast("Please enter a valid amount");
     selectedAmountUSD = amount;
     currentStep = 2;
@@ -174,21 +163,17 @@ function startCountdown() {
     let timeLeft = 30 * 60 * 1000;
     timerInterval = setInterval(() => {
         timeLeft -= 10;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            document.getElementById("countdown").innerHTML = "EXPIRED";
-            return;
-        }
+        if (timeLeft <= 0) { clearInterval(timerInterval); document.getElementById("countdown").innerHTML = "EXPIRED"; return; }
         const min = Math.floor(timeLeft / 60000);
         const sec = Math.floor((timeLeft % 60000) / 1000);
-        const ms = Math.floor((timeLeft % 1000) / 10);
+        const ms  = Math.floor((timeLeft % 1000) / 10);
         document.getElementById("countdown").innerHTML = `${min}:${sec.toString().padStart(2,'0')}.${ms.toString().padStart(2,'0')}`;
     }, 10);
 }
 
 function copyAccount() {
-    const num = document.getElementById("accNumber").innerText;
-    navigator.clipboard.writeText(num).then(() => toast("✅ Account number copied!"));
+    navigator.clipboard.writeText(document.getElementById("accNumber").innerText)
+        .then(() => toast("✅ Account number copied!"));
 }
 
 function handleFile(input) {
@@ -206,16 +191,12 @@ function handleFile(input) {
 
 async function getMinerId() {
     return new Promise(resolve => {
-        db.ref("users/" + uid).once("value", snap => {
-            resolve((snap.val() || {}).minerId || "No Miner ID");
-        });
+        db.ref("users/" + uid).once("value", snap => resolve((snap.val() || {}).minerId || "No Miner ID"));
     });
 }
 
 async function sendToTelegramBot(method, amount, photoBase64, txKey) {
     const minerId = await getMinerId();
-
-    // ─── Build URL buttons (never expire!) ────────────────────────────────────
     const approveUrl = `${FUNCTIONS_BASE}/approveRecharge?txId=${txKey}&secret=${SECRET}`;
     const rejectUrl  = `${FUNCTIONS_BASE}/rejectRecharge?txId=${txKey}&secret=${SECRET}`;
 
@@ -229,12 +210,10 @@ ${method === 'bank' ? `💵 Naira: ₦${(amount * 1500).toLocaleString('en-US')}
 🕐 Time: ${new Date().toLocaleString()}
 🔑 Tx ID: ${txKey}`;
 
-    // Convert base64 to blob for photo upload
     const byteCharacters = atob(photoBase64.split(',')[1]);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) byteNumbers[i] = byteCharacters.charCodeAt(i);
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: 'image/jpeg' });
+    const blob = new Blob([new Uint8Array(byteNumbers)], { type: 'image/jpeg' });
 
     const formData = new FormData();
     formData.append("chat_id", ADMIN_CHAT_ID);
@@ -247,10 +226,7 @@ ${method === 'bank' ? `💵 Naira: ₦${(amount * 1500).toLocaleString('en-US')}
         ]]
     }));
 
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-        method: "POST",
-        body: formData
-    });
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: "POST", body: formData });
 }
 
 function submitRecharge(method) {
@@ -258,34 +234,32 @@ function submitRecharge(method) {
     loader.style.display = "flex";
 
     setTimeout(async () => {
-        let amount = 0;
-        if (method === "bank") amount = selectedAmountUSD;
-        else amount = parseFloat(document.getElementById("usdAmountUSDT").value) || 0;
+        let amount = method === "bank" ? selectedAmountUSD : parseFloat(document.getElementById("usdAmountUSDT").value) || 0;
+        if (!amount || amount <= 0) { loader.style.display = "none"; return toast("Enter a valid amount"); }
 
-        if (!amount || amount <= 0) {
-            loader.style.display = "none";
-            return toast("Enter a valid amount");
-        }
-
-        // Save to Firebase
-        const txRef = db.ref("transactions").push();
-        await txRef.set({
-            uid: uid,
+        const txData = {
+            uid,
             type: "recharge",
-            method: method,
-            amount: amount,
+            method,
+            amount,
             nairaEquivalent: method === "bank" ? amount * 1500 : null,
-            proof: proofBase64 || null,
             status: "pending",
             date: Date.now()
-        });
+        };
 
-        // Send receipt + URL buttons to Telegram
+        // ── Write to BOTH paths ──────────────────────────────────────────
+        // 1. Main transactions node (for admin Cloud Functions)
+        const txRef = db.ref("transactions").push();
+        await txRef.set({ ...txData, proof: proofBase64 || null });
+
+        // 2. User-specific node (for fast history loading — no proof stored here)
+        await db.ref("userTransactions/" + uid + "/" + txRef.key).set(txData);
+        // ────────────────────────────────────────────────────────────────
+
         if (proofBase64) await sendToTelegramBot(method, amount, proofBase64, txRef.key);
 
         loader.style.display = "none";
         toast("Receipt sent to Financial Department • Awaiting admin approval");
-
         proofBase64 = null;
         currentStep = 1;
         setTimeout(() => renderTab(method), 1800);

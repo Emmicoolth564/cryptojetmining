@@ -29,7 +29,6 @@ body {
 .back { font-size:28px; color:#22c55e; cursor:pointer; margin-right:8px; }
 .header h3 { flex:1; text-align:center; font-size:18px; font-weight:700; }
 
-/* FULL PAGE LOADER */
 .page-loader {
     position: fixed;
     inset: 0;
@@ -44,8 +43,7 @@ body {
 }
 .page-loader.hidden { opacity: 0; pointer-events: none; }
 .spinner {
-    width: 52px;
-    height: 52px;
+    width: 52px; height: 52px;
     border: 5px solid rgba(34,197,94,0.15);
     border-top: 5px solid #22c55e;
     border-radius: 50%;
@@ -54,7 +52,6 @@ body {
 .spinner-text { font-size: 14px; color: #64748b; font-weight: 500; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* TABS */
 .tabs {
     display: flex;
     gap: 6px;
@@ -85,10 +82,8 @@ body {
     color: #22c55e;
 }
 
-/* CONTENT */
 .content { padding: 14px 16px 100px; }
 
-/* SUMMARY */
 .summary {
     display: flex;
     gap: 10px;
@@ -105,7 +100,6 @@ body {
 .summary-label { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; }
 .summary-value { font-size: 17px; font-weight: 700; }
 
-/* TX CARD */
 .tx-card {
     background: #0f172a;
     border-radius: 18px;
@@ -120,8 +114,7 @@ body {
 @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:none; } }
 
 .tx-icon {
-    width: 44px;
-    height: 44px;
+    width: 44px; height: 44px;
     border-radius: 13px;
     display: flex;
     align-items: center;
@@ -157,7 +150,6 @@ body {
 .badge-pending  { background: rgba(245,158,11,0.15); color: #f59e0b; }
 .badge-rejected { background: rgba(239,68,68,0.15);  color: #f87171; }
 
-/* empty state — just a small spinner, no text */
 .empty {
     display: flex;
     align-items: center;
@@ -165,8 +157,7 @@ body {
     padding: 80px 20px;
 }
 .mini-spinner {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     border: 4px solid rgba(34,197,94,0.1);
     border-top: 4px solid #22c55e;
     border-radius: 50%;
@@ -221,10 +212,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const uid = localStorage.getItem("uid");
-if (!uid) {
-    alert("Please sign in first");
-    window.location.href = "signin.html";
-}
+if (!uid) { alert("Please sign in first"); window.location.href = "signin.html"; }
 
 let currentTab = "all";
 let allTransactions = [];
@@ -236,8 +224,8 @@ function switchTab(tab, el) {
     renderTransactions();
 }
 
-// Real-time listener — auto-updates the moment admin approves/rejects
-db.ref("transactions").orderByChild("uid").equalTo(uid).on("value", snap => {
+// ── FAST: reads only THIS user's node directly — no scan, no filter ──
+db.ref("userTransactions/" + uid).on("value", snap => {
     const txns = snap.val() || {};
 
     allTransactions = Object.entries(txns)
@@ -248,14 +236,11 @@ db.ref("transactions").orderByChild("uid").equalTo(uid).on("value", snap => {
             amount:    tx.amount || 0,
             status:    tx.status || "pending",
             timestamp: tx.date   || Date.now()
-            // proof intentionally excluded — receipts never shown in history
         }))
         .sort((a, b) => b.timestamp - a.timestamp);
 
-    // First load: hide loader, show content
     document.getElementById("pageLoader").classList.add("hidden");
     document.getElementById("mainContent").style.display = "block";
-
     renderTransactions();
 });
 
@@ -274,14 +259,8 @@ function formatDateTime(ts) {
 function renderTransactions() {
     const list = document.getElementById("tx-list");
 
-    // Summary counts (always based on all transactions)
-    const totalIn  = allTransactions
-        .filter(t => t.type === "recharge" && t.status === "approved")
-        .reduce((s, t) => s + t.amount, 0);
-    const totalOut = allTransactions
-        .filter(t => t.type === "withdraw" && t.status === "approved")
-        .reduce((s, t) => s + t.amount, 0);
-
+    const totalIn  = allTransactions.filter(t => t.type === "recharge" && t.status === "approved").reduce((s, t) => s + t.amount, 0);
+    const totalOut = allTransactions.filter(t => t.type === "withdraw" && t.status === "approved").reduce((s, t) => s + t.amount, 0);
     document.getElementById("totalIn").textContent  = "$" + totalIn.toFixed(2);
     document.getElementById("totalOut").textContent = "$" + totalOut.toFixed(2);
 
@@ -296,24 +275,22 @@ function renderTransactions() {
 
     list.innerHTML = filtered.map(tx => {
         const isRecharge = tx.type === "recharge";
-        const label      = isRecharge ? "Recharge" : "Withdrawal";
-        const icon       = isRecharge ? "💳" : "🏦";
-        const iconClass  = isRecharge ? "icon-recharge" : "icon-withdraw";
-        const amtClass   = isRecharge ? "amount-in" : "amount-out";
-        const prefix     = isRecharge ? "+" : "−";
-
         return `
         <div class="tx-card">
             <div class="tx-left">
-                <div class="tx-icon ${iconClass}">${icon}</div>
+                <div class="tx-icon ${isRecharge ? 'icon-recharge' : 'icon-withdraw'}">
+                    ${isRecharge ? '💳' : '🏦'}
+                </div>
                 <div class="tx-info">
-                    <div class="tx-type">${label}</div>
+                    <div class="tx-type">${isRecharge ? 'Recharge' : 'Withdrawal'}</div>
                     <div class="tx-date">${formatDateTime(tx.timestamp)}</div>
                     <div class="tx-method">${tx.method}</div>
                 </div>
             </div>
             <div class="tx-right">
-                <div class="tx-amount ${amtClass}">${prefix}$${Number(tx.amount).toFixed(2)}</div>
+                <div class="tx-amount ${isRecharge ? 'amount-in' : 'amount-out'}">
+                    ${isRecharge ? '+' : '−'}$${Number(tx.amount).toFixed(2)}
+                </div>
                 <div class="tx-badge badge-${tx.status}">${tx.status.toUpperCase()}</div>
             </div>
         </div>`;
