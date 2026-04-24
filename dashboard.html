@@ -3,1011 +3,468 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CryptoJet Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background: radial-gradient(circle at top,#020617,#000814);
-    color:white;
-}
-.logo{
-  height:70px;   /* 👈 THIS IS THE MAGIC */
-  width:auto;
-  display:block;
-  margin:auto;
+* { margin:0; padding:0; box-sizing:border-box; }
 
-  mix-blend-mode: screen;
-  opacity:0.95;
-}
-.logo{
-  filter: brightness(1.2);
+html, body { height:100%; overflow:hidden; }
+
+body {
+  font-family:'DM Sans',sans-serif;
+  background:radial-gradient(circle at top,#020617,#000814);
+  color:white;
 }
 
-/* 👇 ADD IT HERE */
-html, body{
-  height:100%;
-  overflow:hidden;
-}
-/* WRAPPER */
-.wrapper{
-    max-width:420px;
-    margin:auto;
-    padding:10px 15px 100px;
- /* increase this */
-}
-/* TITLE */
-.title{
-    text-align:center;
-    font-size:30px;
-    font-weight:900;
-    color:#00ffcc;
-    animation:glow 2s infinite alternate;
-}
-
-@keyframes glow{
-    from{ text-shadow:0 0 5px #00ffcc;}
-    to{ text-shadow:0 0 30px #00ffcc;}
-}
-
-/* MINER CARD */
-.miner-card{
-    margin-top:20px;
-    padding:20px;
-    border-radius:18px;
-    background:linear-gradient(145deg,#020617,#0f172a);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 0 25px rgba(0,255,204,0.08);
-}
-
-/* LEFT INFO */
-.miner-info{ flex:1; }
-
-.miner-title{
-    font-size:16px;
-    font-weight:700;
-    color:#e5e7eb; /* soft white */
-    letter-spacing:0.5px;
-}
-
-.miner-id{
-    color:#22c55e; /* deeper green */
-    font-size:15px;
-    font-weight:700;
-}
-
-.miner-level{
-    margin-top:8px;
-    color:#38bdf8; /* clean blue */
-    font-weight:600;
-    font-size:14px;
-}
-
-/* BADGE */
-.badge{
-    margin-top:10px;
-    display:inline-block;
-    padding:6px 12px;
-    border-radius:20px;
-    background:#022c22;
-    color:#00ff9d;
-    font-size:12px;
-    position:relative;
-    overflow:hidden;
-}
-.badge::after{
-    content:"";
-    position:absolute;
-    width:100%;
-    height:100%;
-    left:-100%;
-    top:0;
-    background:linear-gradient(120deg,transparent,rgba(0,255,200,0.5),transparent);
-    animation:shine 2s infinite;
-}
-.miner-status{
-    margin-top:6px;
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    padding:3px 8px;
-    border-radius:12px;
-    background:rgba(255,0,0,0.1);
-    color:#ff4d4d;
-    font-size:10px;
-    font-weight:600;
-    animation: blink 1s infinite;
-}
-
-.miner-status .dot{
-    width:5px;
-    height:5px;
-    background:#ff0000;
-    border-radius:50%;
-    box-shadow:0 0 6px #ff0000;
-}
-
-@keyframes blink{
-    0%{opacity:1;}
-    50%{opacity:0.4;}
-    100%{opacity:1;}
-}
-
-@keyframes shine{
-    100%{left:100%;}
-}
-
-/* VISUAL */
-.visual{
-    width:100px;
-    height:100px;
-    position:relative;
-}
-
-/* ✅ FIXED: REAL IMAGES */
-.coin{
-    width:45px;
-    height:45px;
-    position:absolute;
-    top:0;
-    left:30px;
-    background:url("./coin.png") no-repeat center/contain;
-    animation:float 3s infinite ease-in-out;
-    filter:drop-shadow(0 0 10px #00ffcc);
-}
-
-.bot{
-    width:55px;
-    height:55px;
-    position:absolute;
-    bottom:0;
-    left:25px;
-    background:url("./bot.png") no-repeat center/contain;
-    animation:pulse 2s infinite;
-    filter:drop-shadow(0 0 10px #00ffcc);
-}
-
-@keyframes float{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-12px);}
-}
-
-@keyframes pulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.08);}
-    100%{transform:scale(1);}
-}
-
-.balance-card{
-    margin-top:15px;
-    padding:15px;
-    border-radius:15px;
-    background:#0f172a;
-    display:flex;
-    justify-content:space-between;
-    box-shadow:0 0 20px rgba(0,255,204,0.05);
-}
-
-.balance-item{
-    text-align:center;
-    flex:1;
-}
-
-.label{
-    font-size:12px;
-    color:#aaa;
-}
-
-.value{
-    margin-top:5px;
-    font-size:16px;
-    color:#00ffcc;
-    font-weight:bold;
-}
-#balance{
-  font-size:18px;
-  letter-spacing:1px;
-}
-/* MARKET */
-.market{ margin-top:25px; }
-.coin-card{
-    background:#0b1220;
-    padding:14px;
-    border-radius:14px;
-    margin-bottom:10px;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    box-shadow:0 0 15px rgba(0,255,204,0.05);
-}
-
-.coin-left{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.coin-icon{
-    width:28px;
-    height:28px;
-}
-
-.coin-name{
-    font-weight:700;
-    font-size:14px;
-}
-
-.coin-pair{
-    font-size:11px;
-    color:#888;
-}
-
-.coin-right{
-    text-align:right;
-}
-
-.coin-price{
-    font-size:15px;
-    font-weight:700;
-}
-
-.coin-change{
-    font-size:12px;
-    font-weight:600;
-}
-
-/* EXTRA */
-.grid{
-    margin-top:20px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-}
-
-.box{
-    background:#0f172a;
-    padding:18px;
-    border-radius:14px;
-    text-align:center;
-}
-
-/* NAV */
-
-/* ✅ ICON NAV */
-.nav-item{
-    text-align:center;
-    color:#aaa;
-    font-size:11px;
-}
-
-.nav-item img{
-    width:22px;
-    height:22px;
-    display:block;
-    margin:auto;
-    margin-bottom:4px;
-    filter:brightness(0.6);
-}
-
-.nav-item.active img{
-    filter:brightness(1.5) drop-shadow(0 0 8px #00ffcc);
-    transform:translateY(-2px);
-}
-
-.nav-item.active{
-    color:#00ffcc;
-}
-
-.logo-container{
-  margin-top:10px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
-}
-.logo-svg {
-  width: 260px;
-}
-
-.logo-text {
-  font-size: 55px;
-  font-weight: 900;
-  fill: none;
-  stroke: #00ffcc;
-  stroke-width: 2;
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  animation: write 3s ease forwards;
-}
-
-@keyframes write {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-.logo-wrap{
-  position:relative;
-  display:inline-block;
-}
-
-/* ✈️ NEW DRAWN PLANE */
-.plane-line{
-  fill:none;
-  stroke:#00ffcc;
-  stroke-width:2.5;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-
-  stroke-dasharray:800;
-  stroke-dashoffset:800;
-
-  animation: planeLoop 9s ease-in-out infinite;
-} /* 👈 ADD THIS LINE */
-
-@keyframes planeLoop{
-
-  0%{
-    stroke-dashoffset:800;
-    opacity:0;
-  }
-
-  20%{
-    stroke-dashoffset:0;
-    opacity:1;
-  }
-
-  20%, 70%{
-    stroke-dashoffset:0;
-    opacity:1;
-  }
-
-  85%{
-    stroke-dashoffset:800;
-    opacity:0;
-  }
-
-  100%{
-    stroke-dashoffset:800;
-    opacity:0;
-  }
-}
-
-.slider{
-  margin-top:15px;
-  overflow:hidden;
-  border-radius:15px;
-  touch-action: pan-y;
-}
-.slides {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
-
-.slide {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  flex-shrink: 0;
-  border-radius: 15px;
-}
-
-/* GLASS NAV */
-.nav-glass{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  width:90%;
-  height:70px;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-
-  border-radius:25px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.4);
-  border:1px solid rgba(255,255,255,0.08);
-  z-index:999;
-}
-
-/* ITEMS */
-.nav-item{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-size:11px;
-  color:#aaa;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.nav-item.active{
-  color:#00ffcc;
-}
-
-/* ICON BASE */
-.icon{
-  width:26px;
-  height:26px;
-  margin-bottom:4px;
-  position:relative;
-}
-
-/* HOME ICON */
-.icon.home::before{
-  content:"";
-  position:absolute;
-  width:18px;
-  height:18px;
-  background:#aaa;
-  transform:rotate(45deg);
-  top:4px;
-  left:4px;
-  border-radius:3px;
-}
-
-.nav-item.active .home::before{
-  background:#00ffcc;
-}
-
-/* MINER ICON */
-.icon.miner::before{
-  content:"⚡";
-  font-size:20px;
-  position:absolute;
-  left:3px;
-  top:-2px;
-}
-
-.nav-item.active .miner::before{
-  color:#00ffcc;
-}
-
-/* ME ICON (CIRCLE PROFILE) */
-.icon.me{
-  background:#ffffff22;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.icon.me::before{
-  content:"👤";
-  font-size:14px;
-}
-
-.nav-item.active .me{
-  background:#00ffcc33;
-}
-
-/* TAP EFFECT */
-.nav-item:active{
-  transform:scale(0.9);
-}
-.page-content{
+/* PAGE CONTENT */
+.page-content {
   height:100%;
   overflow-y:auto;
-  padding-bottom:90px;
-}
-.plane-line{
-  fill: none;
-  stroke: #00ffcc;
-  stroke-width: 3;
-
-  stroke-linecap: round;
-
-  filter: drop-shadow(0 0 6px #00ffcc)
-          drop-shadow(0 0 12px #00ffcc);
-
-  stroke-dasharray: 6 8; /* makes it look like motion trail */
-}
-.plane-head{
-  fill: #00ffcc;
-
-  filter: drop-shadow(0 0 6px #00ffcc)
-          drop-shadow(0 0 12px #00ffcc);
-}
-.plane-line{
-  animation: moveLine 2s linear infinite;
-}
-
-@keyframes moveLine{
-  from{
-    stroke-dashoffset: 0;
-  }
-  to{
-    stroke-dashoffset: -100;
-  }
-}
-#loader{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#000814;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-}
-
-.loader-content{
-  text-align:center;
-}
-
-.loader-logo{
-  font-size:32px;
-  font-weight:900;
-  color:#00ffcc;
-  margin-bottom:20px;
-  letter-spacing:2px;
-
-  animation: glow 1.5s infinite alternate;
-}
-
-.loader-bar{
-  width:180px;
-  height:4px;
-  background:#111;
-  border-radius:10px;
-  overflow:hidden;
-}
-
-.loader-fill{
-  width:0%;
-  height:100%;
-  background:#00ffcc;
-  animation: loadBar 2s ease forwards;
-}
-
-@keyframes loadBar{
-  to{
-    width:100%;
-  }
-}
-.page-content{
+  padding-bottom:100px;
   opacity:0;
   transition:0.5s;
+  scrollbar-width:none;
+}
+.page-content::-webkit-scrollbar { display:none; }
+
+.wrapper {
+  max-width:420px;
+  margin:auto;
+  padding:10px 15px 20px;
 }
 
-/* SVG Icon Styling */
-.nav-icon {
-    width: 24px;
-    height: 24px;
-    stroke: currentColor;
-    stroke-width: 2;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    margin-bottom: 4px;
+/* LOADER */
+#loader {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:#000814; display:flex; align-items:center; justify-content:center;
+  z-index:9999;
+}
+.loader-content { text-align:center; }
+.loader-logo {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:30px; font-weight:900; color:#00ffcc;
+  margin-bottom:20px; letter-spacing:2px;
+  animation:glow 1.5s infinite alternate;
+}
+.loader-bar { width:180px; height:4px; background:#111; border-radius:10px; overflow:hidden; }
+.loader-fill { width:0%; height:100%; background:#00ffcc; animation:loadBar 2s ease forwards; }
+@keyframes loadBar { to{width:100%;} }
+@keyframes glow { from{text-shadow:0 0 5px #00ffcc;} to{text-shadow:0 0 25px #00ffcc;} }
+
+/* LOGO */
+.logo-container {
+  margin-top:10px; display:flex; flex-direction:column; align-items:center; text-align:center;
+}
+.logo-svg { width:240px; }
+.logo-text {
+  font-size:55px; font-weight:900; fill:none; stroke:#00ffcc; stroke-width:2;
+  stroke-dasharray:600; stroke-dashoffset:600; animation:write 3s ease forwards;
+  font-family:'Space Grotesk',sans-serif;
+}
+@keyframes write { to{stroke-dashoffset:0;} }
+.plane-line {
+  fill:none; stroke:#00ffcc; stroke-width:3; stroke-linecap:round;
+  filter:drop-shadow(0 0 6px #00ffcc) drop-shadow(0 0 12px #00ffcc);
+  stroke-dasharray:6 8; animation:moveLine 2s linear infinite;
+}
+.plane-head { fill:#00ffcc; filter:drop-shadow(0 0 6px #00ffcc); }
+@keyframes moveLine { from{stroke-dashoffset:0} to{stroke-dashoffset:-100} }
+
+/* MINER CARD */
+.miner-card {
+  margin-top:16px; padding:18px 20px; border-radius:18px;
+  background:linear-gradient(145deg,#020617,#0f172a);
+  display:flex; justify-content:space-between; align-items:center;
+  box-shadow:0 0 25px rgba(0,255,204,0.08);
+  border:1px solid rgba(0,255,204,0.08);
+}
+.miner-info { flex:1; }
+.miner-title { font-size:11px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; }
+.miner-id { color:#22c55e; font-size:18px; font-weight:700; font-family:'Space Grotesk',sans-serif; }
+.miner-level { margin-top:6px; color:#38bdf8; font-weight:600; font-size:13px; }
+.badge {
+  margin-top:8px; display:inline-block; padding:5px 12px;
+  border-radius:20px; background:#022c22; color:#00ff9d; font-size:11px;
+  position:relative; overflow:hidden; font-weight:600;
+}
+.badge::after {
+  content:""; position:absolute; width:100%; height:100%; left:-100%; top:0;
+  background:linear-gradient(120deg,transparent,rgba(0,255,200,0.5),transparent);
+  animation:shine 2s infinite;
+}
+@keyframes shine { 100%{left:100%;} }
+.miner-status {
+  margin-top:6px; display:inline-flex; align-items:center; gap:5px;
+  padding:3px 8px; border-radius:12px; font-size:11px; font-weight:600;
+}
+.miner-status .dot { width:5px; height:5px; border-radius:50%; }
+
+/* VISUAL */
+.visual { width:90px; height:90px; position:relative; flex-shrink:0; }
+.coin {
+  width:40px; height:40px; position:absolute; top:0; left:25px;
+  background:url("./coin.png") no-repeat center/contain;
+  animation:float 3s infinite ease-in-out;
+  filter:drop-shadow(0 0 10px #00ffcc);
+}
+.bot {
+  width:50px; height:50px; position:absolute; bottom:0; left:20px;
+  background:url("./bot.png") no-repeat center/contain;
+  animation:pulse 2s infinite;
+  filter:drop-shadow(0 0 10px #00ffcc);
+}
+@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+@keyframes pulse { 0%{transform:scale(1);} 50%{transform:scale(1.08);} 100%{transform:scale(1);} }
+
+/* BALANCE CARD */
+.balance-card {
+  margin-top:12px; padding:14px; border-radius:14px;
+  background:#0f172a; display:flex; justify-content:space-between;
+  box-shadow:0 0 20px rgba(0,255,204,0.05);
+  border:1px solid rgba(255,255,255,0.04);
+}
+.balance-item { text-align:center; flex:1; }
+.label { font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:0.06em; }
+.value { margin-top:4px; font-size:17px; color:#00ffcc; font-weight:700; font-family:'Space Grotesk',sans-serif; }
+
+/* SLIDER */
+.slider { margin-top:12px; overflow:hidden; border-radius:14px; touch-action:pan-y; }
+.slides { display:flex; transition:transform 0.5s ease-in-out; }
+.slide { width:100%; height:180px; object-fit:cover; flex-shrink:0; border-radius:14px; }
+
+/* ── QUICK ACCESS GRID (now above market) ── */
+.section-label {
+  font-size:11px; font-weight:700; color:#475569;
+  text-transform:uppercase; letter-spacing:0.1em;
+  margin:16px 0 10px;
+}
+.grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  margin-bottom:4px;
+}
+.box {
+  background:#0f172a; padding:14px 12px; border-radius:14px;
+  display:flex; align-items:center; gap:10px;
+  border:1px solid rgba(255,255,255,0.04);
+  cursor:pointer; transition:all 0.2s;
+  font-size:14px; font-weight:600; color:#e2e8f0;
+}
+.box:active { transform:scale(0.96); }
+.box:hover { border-color:rgba(0,255,204,0.2); background:#111f30; }
+
+/* Box icon — small, subtle, not shiny */
+.box-icon {
+  width:32px; height:32px; border-radius:9px;
+  background:rgba(0,255,204,0.08);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.box-icon svg {
+  width:16px; height:16px;
+  stroke:#00ffcc; stroke-width:2;
+  fill:none; stroke-linecap:round; stroke-linejoin:round;
 }
 
-.nav-item {
-    color: #94a3b8; /* Muted color for inactive */
+/* ── LIVE MARKET ─────────────────────────── */
+.market { margin-top:4px; }
+.coin-card {
+  background:#0b1220; padding:12px 14px; border-radius:13px;
+  margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;
+  border:1px solid rgba(255,255,255,0.04);
 }
+.coin-left { display:flex; align-items:center; gap:10px; }
+.coin-icon { width:26px; height:26px; border-radius:50%; }
+.coin-name { font-weight:700; font-size:13px; font-family:'Space Grotesk',sans-serif; }
+.coin-pair { font-size:11px; color:#64748b; margin-top:1px; }
+.coin-right { text-align:right; }
+.coin-price { font-size:14px; font-weight:700; font-family:'Space Grotesk',sans-serif; }
+.coin-change { font-size:11px; font-weight:600; margin-top:2px; }
 
-.nav-item.active {
-    color: #00ffcc; /* Brand color for active */
+/* GLASS NAV */
+.nav-glass {
+  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+  width:90%; height:68px; display:flex; justify-content:space-around; align-items:center;
+  background:rgba(255,255,255,0.05); backdrop-filter:blur(20px);
+  border-radius:25px; box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  border:1px solid rgba(255,255,255,0.08); z-index:999;
 }
-
+.nav-item { display:flex; flex-direction:column; align-items:center; font-size:11px; color:#64748b; cursor:pointer; transition:0.3s; font-family:'DM Sans',sans-serif; }
+.nav-item.active { color:#00ffcc; }
+.icon { width:26px; height:26px; margin-bottom:4px; position:relative; }
+.icon.home::before { content:""; position:absolute; width:18px; height:18px; background:#64748b; transform:rotate(45deg); top:4px; left:4px; border-radius:3px; }
+.nav-item.active .home::before { background:#00ffcc; }
+.icon.miner::before { content:"⚡"; font-size:20px; position:absolute; left:3px; top:-2px; }
+.nav-item.active .miner::before { color:#00ffcc; }
+.icon.me { background:#ffffff15; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.icon.me::before { content:"👤"; font-size:14px; }
+.nav-item.active .me { background:#00ffcc22; }
+.nav-item:active { transform:scale(0.9); }
 </style>
 </head>
-
 <body>
+
 <div id="loader">
   <div class="loader-content">
-    
     <div class="loader-logo">CryptoJet</div>
-
-    <div class="loader-bar">
-      <div class="loader-fill"></div>
-    </div>
-
+    <div class="loader-bar"><div class="loader-fill"></div></div>
   </div>
 </div>
+
 <div class="page-content">
 <div class="wrapper">
-<div class="logo-container">
-<div class="logo-wrap">
 
-<svg viewBox="0 0 500 120" class="logo-svg">
-  <text x="50%" y="70%" text-anchor="middle" class="logo-text">
-          CryptoJet
-  </text>
+  <!-- LOGO -->
+  <div class="logo-container">
+    <svg viewBox="0 0 500 120" class="logo-svg">
+      <text x="50%" y="70%" text-anchor="middle" class="logo-text">CryptoJet</text>
+      <path class="plane-line" d="M40 95 Q250 10 460 75"/>
+      <circle cx="460" cy="75" r="4" class="plane-head"/>
+    </svg>
+  </div>
 
-  <!-- plane line -->
-<path class="plane-line"
-  d="M40 95 Q250 10 460 75"
-/>
-<circle cx="460" cy="75" r="4" class="plane-head"/>
-</svg>
-
-</div>
-</div>
-
-<div class="miner-card">
-
-<div class="miner-info">
-    <div class="miner-title">VERIFIED USER CARD</div>
-
-    <div>ID:</div>
-    <div id="userId" class="miner-id">----</div>
-
-    <div class="miner-level">
-        Miner Level: <span id="minerLevel">Novice Miner</span>
+  <!-- MINER CARD -->
+  <div class="miner-card">
+    <div class="miner-info">
+      <div class="miner-title">Verified User Card</div>
+      <div id="userId" class="miner-id">----</div>
+      <div class="miner-level">Level: <span id="minerLevel">Novice Miner</span></div>
+      <div class="badge">Active User</div>
+      <div class="miner-status" id="minerStatus">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">Loading...</span>
+      </div>
     </div>
-
-    <div class="badge">Active User</div>
-
-<!-- Dynamic Mining Status -->
-<div class="miner-status" id="minerStatus">
-    <span class="dot" id="statusDot"></span>
-    <span id="statusText">status loading....</span>
-</div>
-</div>
-<!-- CLICKABLE: Coin = Settings, Bot = Chatbot -->
-<div class="visual">
-    <div class="coin" onclick="window.location.href='settings.html'" style="cursor:pointer;"></div>
-    <div class="bot" onclick="window.location.href='chatbot.html'" style="cursor:pointer;"></div>
-</div>
-
-</div>
-<div class="balance-card">
-<div class="balance-item">
-  <div class="label">Balance</div>
-  <div class="value" id="balance">0</div>
-</div>
- <div class="balance-item">
-        <div class="label">Team Income</div>
-        <div class="value" id="teamIncome">0</div>
+    <div class="visual">
+      <div class="coin" onclick="window.location.href='settings.html'" style="cursor:pointer;"></div>
+      <div class="bot"  onclick="window.location.href='chatbot.html'"  style="cursor:pointer;"></div>
     </div>
+  </div>
 
+  <!-- BALANCE -->
+  <div class="balance-card">
     <div class="balance-item">
-        <div class="label">UI Points</div>
-        <div class="value" id="uiPoints">0</div>
+      <div class="label">Balance</div>
+      <div class="value" id="balance">0</div>
     </div>
-</div>
-<div class="slider">
-  <div class="slides">
-  <img src="logo.jpg" class="slide">
-<img src="mining1.jpg" class="slide">
-<img src="mining2.jpg" class="slide">
-<img src="mining3.jpg" class="slide">
-</div>
-</div>
-<div class="market" id="market"></div>
+    <div class="balance-item">
+      <div class="label">Team Income</div>
+      <div class="value" id="teamIncome">0</div>
+    </div>
+    <div class="balance-item">
+      <div class="label">Points</div>
+      <div class="value" id="uiPoints">0</div>
+    </div>
+  </div>
 
-<div class="grid">
+  <!-- SLIDER -->
+  <div class="slider">
+    <div class="slides">
+      <img src="logo.jpg"     class="slide">
+      <img src="mining1.jpg"  class="slide">
+      <img src="mining2.jpg"  class="slide">
+      <img src="mining3.jpg"  class="slide">
+    </div>
+  </div>
+
+  <!-- QUICK ACCESS (moved above market) -->
+  <div class="section-label">Quick Access</div>
+  <div class="grid">
+
     <div class="box" onclick="nav('miner-power.html')">
-        <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-            </svg>
-            <span>Mining Power</span>
-        </div>
+      <div class="box-icon">
+        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      Mining Power
     </div>
-    
+
     <div class="box" onclick="nav('reward.html')">
-        <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                <path d="M2 17l10 5 10-5"></path>
-                <path d="M2 12l10 5 10-5"></path>
-            </svg>
-            <span>Rewards</span>
-        </div>
+      <div class="box-icon">
+        <svg viewBox="0 0 24 24"><polyline points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      Rewards
     </div>
-     <div class="box" onclick="nav('tasks.html')">
-        <div
-style="display:flex;align-items:center;gap:10px;justify-content:center;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <path d="M14 2v6h6"></path>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <line x1="10" y1="9" x2="8" y2="9"></line>
-            </svg>
-            <span>Tasks</span>
-        </div>
+
+    <div class="box" onclick="nav('tasks.html')">
+      <div class="box-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      Tasks
     </div>
-    
+
     <div class="box" onclick="nav('feeds.html')">
-        <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 6h16"></path>
-                <path d="M4 12h16"></path>
-                <path d="M4 18h7"></path>
-                <circle cx="18" cy="18" r="3"></circle>
-            </svg>
-            <span>Feeds</span>
-        </div>
+      <div class="box-icon">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h7"/><circle cx="18" cy="18" r="3"/></svg>
+      </div>
+      Feeds
     </div>
-</div>
-<!-- ✅ NAV WITH ICONS -->
+
+  </div>
+
+  <!-- LIVE MARKET (now below grid) -->
+  <div class="section-label" style="margin-top:16px;">Live Market</div>
+  <div class="market" id="market"></div>
+
+</div><!-- end wrapper -->
+</div><!-- end page-content -->
+
+<!-- NAV -->
 <div class="nav-glass">
-  
-  <div class="nav-item active" onclick="nav('dashboard.html')">
-    <div class="icon home"></div>
-    <span>Home</span>
-  </div>
-
-  <div class="nav-item" onclick="nav('miner.html')">
-    <div class="icon miner"></div>
-    <span>Miner</span>
-  </div>
-
-  <div class="nav-item" onclick="nav('me.html')">
-    <div class="icon me"></div>
-    <span>Me</span>
-  </div>
-
+  <div class="nav-item active" onclick="nav('dashboard.html')"><div class="icon home"></div><span>Home</span></div>
+  <div class="nav-item"        onclick="nav('miner.html')">   <div class="icon miner"></div><span>Miner</span></div>
+  <div class="nav-item"        onclick="nav('me.html')">      <div class="icon me"></div><span>Me</span></div>
 </div>
 
-<script>
-function nav(page){
-    window.location.href=page;
-}
-
-/* MARKET */
-const coins = [
-  {
-    id: "bitcoin",
-    symbol: "btc",
-    img: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"
-  },
-  {
-    id: "ethereum",
-    symbol: "eth",
-    img: "https://assets.coingecko.com/coins/images/279/large/ethereum.png"
-  },
-  {
-    id: "solana",
-    symbol: "sol",
-    img: "https://assets.coingecko.com/coins/images/4128/large/solana.png"
-  }
-];
-let last={};
-
-async function loadMarket(){
-  try{
-    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coins.map(c => c.id).join(",")}&vs_currencies=usd`);
-    
-    const data = await res.json();
-
-    let html = "";
-
-    for (let coin of coins){
-      let price = data[coin.id]?.usd || 0;
-      let old = last[coin.id] || price;
-
-      let up = price >= old;
-      let color = up ? "#00ffcc" : "#ff4d4d";
-
-      html += `
-<div class="coin-card">
-  <div class="coin-left">
-    <img src="${coin.img}" class="coin-icon">
-    <div>
-      <div>${coin.id.toUpperCase()}</div>
-      <small>${coin.id}/USD</small>
-    </div>
-  </div>
-  <div class="coin-right">
-    <div class="coin-price">$${price.toLocaleString()}</div>
-    <div class="coin-change" style="color:${color}">
-      ${up ? "▲ Up" : "▼ Down"}
-    </div>
-  </div>
-</div>
-`;
-      last[coin.id] = price;
-    }
-
-    document.getElementById("market").innerHTML = html;
-
-  }catch(e){
-    console.log("Market error:", e);
-  }
-}
- 
-loadMarket();
-setInterval(loadMarket,10000);
-</script>
-
-<!-- ✅ FIXED FIREBASE (REAL USER DATA) -->
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
-  authDomain: "cj-miner.firebaseapp.com",
+  apiKey:      "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
+  authDomain:  "cj-miner.firebaseapp.com",
   databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "cj-miner"
+  projectId:   "cj-miner"
 };
-
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const db  = firebase.database();
+const uid = localStorage.getItem("uid");
+if (!uid) window.location.href = "signin.html";
 
-let uid = localStorage.getItem("uid");
+function nav(p){ window.location.href = p; }
 
-if(!uid){
-    window.location.href = "signin.html";
-}
-
-/* 🔥 FIREBASE BALANCE LISTENER */
-db.ref("users/" + uid).on("value", snapshot => {
-  const data = snapshot.val();
-
-  if (data) {
-    document.getElementById("balance").innerText = Math.floor(data.balance || 0);
-    document.getElementById("uiPoints").innerText = data.points || 0;
-    document.getElementById("teamIncome").innerText = data.team || 0;
-  } else {
-    document.getElementById("balance").innerText = 0;
-    document.getElementById("uiPoints").innerText = 0;
-    document.getElementById("teamIncome").innerText = 0;
-  }
+// ── BALANCE LIVE ───────────────────────────────────────────────
+db.ref("users/" + uid).on("value", snap => {
+  const d = snap.val() || {};
+  document.getElementById("balance").innerText   = Math.floor(d.balance || 0);
+  document.getElementById("uiPoints").innerText  = d.points  || 0;
+  document.getElementById("teamIncome").innerText= d.team    || 0;
 });
-/* LOAD USER */
-async function loadUser(){
-    const snapshot = await db.ref("users/" + uid).once("value");
 
-    if(snapshot.exists()){
-        const data = snapshot.val();
-
-        if(data.minerId){
-    document.getElementById("userId").innerText = data.minerId;
-} else {
-    // 🔥 AUTO FIX OLD USERS
-    let newId = "CJ" + Math.floor(1000 + Math.random() * 9000);
-
-    document.getElementById("userId").innerText = newId;
-
-    db.ref("users/" + uid).update({
-        minerId: newId
-    });
-}
-        document.getElementById("minerLevel").innerText =
-            data.level || "Novice Miner";
-
+// ── USER INFO ──────────────────────────────────────────────────
+async function loadUser() {
+  const snap = await db.ref("users/" + uid).once("value");
+  if (snap.exists()) {
+    const d = snap.val();
+    if (d.minerId) {
+      document.getElementById("userId").innerText = d.minerId;
     } else {
-        /* CREATE NEW USER */
-        document.getElementById("userId").innerText = uid;
-        document.getElementById("minerLevel").innerText = "Novice Miner";
-
-        await db.ref("users/" + uid).set({
-            balance: 0,
-            level: "Novice Miner",
-            mining: false,
-            lastClaim: Date.now()
-        });
+      const newId = "CJ" + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById("userId").innerText = newId;
+      db.ref("users/" + uid).update({ minerId: newId });
     }
+    document.getElementById("minerLevel").innerText = d.level || "Novice Miner";
+  } else {
+    document.getElementById("userId").innerText     = uid;
+    document.getElementById("minerLevel").innerText = "Novice Miner";
+    await db.ref("users/" + uid).set({ balance:0, level:"Novice Miner", mining:false, lastClaim:Date.now() });
+  }
 }
 loadUser();
-</script>
-<script>
-let index = 0;
 
-window.onload = () => {
-  const slides = document.querySelector('.slides');
-  const totalSlides = document.querySelectorAll('.slide').length;
-
-  function showSlide() {
-    index++;
-    if (index >= totalSlides) {
-      index = 0;
-    }
-    slides.style.transform = `translateX(-${index * 100}%)`;
-  }
-
-  setInterval(showSlide, 2000);
-
-  let startX = 0;
-
-  slides.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-  });
-
-  slides.addEventListener('touchend', e => {
-    let endX = e.changedTouches[0].clientX;
-
-    if (startX - endX > 50) {
-      showSlide();
-    }
-
-    if (endX - startX > 50) {
-      index--;
-      if (index < 0) index = totalSlides - 1;
-      slides.style.transform = `translateX(-${index * 100}%)`;
-    }
-  });
-};
-</script>
-<script>
-let startX = 0;
-let endX = 0;
-
-const wrapper = document.querySelector(".wrapper");
-
-wrapper.addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
-});
-
-wrapper.addEventListener("touchend", e => {
-  endX = e.changedTouches[0].clientX;
-
-  let diff = startX - endX;
-
-  if(diff > 80){
-    goNext();
-  }
-
-  if(diff < -80){
-    goPrev();
+// ── MINING STATUS ──────────────────────────────────────────────
+db.ref("users/" + uid).on("value", snap => {
+  const d       = snap.val() || {};
+  const active  = d.mining === true || (d.miners && Object.keys(d.miners).length > 0);
+  const statusEl= document.getElementById("minerStatus");
+  const dotEl   = document.getElementById("statusDot");
+  const txtEl   = document.getElementById("statusText");
+  if (active) {
+    txtEl.textContent       = "Mining Active";
+    dotEl.style.background  = "#22c55e";
+    dotEl.style.boxShadow   = "0 0 6px #22c55e";
+    statusEl.style.background = "rgba(34,197,94,0.1)";
+    statusEl.style.color      = "#22c55e";
+  } else {
+    txtEl.textContent       = "Mining Inactive";
+    dotEl.style.background  = "#ef4444";
+    dotEl.style.boxShadow   = "0 0 6px #ef4444";
+    statusEl.style.background = "rgba(239,68,68,0.1)";
+    statusEl.style.color      = "#ef4444";
   }
 });
 
-function goNext(){
-  if(window.location.pathname.includes("dashboard")){
-    window.location.href = "miner.html";
-  } else if(window.location.pathname.includes("miner")){
-    window.location.href = "me.html";
-  }
-}
-
-function goPrev(){
-  if(window.location.pathname.includes("me")){
-    window.location.href = "miner.html";
-  } else if(window.location.pathname.includes("miner")){
-    window.location.href = "dashboard.html";
-  }
-}
-</script>
-</script>
-
-<script>
+// ── SLIDER ─────────────────────────────────────────────────────
+let slideIdx = 0;
 window.addEventListener("load", () => {
+  const slides      = document.querySelector(".slides");
+  const totalSlides = document.querySelectorAll(".slide").length;
+  function showSlide() {
+    slideIdx = (slideIdx + 1) % totalSlides;
+    slides.style.transform = `translateX(-${slideIdx * 100}%)`;
+  }
+  setInterval(showSlide, 2500);
+  let sx = 0;
+  slides.addEventListener("touchstart", e => { sx = e.touches[0].clientX; });
+  slides.addEventListener("touchend",   e => {
+    const diff = sx - e.changedTouches[0].clientX;
+    if (diff > 50)       showSlide();
+    else if (diff < -50) { slideIdx = Math.max(0, slideIdx - 1); slides.style.transform = `translateX(-${slideIdx * 100}%)`; }
+  });
+});
 
+// ── SWIPE BETWEEN PAGES ────────────────────────────────────────
+let swipeX = 0;
+document.querySelector(".wrapper").addEventListener("touchstart", e => { swipeX = e.touches[0].clientX; });
+document.querySelector(".wrapper").addEventListener("touchend",   e => {
+  const diff = swipeX - e.changedTouches[0].clientX;
+  if (diff > 80)       nav("miner.html");
+  else if (diff < -80) {} // already on home
+});
+
+// ── LIVE MARKET — 7 coins ──────────────────────────────────────
+const COINS = [
+  { id:"bitcoin",       symbol:"BTC", img:"https://assets.coingecko.com/coins/images/1/large/bitcoin.png" },
+  { id:"ethereum",      symbol:"ETH", img:"https://assets.coingecko.com/coins/images/279/large/ethereum.png" },
+  { id:"solana",        symbol:"SOL", img:"https://assets.coingecko.com/coins/images/4128/large/solana.png" },
+  { id:"tether",        symbol:"USDT",img:"https://assets.coingecko.com/coins/images/325/large/Tether.png" },
+  { id:"binancecoin",   symbol:"BNB", img:"https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png" },
+  { id:"ripple",        symbol:"XRP", img:"https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png" },
+  { id:"dogecoin",      symbol:"DOGE",img:"https://assets.coingecko.com/coins/images/5/large/dogecoin.png" }
+];
+let lastPrices = {};
+
+async function loadMarket() {
+  try {
+    const ids  = COINS.map(c => c.id).join(",");
+    const res  = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`);
+    const data = await res.json();
+    let html   = "";
+    COINS.forEach(coin => {
+      const price = data[coin.id]?.usd || 0;
+      const old   = lastPrices[coin.id] || price;
+      const up    = price >= old;
+      const color = up ? "#00ffcc" : "#f87171";
+      const arrow = up ? "▲" : "▼";
+      html += `
+        <div class="coin-card">
+          <div class="coin-left">
+            <img src="${coin.img}" class="coin-icon">
+            <div>
+              <div class="coin-name">${coin.symbol}</div>
+              <div class="coin-pair">${coin.id}/USD</div>
+            </div>
+          </div>
+          <div class="coin-right">
+            <div class="coin-price">$${price.toLocaleString()}</div>
+            <div class="coin-change" style="color:${color}">${arrow} ${up?"Up":"Down"}</div>
+          </div>
+        </div>`;
+      lastPrices[coin.id] = price;
+    });
+    document.getElementById("market").innerHTML = html;
+  } catch(e) { console.log("Market error:", e); }
+}
+loadMarket();
+setInterval(loadMarket, 10000);
+
+// ── LOADER ─────────────────────────────────────────────────────
+window.addEventListener("load", () => {
   setTimeout(() => {
     document.getElementById("loader").style.display = "none";
     document.querySelector(".page-content").style.opacity = "1";
   }, 1500);
-
-});
-</script>
-<script>
-// Dynamic mining status - shows Active or Inactive
-db.ref("users/" + uid).on("value", snapshot => {
-    const data = snapshot.val() || {};
-    const isMining = data.mining === true || (data.miners && Object.keys(data.miners).length > 0);
-    
-    const statusText = document.getElementById("statusText");
-    const statusDot = document.getElementById("statusDot");
-    
-    if (isMining) {
-        statusText.textContent = "Mining Active";
-        statusDot.style.background = "#22c55e";
-        statusDot.style.boxShadow = "0 0 6px #22c55e";
-        document.getElementById("minerStatus").style.background = "rgba(34,197,94,0.1)";
-        document.getElementById("minerStatus").style.color = "#22c55e";
-    } else {
-        statusText.textContent = "Mining Inactive";
-        statusDot.style.background = "#ef4444";
-        statusDot.style.boxShadow = "0 0 6px #ef4444";
-        document.getElementById("minerStatus").style.background = "rgba(239,68,68,0.1)";
-        document.getElementById("minerStatus").style.color = "#ef4444";
-    }
 });
 </script>
 </body>
