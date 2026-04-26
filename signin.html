@@ -7,33 +7,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --green:  #00ffcc;
-  --blue:   #00f0ff;
-  --bg:     #020617;
-  --card:   #0c1628;
-  --border: rgba(0,255,204,0.15);
-  --text:   #e2e8f0;
-  --muted:  #64748b;
+  --green:#00ffcc; --blue:#00f0ff; --bg:#020617;
+  --card:#0c1628; --border:rgba(0,255,204,0.15);
+  --text:#e2e8f0; --muted:#64748b;
 }
-
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { max-width:100vw; overflow-x:hidden; }
 
 body {
   font-family:'DM Sans',sans-serif;
-  background:var(--bg);
-  color:var(--text);
+  background:var(--bg); color:var(--text);
   background-image:
     radial-gradient(ellipse at 20% 20%, rgba(0,255,204,0.07) 0%, transparent 55%),
     radial-gradient(ellipse at 80% 80%, rgba(0,240,255,0.05) 0%, transparent 55%);
 }
 
-.page {
-  max-width:420px; margin:0 auto;
-  padding:28px 16px 40px;
-}
+.page { max-width:420px; margin:0 auto; padding:28px 16px 40px; }
 
-/* ── LOGO — green like dashboard ── */
+/* LOGO */
 .logo-wrap { text-align:center; margin-bottom:20px; }
 .logo-svg  { width:min(240px,65vw); }
 .logo-text {
@@ -53,7 +44,7 @@ body {
 @keyframes moveLine { from{stroke-dashoffset:0} to{stroke-dashoffset:-100} }
 .logo-sub { font-size:12px; color:var(--muted); margin-top:4px; letter-spacing:0.06em; }
 
-/* ── MODE TOGGLE ── */
+/* MODE TOGGLE */
 .mode-toggle {
   display:flex; background:var(--card); border-radius:14px;
   padding:5px; margin-bottom:14px; border:1px solid var(--border); gap:4px;
@@ -68,7 +59,7 @@ body {
   color:var(--green); border:1px solid var(--border);
 }
 
-/* ── CARD ── */
+/* CARD */
 .card {
   background:var(--card); border:1px solid var(--border);
   border-radius:20px; padding:20px 16px; margin-bottom:12px;
@@ -76,8 +67,8 @@ body {
 .card-title { font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700; color:var(--text); margin-bottom:3px; }
 .card-sub   { font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.5; }
 
-/* ── METHOD TABS ── */
-.method-tabs { display:flex; gap:8px; margin-bottom:16px; }
+/* METHOD TABS */
+.method-tabs { display:flex; gap:8px; margin-bottom:14px; }
 .method-tab {
   flex:1; padding:10px; border-radius:11px; text-align:center;
   font-size:13px; font-weight:600; cursor:pointer;
@@ -88,7 +79,7 @@ body {
 }
 .method-tab.active { background:rgba(0,255,204,0.1); border-color:var(--green); color:var(--green); }
 
-/* ── INPUTS ── */
+/* INPUTS */
 .field { margin-bottom:10px; }
 .field label { display:block; font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:5px; }
 .field input {
@@ -98,13 +89,13 @@ body {
   font-size:15px; font-family:'DM Sans',sans-serif; transition:all 0.2s;
   -webkit-appearance:none;
 }
-.field input:focus { border-color:var(--green); outline:none; box-shadow:0 0 0 3px rgba(0,255,204,0.1); background:rgba(0,255,204,0.02); }
+.field input:focus { border-color:var(--green); outline:none; box-shadow:0 0 0 3px rgba(0,255,204,0.1); }
 .field input::placeholder { color:#334155; }
 
-/* Country code + phone */
+/* Phone */
 .phone-wrap { display:flex; gap:8px; }
 .country-select {
-  padding:13px 10px; border-radius:12px;
+  padding:12px 8px; border-radius:12px;
   border:1.5px solid rgba(255,255,255,0.08);
   background:rgba(255,255,255,0.04); color:var(--text);
   font-size:13px; font-family:'DM Sans',sans-serif;
@@ -112,29 +103,21 @@ body {
   -webkit-appearance:none; appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E");
   background-repeat:no-repeat; background-position:right 8px center;
-  padding-right:24px;
+  padding-right:22px;
 }
-.country-select:focus { border-color:var(--green); outline:none; }
 .country-select option { background:#0c1628; color:var(--text); }
 .phone-wrap input { flex:1; }
 
-/* ── BUTTONS ── */
+/* BUTTONS */
 .main-btn {
-  width:100%; padding:15px; border-radius:13px; border:none;
+  width:100%; padding:14px; border-radius:13px; border:none;
   background:linear-gradient(90deg,#00ffcc,#00bfff);
   color:#000; font-family:'DM Sans',sans-serif; font-weight:700;
   font-size:15px; cursor:pointer; transition:all 0.2s;
   box-shadow:0 8px 22px rgba(0,255,204,0.2); margin-top:4px;
 }
-.main-btn:hover   { transform:translateY(-1px); box-shadow:0 12px 28px rgba(0,255,204,0.3); }
 .main-btn:active  { transform:scale(0.98); }
-.main-btn:disabled{ opacity:0.6; cursor:not-allowed; transform:none; }
-
-.forgot-link {
-  text-align:center; font-size:13px; color:var(--blue);
-  cursor:pointer; margin-top:10px; font-weight:600;
-}
-.forgot-link:hover { color:var(--green); }
+.main-btn:disabled{ opacity:0.6; cursor:not-allowed; }
 
 .divider { display:flex; align-items:center; gap:10px; margin:10px 0; }
 .divider::before, .divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.07); }
@@ -148,88 +131,24 @@ body {
   cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;
   transition:all 0.2s;
 }
-.google-btn:hover { background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.2); }
+.google-btn:hover { background:rgba(255,255,255,0.08); }
+
 .google-logo {
   width:20px; height:20px; flex-shrink:0;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23EA4335' d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z'/%3E%3Cpath fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z'/%3E%3Cpath fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z'/%3E%3Cpath fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z'/%3E%3C/svg%3E") no-repeat center/contain;
 }
 
-/* ── VERIFY NOTICE ── */
-.verify-notice {
-  background:rgba(0,255,204,0.07); border:1px solid rgba(0,255,204,0.18);
-  border-radius:12px; padding:14px 15px; font-size:13px; color:#94a3b8;
-  line-height:1.6; display:none; margin-top:12px;
-}
-.verify-notice strong { color:var(--green); }
-.verify-notice .resend { color:var(--blue); cursor:pointer; font-weight:600; text-decoration:underline; }
-
-/* ── REMEMBER ── */
+/* REMEMBER */
 .remember { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); margin-bottom:10px; cursor:pointer; }
 .remember input[type=checkbox] { accent-color:var(--green); width:15px; height:15px; cursor:pointer; }
 
-/* ── SWITCH LINK ── */
+/* SWITCH */
 .switch-link { text-align:center; font-size:13px; color:var(--muted); margin-top:4px; }
 .switch-link span { color:var(--green); cursor:pointer; font-weight:600; }
 
-.footer { text-align:center; padding-top:16px; padding-bottom:20px; font-size:12px; color:#334155; line-height:1.7; }
+.footer { text-align:center; padding-top:14px; padding-bottom:20px; font-size:12px; color:#334155; line-height:1.7; }
 
-/* ── FORGOT PASSWORD OVERLAY ── */
-.overlay {
-  position:fixed; inset:0; background:rgba(2,6,23,0.92);
-  display:none; align-items:flex-end; justify-content:center;
-  z-index:9000; padding:0;
-}
-.overlay.open { display:flex; }
-.fp-sheet {
-  background:#0c1628; border-radius:24px 24px 0 0;
-  padding:28px 22px 40px; width:100%; max-width:480px;
-  border:1px solid rgba(0,255,204,0.15); border-bottom:none;
-  animation:slideUp 0.3s ease;
-}
-@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-.fp-title { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; color:var(--green); margin-bottom:6px; }
-.fp-sub   { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:20px; }
-.fp-close { float:right; font-size:22px; color:var(--muted); cursor:pointer; line-height:1; }
-.fp-input {
-  width:100%; padding:14px 15px; border-radius:12px; margin-bottom:12px;
-  border:1.5px solid rgba(255,255,255,0.1);
-  background:rgba(255,255,255,0.04); color:var(--text);
-  font-size:15px; font-family:'DM Sans',sans-serif; -webkit-appearance:none;
-}
-.fp-input:focus { border-color:var(--green); outline:none; box-shadow:0 0 0 3px rgba(0,255,204,0.1); }
-.fp-btn {
-  width:100%; padding:14px; border-radius:12px; border:none;
-  background:linear-gradient(90deg,#00ffcc,#00bfff); color:#000;
-  font-family:'DM Sans',sans-serif; font-weight:700; font-size:15px;
-  cursor:pointer; margin-top:4px;
-}
-.fp-btn:disabled { opacity:0.6; cursor:not-allowed; }
-.fp-back { font-size:13px; color:var(--blue); cursor:pointer; text-align:center; margin-top:12px; font-weight:600; }
-.fp-info {
-  background:rgba(0,255,204,0.07); border:1px solid rgba(0,255,204,0.15);
-  border-radius:12px; padding:13px 15px; font-size:13px; color:#94a3b8;
-  line-height:1.6; margin-bottom:14px;
-}
-.fp-info strong { color:var(--green); }
-.fp-warn {
-  background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2);
-  border-radius:12px; padding:13px 15px; font-size:13px; color:#94a3b8;
-  line-height:1.6; margin-bottom:14px;
-}
-.fp-warn strong { color:#f59e0b; }
-
-/* OTP input row */
-.otp-row { display:flex; gap:8px; margin-bottom:12px; }
-.otp-digit {
-  flex:1; padding:14px 0; border-radius:12px; text-align:center;
-  border:1.5px solid rgba(255,255,255,0.1);
-  background:rgba(255,255,255,0.04); color:var(--text);
-  font-size:22px; font-weight:700; font-family:'Space Grotesk',sans-serif;
-  -webkit-appearance:none;
-}
-.otp-digit:focus { border-color:var(--green); outline:none; box-shadow:0 0 0 3px rgba(0,255,204,0.1); }
-
-/* ── TOAST ── */
+/* TOAST */
 .toast {
   position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
   padding:12px 22px; border-radius:999px; font-weight:700; font-size:13px;
@@ -241,10 +160,9 @@ body {
 </style>
 </head>
 <body>
-
 <div class="page">
 
-  <!-- LOGO — green -->
+  <!-- LOGO -->
   <div class="logo-wrap">
     <svg viewBox="0 0 500 120" class="logo-svg">
       <text x="50%" y="70%" text-anchor="middle" class="logo-text">CryptoJet</text>
@@ -254,7 +172,7 @@ body {
     <div class="logo-sub">Mine • Earn • Grow</div>
   </div>
 
-  <!-- SIGN UP / SIGN IN TOGGLE -->
+  <!-- MODE TOGGLE -->
   <div class="mode-toggle">
     <div class="mode-btn active" id="modeSignUp" onclick="setMode('signup')">Create Account</div>
     <div class="mode-btn"        id="modeSignIn" onclick="setMode('signin')">Sign In</div>
@@ -341,16 +259,6 @@ body {
 
     <button class="main-btn" id="mainBtn" onclick="handleAuth()">Create Account</button>
 
-    <!-- FORGOT PASSWORD — only shown on sign in -->
-    <div class="forgot-link" id="forgotLink" style="display:none" onclick="openForgot()">Forgot Password?</div>
-
-    <!-- EMAIL VERIFICATION NOTICE -->
-    <div class="verify-notice" id="verifyNotice">
-      📧 Verification link sent to <strong id="verifyEmail"></strong>.<br>
-      Check your inbox (and spam) then come back to sign in.<br><br>
-      Didn't receive it? <span class="resend" onclick="resendVerification()">Resend email</span>
-    </div>
-
     <div class="divider"><span>or continue with</span></div>
 
     <button class="google-btn" onclick="signInWithGoogle()">
@@ -369,13 +277,6 @@ body {
   </div>
 </div>
 
-<!-- FORGOT PASSWORD BOTTOM SHEET -->
-<div class="overlay" id="fpOverlay" onclick="handleOverlayClick(event)">
-  <div class="fp-sheet" id="fpSheet">
-    <div id="fpContent"></div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -384,7 +285,7 @@ body {
 <script>
 const firebaseConfig = {
   apiKey:      "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
-  authDomain:  "cryptojetmining.com",
+  authDomain:  "cj-miner.firebaseapp.com",
   databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
   projectId:   "cj-miner"
 };
@@ -394,24 +295,21 @@ const db   = firebase.database();
 
 let isSignUp   = true;
 let authMethod = "email";
-let lastUser   = null;
 
 // ── MODE ──────────────────────────────────────────────────────
 function setMode(mode) {
   isSignUp = mode === "signup";
   document.getElementById("modeSignUp").classList.toggle("active",  isSignUp);
   document.getElementById("modeSignIn").classList.toggle("active", !isSignUp);
-  document.getElementById("nameField").style.display          = isSignUp ? "block" : "none";
-  document.getElementById("confirmField").style.display       = isSignUp ? "block" : "none";
-  document.getElementById("phoneConfirmField").style.display  = isSignUp ? "block" : "none";
-  document.getElementById("cardTitle").textContent            = isSignUp ? "Join CryptoJet" : "Welcome Back";
-  document.getElementById("cardSub").textContent              = isSignUp ? "Start earning passive income today" : "Sign in to continue mining";
-  document.getElementById("mainBtn").textContent              = isSignUp ? "Create Account" : "Sign In";
-  document.getElementById("forgotLink").style.display         = !isSignUp ? "block" : "none";
-  document.getElementById("switchLink").innerHTML             = isSignUp
+  document.getElementById("nameField").style.display         = isSignUp ? "block" : "none";
+  document.getElementById("confirmField").style.display      = isSignUp ? "block" : "none";
+  document.getElementById("phoneConfirmField").style.display = isSignUp ? "block" : "none";
+  document.getElementById("cardTitle").textContent           = isSignUp ? "Join CryptoJet" : "Welcome Back";
+  document.getElementById("cardSub").textContent             = isSignUp ? "Start earning passive income today" : "Sign in to continue mining";
+  document.getElementById("mainBtn").textContent             = isSignUp ? "Create Account" : "Sign In";
+  document.getElementById("switchLink").innerHTML            = isSignUp
     ? 'Already have an account? <span onclick="setMode(\'signin\')">Sign In</span>'
     : 'Don\'t have an account? <span onclick="setMode(\'signup\')">Sign Up</span>';
-  document.getElementById("verifyNotice").style.display = "none";
 }
 
 // ── METHOD ────────────────────────────────────────────────────
@@ -423,7 +321,7 @@ function setMethod(method) {
   document.getElementById("phoneFields").style.display = method === "phone" ? "block" : "none";
 }
 
-// ── HANDLE AUTH ───────────────────────────────────────────────
+// ── MAIN AUTH ─────────────────────────────────────────────────
 async function handleAuth() {
   const btn = document.getElementById("mainBtn");
   btn.disabled = true; btn.textContent = "Please wait...";
@@ -438,7 +336,7 @@ async function handleAuth() {
   }
 }
 
-// ── EMAIL AUTH ────────────────────────────────────────────────
+// ── EMAIL AUTH — no verification at all ───────────────────────
 async function handleEmailAuth() {
   const name     = document.getElementById("nameInput").value.trim();
   const email    = document.getElementById("emailInput").value.trim();
@@ -450,26 +348,14 @@ async function handleEmailAuth() {
     if (password.length < 6)  throw { message:"Password must be at least 6 characters" };
     if (password !== confirm) throw { message:"Passwords do not match" };
     const cred = await auth.createUserWithEmailAndPassword(email, password);
-    lastUser   = cred.user;
-    await cred.user.sendEmailVerification();
     await createUserProfile(cred.user.uid, name, email);
-    await auth.signOut();
-    document.getElementById("verifyEmail").textContent = email;
-    document.getElementById("verifyNotice").style.display = "block";
-    showToast("Verification email sent! Check your inbox 📧", "success");
+    localStorage.setItem("uid", cred.user.uid);
+    if (document.getElementById("rememberMe").checked) localStorage.setItem("rememberedEmail", email);
+    showToast("Account created! Welcome 🚀", "success");
+    setTimeout(() => window.location.href = "dashboard.html", 800);
   } else {
-    const cred      = await auth.signInWithEmailAndPassword(email, password);
-    const user      = cred.user;
-    const dbSnap    = await db.ref("users/" + user.uid).once("value");
-    const isOldUser = dbSnap.exists();
-    if (!user.emailVerified && !isOldUser) {
-      lastUser = user;
-      await auth.signOut();
-      document.getElementById("verifyEmail").textContent = email;
-      document.getElementById("verifyNotice").style.display = "block";
-      throw { message:"Please verify your email first. Check your inbox." };
-    }
-    localStorage.setItem("uid", user.uid);
+    const cred = await auth.signInWithEmailAndPassword(email, password);
+    localStorage.setItem("uid", cred.user.uid);
     if (document.getElementById("rememberMe").checked) localStorage.setItem("rememberedEmail", email);
     showToast("Welcome back! ✅", "success");
     setTimeout(() => window.location.href = "dashboard.html", 800);
@@ -506,48 +392,34 @@ async function signInWithGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.addScope("email");
   provider.addScope("profile");
-
   try {
     const cred = await auth.signInWithPopup(provider);
     const user = cred.user;
-
-    // Create profile if new user
     const snap = await db.ref("users/" + user.uid).once("value");
     if (!snap.exists()) {
       await createUserProfile(user.uid, user.displayName || "Miner", user.email);
     }
-
     localStorage.setItem("uid", user.uid);
-    if (document.getElementById("rememberMe").checked) {
-      localStorage.setItem("rememberedEmail", user.email || "");
-    }
-
+    if (document.getElementById("rememberMe").checked) localStorage.setItem("rememberedEmail", user.email || "");
     showToast("Signed in with Google ✅", "success");
-    // Short delay so toast is visible then redirect
     setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
-
   } catch (err) {
-    if (err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user") {
-      // Fallback to redirect-based sign in if popup blocked
-      if (err.code === "auth/popup-blocked") {
-        showToast("Popup blocked — trying redirect...", "error");
-        setTimeout(() => auth.signInWithRedirect(provider), 800);
-      }
-      // If user just closed the popup, do nothing
-    } else {
+    if (err.code === "auth/popup-blocked") {
+      const provider2 = new firebase.auth.GoogleAuthProvider();
+      showToast("Redirecting to Google...", "success");
+      setTimeout(() => auth.signInWithRedirect(provider2), 600);
+    } else if (err.code !== "auth/popup-closed-by-user") {
       showToast(friendlyError(err.code || err.message), "error");
     }
   }
 }
 
-// Handle redirect result (for when popup was blocked and we used redirect instead)
+// Handle redirect result
 auth.getRedirectResult().then(async result => {
   if (!result || !result.user) return;
   const user = result.user;
   const snap = await db.ref("users/" + user.uid).once("value");
-  if (!snap.exists()) {
-    await createUserProfile(user.uid, user.displayName || "Miner", user.email);
-  }
+  if (!snap.exists()) await createUserProfile(user.uid, user.displayName || "Miner", user.email);
   localStorage.setItem("uid", user.uid);
   showToast("Signed in with Google ✅", "success");
   setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
@@ -574,277 +446,6 @@ async function createUserProfile(uid, name, emailOrPhone, isPhone = false) {
   localStorage.removeItem("referrer");
 }
 
-// ── RESEND VERIFICATION ───────────────────────────────────────
-async function resendVerification() {
-  try {
-    const email    = document.getElementById("emailInput").value.trim();
-    const password = document.getElementById("passwordInput").value;
-    const cred     = await auth.signInWithEmailAndPassword(email, password);
-    await cred.user.sendEmailVerification();
-    await auth.signOut();
-    showToast("Verification email resent! 📧", "success");
-  } catch { showToast("Could not resend — try signing in again", "error"); }
-}
-
-// ══════════════════════════════════════════════════════════════
-// FORGOT PASSWORD FLOW
-// ══════════════════════════════════════════════════════════════
-let fpStep = "choose"; // "choose" | "email-entry" | "otp" | "phone-add-email" | "new-password"
-let fpEmail = "";
-let fpOTP   = "";
-let fpUid   = "";
-
-function openForgot() {
-  fpStep = "choose";
-  document.getElementById("fpOverlay").classList.add("open");
-  renderFP();
-}
-
-function closeForgot() {
-  document.getElementById("fpOverlay").classList.remove("open");
-}
-
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById("fpOverlay")) closeForgot();
-}
-
-function renderFP() {
-  const el = document.getElementById("fpContent");
-
-  if (fpStep === "choose") {
-    el.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-        <div class="fp-title">Forgot Password?</div>
-        <span class="fp-close" onclick="closeForgot()">✕</span>
-      </div>
-      <div class="fp-sub">How did you sign up? We'll send a reset link to your email.</div>
-      <button class="fp-btn" onclick="fpStep='email-entry';renderFP()">✉️ I signed up with Email</button>
-      <div style="height:10px"></div>
-      <button class="fp-btn" style="background:linear-gradient(90deg,#22c55e,#00ffcc);" onclick="fpStep='phone-check';renderFP()">📱 I signed up with Phone</button>
-      <div class="fp-back" onclick="closeForgot()">Cancel</div>`;
-
-  } else if (fpStep === "email-entry") {
-    el.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-        <div class="fp-title">Reset Password</div>
-        <span class="fp-close" onclick="closeForgot()">✕</span>
-      </div>
-      <div class="fp-sub">Enter your registered email address. We'll send you a 6-digit reset code.</div>
-      <input class="fp-input" type="email" id="fpEmailInput" placeholder="your@email.com" autocomplete="email">
-      <button class="fp-btn" id="fpSendBtn" onclick="sendOTP()">Send Reset Code</button>
-      <div class="fp-back" onclick="fpStep='choose';renderFP()">← Back</div>`;
-
-  } else if (fpStep === "otp") {
-    el.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-        <div class="fp-title">Enter Reset Code</div>
-        <span class="fp-close" onclick="closeForgot()">✕</span>
-      </div>
-      <div class="fp-info">A 6-digit code was sent to <strong>${fpEmail}</strong>. Check your inbox and spam folder.</div>
-      <div class="otp-row" id="otpRow">
-        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" oninput="otpInput(this,0)">
-        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" oninput="otpInput(this,1)">
-        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" oninput="otpInput(this,2)">
-        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" oninput="otpInput(this,3)">
-        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" oninput="otpInput(this,4)">
-        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" oninput="otpInput(this,5)">
-      </div>
-      <button class="fp-btn" id="fpVerifyBtn" onclick="verifyOTP()">Verify Code</button>
-      <div class="fp-back" onclick="sendOTP(true)">Didn't receive it? Resend code</div>`;
-
-  } else if (fpStep === "new-password") {
-    el.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-        <div class="fp-title">Set New Password</div>
-        <span class="fp-close" onclick="closeForgot()">✕</span>
-      </div>
-      <div class="fp-sub">Code verified ✅ Choose a strong new password.</div>
-      <input class="fp-input" type="password" id="fpPass1" placeholder="New password (min 6 chars)">
-      <input class="fp-input" type="password" id="fpPass2" placeholder="Confirm new password">
-      <button class="fp-btn" onclick="confirmNewPassword()">Save New Password</button>`;
-
-  } else if (fpStep === "phone-check") {
-    el.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-        <div class="fp-title">Phone Account Reset</div>
-        <span class="fp-close" onclick="closeForgot()">✕</span>
-      </div>
-      <div class="fp-warn">⚠️ Phone accounts don't have a recovery email by default. To reset your password you need to <strong>add a real email</strong> to your account first.</div>
-      <div class="fp-sub">Enter your phone number to look up your account, then you can add a recovery email.</div>
-      <div style="display:flex;gap:8px;margin-bottom:0">
-        <select class="country-select" id="fpCountry" style="padding:13px 8px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;width:90px;flex-shrink:0;">
-          <option value="+234">🇳🇬 +234</option>
-          <option value="+1">🇺🇸 +1</option>
-          <option value="+44">🇬🇧 +44</option>
-          <option value="+91">🇮🇳 +91</option>
-          <option value="+27">🇿🇦 +27</option>
-          <option value="+254">🇰🇪 +254</option>
-          <option value="+233">🇬🇭 +233</option>
-          <option value="+256">🇺🇬 +256</option>
-          <option value="+255">🇹🇿 +255</option>
-          <option value="+260">🇿🇲 +260</option>
-        </select>
-        <input class="fp-input" type="tel" id="fpPhoneNum" placeholder="08012345678" inputmode="tel" style="flex:1;margin-bottom:0;">
-      </div>
-      <button class="fp-btn" style="margin-top:12px;" onclick="lookupPhoneAccount()">Look Up My Account</button>
-      <div class="fp-back" onclick="fpStep='choose';renderFP()">← Back</div>`;
-
-  } else if (fpStep === "phone-add-email") {
-    el.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-        <div class="fp-title">Add Recovery Email</div>
-        <span class="fp-close" onclick="closeForgot()">✕</span>
-      </div>
-      <div class="fp-info">Account found ✅ Add a real email address below. We'll save it and send your reset code there.</div>
-      <input class="fp-input" type="email" id="fpRecoveryEmail" placeholder="your@email.com">
-      <button class="fp-btn" onclick="saveRecoveryEmail()">Save Email & Send Code</button>
-      <div class="fp-back" onclick="fpStep='phone-check';renderFP()">← Back</div>`;
-  }
-}
-
-// ── SEND OTP ──────────────────────────────────────────────────
-async function sendOTP(isResend = false) {
-  const emailEl = document.getElementById("fpEmailInput");
-  const email   = (emailEl ? emailEl.value.trim() : fpEmail);
-  if (!email || !email.includes("@")) return showToast("Enter a valid email", "error");
-
-  const btn = document.getElementById("fpSendBtn");
-  if (btn) { btn.disabled = true; btn.textContent = "Sending..."; }
-
-  fpEmail = email;
-
-  // Generate 6-digit OTP and store in Firebase with 15min expiry
-  const code    = Math.floor(100000 + Math.random() * 900000).toString();
-  const expires = Date.now() + 15 * 60 * 1000;
-  const key     = email.replace(/[.#$\[\]@]/g, "_");
-  await db.ref("passwordResets/" + key).set({ code, expires, email });
-
-  // Use Firebase built-in reset email as delivery (sends the code in a custom way)
-  // Since we don't have EmailJS yet, we use Firebase's sendPasswordResetEmail
-  // but ALSO store OTP so user can enter it OR use the magic link — best of both
-  try {
-    await auth.sendPasswordResetEmail(email);
-  } catch (e) {
-    // Email might not exist in Firebase Auth — that's fine, OTP in DB is enough
-  }
-
-  // NOTE: Until EmailJS is set up, the code is sent via Firebase's standard reset email.
-  // The OTP is stored in DB. For now redirect user to use the magic link in their email.
-  fpStep = "otp";
-  renderFP();
-  if (btn) { btn.disabled = false; btn.textContent = "Send Reset Code"; }
-  showToast(isResend ? "New code sent! Check your inbox 📧" : "Reset code sent! Check your inbox 📧", "success");
-}
-
-// ── OTP INPUT AUTO-ADVANCE ────────────────────────────────────
-function otpInput(el, idx) {
-  // Keep only 1 digit
-  el.value = el.value.slice(-1).replace(/\D/,"");
-  const digits = document.querySelectorAll(".otp-digit");
-  if (el.value && idx < 5) digits[idx + 1].focus();
-  // Check if all filled
-  const entered = Array.from(digits).map(d => d.value).join("");
-  if (entered.length === 6) verifyOTP();
-}
-
-// ── VERIFY OTP ────────────────────────────────────────────────
-async function verifyOTP() {
-  const digits  = document.querySelectorAll(".otp-digit");
-  const entered = Array.from(digits).map(d => d.value).join("");
-  if (entered.length < 6) return showToast("Enter the full 6-digit code", "error");
-
-  const key  = fpEmail.replace(/[.#$\[\]@]/g, "_");
-  const snap = await db.ref("passwordResets/" + key).once("value");
-  const data = snap.val();
-
-  if (!data)                        return showToast("Code not found. Request a new one.", "error");
-  if (Date.now() > data.expires)    return showToast("Code has expired. Request a new one.", "error");
-  if (entered !== data.code)        return showToast("Incorrect code. Try again.", "error");
-
-  // Code correct — move to new password step
-  fpStep = "new-password";
-  renderFP();
-  showToast("Code verified ✅", "success");
-}
-
-// ── CONFIRM NEW PASSWORD ──────────────────────────────────────
-async function confirmNewPassword() {
-  const p1 = document.getElementById("fpPass1").value;
-  const p2 = document.getElementById("fpPass2").value;
-  if (!p1 || p1.length < 6) return showToast("Password must be at least 6 characters", "error");
-  if (p1 !== p2)             return showToast("Passwords do not match", "error");
-
-  try {
-    // Sign in with current credentials to update password
-    // We use Firebase's sendPasswordResetEmail flow — user clicks link in email
-    // For OTP flow: we need to sign in the user to update password
-    // Since we can't do that without current password, we use Firebase Admin SDK approach:
-    // Store the new password request and use the reset link Firebase already sent
-
-    // Mark in DB that password was reset via OTP
-    const key = fpEmail.replace(/[.#$\[\]@]/g, "_");
-    await db.ref("passwordResets/" + key).remove();
-
-    // The actual password update happens when user clicks the link in the Firebase reset email
-    // Show success and instruct user
-    document.getElementById("fpContent").innerHTML = `
-      <div class="fp-title" style="margin-bottom:10px;">Almost Done! 🎉</div>
-      <div class="fp-info">
-        <strong>Check your email</strong> for a password reset link from CryptoJet.<br><br>
-        Click that link → enter your new password → come back here to sign in.<br><br>
-        <small style="color:#475569;">The reset link was sent when you requested your code.</small>
-      </div>
-      <button class="fp-btn" onclick="closeForgot()">Got It →</button>`;
-    showToast("Check your email for the reset link 📧", "success");
-  } catch (err) {
-    showToast(friendlyError(err.code || err.message), "error");
-  }
-}
-
-// ── PHONE ACCOUNT LOOKUP ──────────────────────────────────────
-async function lookupPhoneAccount() {
-  const code  = document.getElementById("fpCountry").value;
-  const phone = document.getElementById("fpPhoneNum").value.trim().replace(/\s/g,"");
-  if (!phone) return showToast("Enter your phone number", "error");
-
-  const fakeEmail = phone.replace(/[^0-9]/g,"") + "@phone.cryptojet";
-
-  // Look in DB for user with this phone
-  const snap  = await db.ref("users").orderByChild("phone").equalTo(code + phone).once("value");
-  const data  = snap.val();
-
-  if (!data) return showToast("No account found with this number", "error");
-
-  const userId = Object.keys(data)[0];
-  const user   = Object.values(data)[0];
-  fpUid = userId;
-
-  // If they already have a recovery email saved
-  if (user.recoveryEmail || user.email) {
-    fpEmail = user.recoveryEmail || user.email;
-    await sendOTP();
-    return;
-  }
-
-  // No email — ask them to add one
-  fpStep = "phone-add-email";
-  renderFP();
-}
-
-// ── SAVE RECOVERY EMAIL FOR PHONE USER ───────────────────────
-async function saveRecoveryEmail() {
-  const email = document.getElementById("fpRecoveryEmail").value.trim();
-  if (!email || !email.includes("@")) return showToast("Enter a valid email", "error");
-
-  fpEmail = email;
-
-  // Save recovery email to their profile
-  await db.ref("users/" + fpUid + "/recoveryEmail").set(email);
-
-  showToast("Email saved! Sending reset code...", "success");
-  await sendOTP();
-}
-
 // ── ERRORS ────────────────────────────────────────────────────
 function friendlyError(code) {
   const map = {
@@ -855,7 +456,6 @@ function friendlyError(code) {
     "auth/invalid-email":          "Please enter a valid email address.",
     "auth/too-many-requests":      "Too many attempts. Please wait a moment.",
     "auth/network-request-failed": "Network error. Check your connection.",
-    "auth/popup-blocked":          "Popup was blocked. Please allow popups and retry.",
     "auth/invalid-credential":     "Incorrect email or password.",
   };
   return map[code] || "Something went wrong. Please try again.";
@@ -865,7 +465,7 @@ function friendlyError(code) {
 function showToast(msg, type = "success") {
   const t = document.getElementById("toast");
   t.textContent = msg; t.className = "toast " + type; t.style.opacity = 1;
-  setTimeout(() => t.style.opacity = 0, 3500);
+  setTimeout(() => t.style.opacity = 0, 3000);
 }
 
 // ── AUTO-FILL ─────────────────────────────────────────────────
