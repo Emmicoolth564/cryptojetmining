@@ -54,7 +54,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 /* TX CARDS */
 .tx-list{padding:0 16px 80px;display:flex;flex-direction:column;gap:10px;}
-.tx-card{background:var(--s1);border-radius:16px;padding:16px 18px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.tx-card{background:var(--s1);border-radius:16px;padding:16px 18px;border:1px solid var(--border);}
+.tx-top{display:flex;justify-content:space-between;align-items:flex-start;}
 .tx-type{font-size:14px;font-weight:700;color:var(--neon);margin-bottom:3px;}
 .tx-date{font-size:12px;color:var(--muted);}
 .tx-amount{font-size:17px;font-weight:700;margin-bottom:4px;}
@@ -62,6 +63,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .badge.approved{background:rgba(34,197,94,0.15);color:var(--green);}
 .badge.pending{background:rgba(245,158,11,0.15);color:var(--gold);}
 .badge.rejected{background:rgba(239,68,68,0.15);color:var(--red);}
+
+/* ACTION BUTTONS on TX cards */
+.tx-actions{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);}
+.tx-action-btn{flex:1;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.tx-action-btn.approve{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3);}
+.tx-action-btn.approve:hover{background:var(--green);color:#000;}
+.tx-action-btn.reject{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3);}
+.tx-action-btn.reject:hover{background:var(--red);color:#fff;}
+.tx-action-btn:disabled{opacity:0.45;cursor:not-allowed;}
+
+/* LOAD MORE */
+.load-more-btn{display:block;width:calc(100% - 32px);margin:0 16px 80px;padding:14px;background:var(--s1);border:1.5px solid var(--border);border-radius:14px;color:var(--neon);font-size:14px;font-weight:700;cursor:pointer;text-align:center;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.load-more-btn:hover{border-color:var(--neon);background:rgba(0,240,255,0.05);}
 
 /* ── USER DETAIL PANEL ───────────────────────── */
 .detail-panel{position:fixed;inset:0;background:var(--bg);z-index:500;overflow-y:auto;display:none;padding-bottom:60px;}
@@ -169,7 +183,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 <div id="view-pending" style="display:none"><div class="tx-list" id="pendingList"></div></div>
-<div id="view-all-tx"  style="display:none"><div class="tx-list" id="allTxList"></div></div>
+<div id="view-all-tx"  style="display:none">
+  <div class="tx-list" id="allTxList"></div>
+  <button class="load-more-btn" id="loadMoreBtn" style="display:none" onclick="loadMoreTx()">Load More Transactions</button>
+</div>
 
 <!-- USER DETAIL PANEL -->
 <div class="detail-panel" id="detailPanel">
@@ -194,18 +211,24 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const ADMIN_UID = "1G40GHwudBcea5GGdEeIIKFT5rL2";
-const myUid     = localStorage.getItem("uid");
+const ADMIN_UID            = "1G40GHwudBcea5GGdEeIIKFT5rL2";
+const myUid                = localStorage.getItem("uid");
+const URL_APPROVE_RECHARGE = "https://approverecharge-t34xxkwqvq-ew.a.run.app";
+const URL_REJECT_RECHARGE  = "https://rejectrecharge-t34xxkwqvq-ew.a.run.app";
+const SECRET               = "cryptojet_secret_2024";
+const TX_PAGE_SIZE         = 20;
+
 if (myUid !== ADMIN_UID) { alert("Access denied"); window.location.href = "signin.html"; }
 
 let allUsers        = {};
 let allTransactions = {};
 let currentOpenUid  = null;
+let allTxPage       = 0;       // current page index for "All Tx"
+let allTxSorted     = [];      // sorted entries cache
 
 // ── BOOT ──────────────────────────────────────────────────────
 window.addEventListener("load", async () => {
   await Promise.all([ loadUsers(), loadTransactions() ]);
-  // Telegram deep-link: ?uid=XXX opens that user directly
   const params  = new URLSearchParams(window.location.search);
   const deepUid = params.get("uid");
   if (deepUid && allUsers[deepUid]) openDetail(deepUid, allUsers[deepUid]);
@@ -248,7 +271,7 @@ function switchTab(name, el) {
   document.getElementById("view-pending").style.display = name === "pending" ? "block" : "none";
   document.getElementById("view-all-tx").style.display  = name === "all-tx"  ? "block" : "none";
   if (name === "pending") renderPending();
-  if (name === "all-tx")  renderAllTx();
+  if (name === "all-tx")  renderAllTx(true);
 }
 
 // ── RENDER USERS ──────────────────────────────────────────────
@@ -283,39 +306,118 @@ function getReferrerName(refUid) {
   return (allUsers[refUid] && allUsers[refUid].minerId) || "Unknown";
 }
 
-// ── PENDING & ALL TX ──────────────────────────────────────────
+// ── PENDING (with Approve / Reject buttons) ───────────────────
 function renderPending() {
   const list    = document.getElementById("pendingList");
   const entries = Object.entries(allTransactions).filter(([,t]) => t.status === "pending");
   list.innerHTML = entries.length ? "" : `<div class="empty">No pending transactions</div>`;
-  entries.forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, true)));
+  entries.sort((a,b) => (b[1].date||0) - (a[1].date||0))
+         .forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, true)));
 }
 
-function renderAllTx() {
-  const list    = document.getElementById("allTxList");
-  const entries = Object.entries(allTransactions).sort((a,b)=>(b[1].date||0)-(a[1].date||0));
-  list.innerHTML = entries.length ? "" : `<div class="empty">No transactions</div>`;
-  entries.slice(0, 100).forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, false)));
+// ── ALL TX with pagination (20 per page) ──────────────────────
+function renderAllTx(reset = true) {
+  if (reset) {
+    allTxPage  = 0;
+    allTxSorted = Object.entries(allTransactions).sort((a,b) => (b[1].date||0) - (a[1].date||0));
+    document.getElementById("allTxList").innerHTML = "";
+  }
+  const list  = document.getElementById("allTxList");
+  const start = allTxPage * TX_PAGE_SIZE;
+  const slice = allTxSorted.slice(start, start + TX_PAGE_SIZE);
+
+  slice.forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, false)));
+  allTxPage++;
+
+  const btn = document.getElementById("loadMoreBtn");
+  btn.style.display = allTxSorted.length > allTxPage * TX_PAGE_SIZE ? "block" : "none";
 }
 
+function loadMoreTx() { renderAllTx(false); }
+
+// ── BUILD TX CARD ─────────────────────────────────────────────
 function buildTxCard(txId, tx, u, showUser) {
   const card  = document.createElement("div");
+  card.id     = "txcard-" + txId;
   card.className = "tx-card";
   const date  = tx.date ? new Date(tx.date).toLocaleString("en-NG") : "—";
   const color = tx.type === "recharge" ? "color:#22c55e" : "color:#f87171";
   const pref  = tx.type === "recharge" ? "+" : "−";
+
+  const actionsHTML = (tx.status === "pending" && tx.type === "recharge") ? `
+    <div class="tx-actions">
+      <button class="tx-action-btn approve" id="approve-${txId}" onclick="handleApprove('${txId}')">✅ Approve</button>
+      <button class="tx-action-btn reject"  id="reject-${txId}"  onclick="handleReject('${txId}')">❌ Reject</button>
+    </div>` : "";
+
   card.innerHTML = `
-    <div class="tx-info" style="cursor:${showUser?'pointer':'default'}" ${showUser&&u.minerId?`onclick="openDetail('${tx.uid}',null)"`:""}> 
-      <div class="tx-type">${(tx.type||"tx").toUpperCase()} ${showUser?`· <span style="color:var(--neon)">${u.minerId||tx.uid.slice(0,8)}</span>`:""}</div>
-      <div class="tx-date">${date} · ${tx.method||"—"}</div>
-      ${tx.bank?`<div class="tx-date">🏦 ${tx.bank} · ${tx.number||""}</div>`:""}
-      ${tx.walletAddress?`<div class="tx-date">💎 ${tx.walletAddress.slice(0,20)}...</div>`:""}
+    <div class="tx-top">
+      <div class="tx-info" style="cursor:${showUser?'pointer':'default'}" ${showUser&&u.minerId?`onclick="openDetail('${tx.uid}',null)"`:""}> 
+        <div class="tx-type">${(tx.type||"tx").toUpperCase()} ${showUser?`· <span style="color:var(--neon)">${u.minerId||tx.uid.slice(0,8)}</span>`:""}</div>
+        <div class="tx-date">${date} · ${tx.method||"—"}</div>
+        ${tx.bank?`<div class="tx-date">🏦 ${tx.bank} · ${tx.number||""}</div>`:""}
+        ${tx.walletAddress?`<div class="tx-date">💎 ${tx.walletAddress.slice(0,20)}...</div>`:""}
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-left:10px;">
+        <div class="tx-amount" style="${color}">${pref}$${tx.amount}</div>
+        <div class="badge ${tx.status||'pending'}" id="badge-${txId}">${(tx.status||"pending").toUpperCase()}</div>
+      </div>
     </div>
-    <div style="text-align:right;flex-shrink:0;margin-left:10px;">
-      <div class="tx-amount" style="${color}">${pref}$${tx.amount}</div>
-      <div class="badge ${tx.status||'pending'}">${(tx.status||"pending").toUpperCase()}</div>
-    </div>`;
+    ${actionsHTML}`;
   return card;
+}
+
+// ── APPROVE ───────────────────────────────────────────────────
+async function handleApprove(txId) {
+  if (!confirm("Approve this recharge?")) return;
+  setTxBtnsDisabled(txId, true);
+  try {
+    const resp = await fetch(`${URL_APPROVE_RECHARGE}?txId=${txId}&secret=${SECRET}`);
+    const text = await resp.text();
+    if (!resp.ok) throw new Error(text);
+    // Update local cache & UI
+    allTransactions[txId].status = "approved";
+    updateTxCardStatus(txId, "approved");
+    updatePendingBadge();
+    toast("✅ Recharge approved!");
+  } catch(e) {
+    setTxBtnsDisabled(txId, false);
+    toast("❌ Approve failed: " + e.message);
+  }
+}
+
+// ── REJECT ────────────────────────────────────────────────────
+async function handleReject(txId) {
+  if (!confirm("Reject this recharge?")) return;
+  setTxBtnsDisabled(txId, true);
+  try {
+    const resp = await fetch(`${URL_REJECT_RECHARGE}?txId=${txId}&secret=${SECRET}`);
+    const text = await resp.text();
+    if (!resp.ok) throw new Error(text);
+    allTransactions[txId].status = "rejected";
+    updateTxCardStatus(txId, "rejected");
+    updatePendingBadge();
+    toast("🗑 Recharge rejected");
+  } catch(e) {
+    setTxBtnsDisabled(txId, false);
+    toast("❌ Reject failed: " + e.message);
+  }
+}
+
+function setTxBtnsDisabled(txId, state) {
+  const a = document.getElementById("approve-" + txId);
+  const r = document.getElementById("reject-" + txId);
+  if (a) a.disabled = state;
+  if (r) r.disabled = state;
+}
+
+function updateTxCardStatus(txId, status) {
+  // Update badge
+  const badge = document.getElementById("badge-" + txId);
+  if (badge) { badge.textContent = status.toUpperCase(); badge.className = "badge " + status; }
+  // Remove action buttons
+  const actions = document.querySelector(`#txcard-${txId} .tx-actions`);
+  if (actions) actions.remove();
 }
 
 // ── OPEN USER DETAIL ──────────────────────────────────────────
@@ -570,7 +672,6 @@ async function adjustBalance(uid, type) {
 
   if (!amount || amount <= 0) return toast("Enter a valid amount");
 
-  // Disable buttons while saving
   const addBtn    = document.getElementById("adjAddBtn");
   const deductBtn = document.getElementById("adjDeductBtn");
   const successEl = document.getElementById("adjSuccessMsg");
@@ -578,30 +679,23 @@ async function adjustBalance(uid, type) {
   if (deductBtn) deductBtn.disabled = true;
 
   try {
-    // Read fresh from Firebase — not cache — so value is always accurate
     const snap    = await db.ref(`users/${uid}/${field}`).once("value");
     const current = snap.val() || 0;
     const newVal  = type === "add"
       ? parseFloat((current + amount).toFixed(4))
       : parseFloat(Math.max(0, current - amount).toFixed(4));
 
-    // ── SAVE to Firebase ──────────────────────────────────────
     await db.ref(`users/${uid}/${field}`).set(newVal);
-
-    // ── LOG the adjustment ────────────────────────────────────
     await db.ref(`balanceAdjustments/${uid}`).push({
-      type, field, amount,
-      reason,
+      type, field, amount, reason,
       before:    current,
       after:     newVal,
       adminUid:  myUid,
       timestamp: Date.now()
     });
 
-    // ── Update local cache ────────────────────────────────────
     allUsers[uid] = { ...(allUsers[uid]||{}), [field]: newVal };
 
-    // ── Update the live stat boxes at the top of detail view ──
     if (field === "balance") {
       const el = document.getElementById("live-balance");
       if (el) el.textContent = Math.floor(newVal);
@@ -615,10 +709,8 @@ async function adjustBalance(uid, type) {
       if (el) el.textContent = newVal;
     }
 
-    // ── Update the strip stats ────────────────────────────────
     updateStripStats();
 
-    // ── Show success message ──────────────────────────────────
     const label = type === "add" ? "Added" : "Deducted";
     if (successEl) {
       successEl.textContent = `✅ ${label} $${amount} ${type==="add"?"to":"from"} ${field}. New value: $${newVal}`;
@@ -626,13 +718,9 @@ async function adjustBalance(uid, type) {
       setTimeout(() => { successEl.style.display = "none"; }, 4000);
     }
 
-    // ── Reload adjustment history ─────────────────────────────
     loadAdjHistory();
-
-    // ── Clear inputs ──────────────────────────────────────────
     document.getElementById("adjAmount").value = "";
     document.getElementById("adjReason").value = "";
-
     toast(`✅ ${label} $${amount} ${type==="add"?"to":"from"} ${field}`);
 
   } catch (err) {

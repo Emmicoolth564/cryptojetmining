@@ -57,7 +57,7 @@ input:focus, select:focus, textarea:focus { border-color:#22c55e; outline:none; 
 .pay-amount { font-size:26px; font-weight:700; color:#22c55e; }
 .pay-sub    { font-size:12px; color:#64748b; margin-top:2px; }
 
-/* INSTRUCTIONS — no more inline strong wrapping issues */
+/* INSTRUCTIONS */
 .instructions-box { background:#0c1a2e; border:1px solid rgba(245,158,11,0.2); border-left:3px solid #f59e0b; border-radius:14px; padding:16px; margin-bottom:14px; }
 .inst-title { font-size:13px; font-weight:700; color:#f59e0b; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
 .inst-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
@@ -201,7 +201,6 @@ function switchTab(tab) {
     currentTab = tab;
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     document.getElementById("tab-" + tab).classList.add("active");
-    // Reset step only if changing tabs
     currentStep = 1; selectedAmountUSD = 0; selectedNetwork = null;
     proofBase64 = null;
     clearState();
@@ -219,7 +218,6 @@ function renderTab(tab) {
 async function renderBank() {
     const c = document.getElementById("content");
 
-    // STEP 1 — amount entry, but first check pending
     if (currentStep === 1) {
         const pending = await hasPendingRecharge();
         if (pending) {
@@ -355,44 +353,64 @@ function startCountdown() {
     }, 1000);
 }
 
+// ── SUBMIT BANK — Firebase write is instant, Telegram runs in background ──
 async function submitBank() {
     if (!proofBase64) return toast("Please upload your payment receipt first");
-    showLoader("Submitting your request...");
+    showLoader("Saving your request...");
 
     // Double-check for pending before submitting
     const pending = await hasPendingRecharge();
     if (pending) { hideLoader(); return toast("You already have a pending deposit — wait for it to settle"); }
 
-    const txData = { uid, type:"recharge", method:"bank", amount:selectedAmountUSD, nairaEquivalent:selectedAmountUSD*1500, status:"pending", date:Date.now(), referenceCode:REFERENCE_CODE };
-    const txRef  = db.ref("transactions").push();
+    const txData = {
+        uid,
+        type: "recharge",
+        method: "bank",
+        amount: selectedAmountUSD,
+        nairaEquivalent: selectedAmountUSD * 1500,
+        status: "pending",
+        date: Date.now(),
+        referenceCode: REFERENCE_CODE
+    };
+    const txRef = db.ref("transactions").push();
     await txRef.set({ ...txData, proof: proofBase64 });
     await db.ref("userTransactions/" + uid + "/" + txRef.key).set(txData);
 
-    const approveUrl = `${URL_APPROVE_RECHARGE}?txId=${txRef.key}&secret=${SECRET}`;
-    const rejectUrl  = `${URL_REJECT_RECHARGE}?txId=${txRef.key}&secret=${SECRET}`;
-    const minerId    = await getMinerId();
-
-    const caption = `🏦 Bank Recharge Request\n──────────────────\n👤 User: ${uid}\n🆔 Miner ID: ${minerId}\n💰 Amount: $${selectedAmountUSD}\n💵 Naira: ₦${(selectedAmountUSD*1500).toLocaleString()}\n🔑 Ref: ${REFERENCE_CODE}\n📅 Time: ${new Date().toLocaleString()}\n🗝 Tx ID: ${txRef.key}`;
-    const byteCharacters = atob(proofBase64.split(",")[1]);
-    const bytes = new Uint8Array([...byteCharacters].map(c => c.charCodeAt(0)));
-    const blob  = new Blob([bytes], { type:"image/jpeg" });
-    const form  = new FormData();
-    form.append("chat_id", ADMIN_CHAT_ID);
-    form.append("caption", caption);
-    form.append("photo", blob, "receipt.jpg");
-    form.append("reply_markup", JSON.stringify({ inline_keyboard:[[
-        { text:"✅ Approve", url:approveUrl },
-        { text:"❌ Reject",  url:rejectUrl  }
-    ]]}));
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method:"POST", body:form });
-
+    // ── Done — show success immediately ──────────────────────
     hideLoader();
     toast("✅ Receipt submitted! Processing in 3–20 mins");
     clearState();
     localStorage.removeItem("cj_r_timer_end");
-    proofBase64 = null;
     if (timerInterval) clearInterval(timerInterval);
+
+    // ── Fire Telegram notification in background (non-blocking) ──
+    // If this fails due to network, admin can still approve from admin panel
+    sendTelegramNotification(txRef.key, txData, proofBase64).catch(() => {});
+    proofBase64 = null;
+
     setTimeout(() => renderBank(), 2000);
+}
+
+// ── Telegram helper — runs independently, never blocks the user ──
+async function sendTelegramNotification(txKey, txData, proof) {
+    const approveUrl = `${URL_APPROVE_RECHARGE}?txId=${txKey}&secret=${SECRET}`;
+    const rejectUrl  = `${URL_REJECT_RECHARGE}?txId=${txKey}&secret=${SECRET}`;
+    const minerId    = await getMinerId();
+
+    const caption = `🏦 Bank Recharge Request\n──────────────────\n👤 User: ${txData.uid}\n🆔 Miner ID: ${minerId}\n💰 Amount: $${txData.amount}\n💵 Naira: ₦${(txData.amount * 1500).toLocaleString()}\n🔑 Ref: ${REFERENCE_CODE}\n📅 Time: ${new Date().toLocaleString()}\n🗝 Tx ID: ${txKey}`;
+
+    const byteCharacters = atob(proof.split(",")[1]);
+    const bytes = new Uint8Array([...byteCharacters].map(c => c.charCodeAt(0)));
+    const blob  = new Blob([bytes], { type: "image/jpeg" });
+    const form  = new FormData();
+    form.append("chat_id", ADMIN_CHAT_ID);
+    form.append("caption", caption);
+    form.append("photo", blob, "receipt.jpg");
+    form.append("reply_markup", JSON.stringify({ inline_keyboard: [[
+        { text: "✅ Approve", url: approveUrl },
+        { text: "❌ Reject",  url: rejectUrl  }
+    ]]}));
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: "POST", body: form });
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -595,7 +613,6 @@ function toast(msg) {
 }
 
 window.onload = () => {
-    // Restore tab
     if (currentTab === "usdt") {
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
         document.getElementById("tab-usdt").classList.add("active");
