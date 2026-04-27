@@ -316,6 +316,7 @@ body {
 </div>
 
 <!-- FIREBASE -->
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -335,17 +336,41 @@ if (!uid) window.location.href = "signin.html";
 
 function nav(p){ window.location.href = p; }
 
-// ── BALANCE LIVE ───────────────────────────────────────────────
+// ── AUTH + DB LISTENERS ──────────────────────────────────────
 auth.onAuthStateChanged(user => {
   if (!user) { window.location.href = "signin.html"; return; }
+
+  // Balance, team, points — live
   db.ref("users/" + uid).on("value", snap => {
-  const d = snap.val() || {};
-  document.getElementById("balance").innerText   = Math.floor(d.balance || 0);
-  document.getElementById("uiPoints").innerText  = d.points  || 0;
-  document.getElementById("teamIncome").innerText= d.team    || 0;
+    const d = snap.val() || {};
+    document.getElementById("balance").innerText    = Math.floor(d.balance || 0);
+    document.getElementById("uiPoints").innerText   = d.points || 0;
+    document.getElementById("teamIncome").innerText = d.team   || 0;
+
+    // Mining status (same data, same listener)
+    const active   = d.mining === true || (d.miners && Object.keys(d.miners).length > 0);
+    const statusEl = document.getElementById("minerStatus");
+    const dotEl    = document.getElementById("statusDot");
+    const txtEl    = document.getElementById("statusText");
+    if (active) {
+      txtEl.textContent         = "Mining Active";
+      dotEl.style.background    = "#22c55e";
+      dotEl.style.boxShadow     = "0 0 6px #22c55e";
+      statusEl.style.background = "rgba(34,197,94,0.1)";
+      statusEl.style.color      = "#22c55e";
+    } else {
+      txtEl.textContent         = "Mining Inactive";
+      dotEl.style.background    = "#ef4444";
+      dotEl.style.boxShadow     = "0 0 6px #ef4444";
+      statusEl.style.background = "rgba(239,68,68,0.1)";
+      statusEl.style.color      = "#ef4444";
+    }
+  });
+
+  loadUser();
 });
 
-// ── USER INFO ──────────────────────────────────────────────────
+// ── USER INFO ────────────────────────────────────────────────
 async function loadUser() {
   const snap = await db.ref("users/" + uid).once("value");
   if (snap.exists()) {
@@ -364,35 +389,17 @@ async function loadUser() {
     await db.ref("users/" + uid).set({ balance:0, level:"Novice Miner", mining:false, lastClaim:Date.now() });
   }
 }
-loadUser();
 
-// ── MINING STATUS ──────────────────────────────────────────────
-auth.onAuthStateChanged(user => {
-  if (!user) { window.location.href = "signin.html"; return; }
-  db.ref("users/" + uid).on("value", snap => {
-  const d       = snap.val() || {};
-  const active  = d.mining === true || (d.miners && Object.keys(d.miners).length > 0);
-  const statusEl= document.getElementById("minerStatus");
-  const dotEl   = document.getElementById("statusDot");
-  const txtEl   = document.getElementById("statusText");
-  if (active) {
-    txtEl.textContent       = "Mining Active";
-    dotEl.style.background  = "#22c55e";
-    dotEl.style.boxShadow   = "0 0 6px #22c55e";
-    statusEl.style.background = "rgba(34,197,94,0.1)";
-    statusEl.style.color      = "#22c55e";
-  } else {
-    txtEl.textContent       = "Mining Inactive";
-    dotEl.style.background  = "#ef4444";
-    dotEl.style.boxShadow   = "0 0 6px #ef4444";
-    statusEl.style.background = "rgba(239,68,68,0.1)";
-    statusEl.style.color      = "#ef4444";
-  }
-});
-
-// ── SLIDER ─────────────────────────────────────────────────────
+// ── SLIDER + LOADER (outside auth — no auth needed) ──────────
 let slideIdx = 0;
 window.addEventListener("load", () => {
+  // Hide loader
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+    document.querySelector(".page-content").style.opacity = "1";
+  }, 1500);
+
+  // Slider
   const slides      = document.querySelector(".slides");
   const totalSlides = document.querySelectorAll(".slide").length;
   function showSlide() {
@@ -409,25 +416,23 @@ window.addEventListener("load", () => {
   });
 });
 
-
-// ── SWIPE BETWEEN PAGES ────────────────────────────────────────
+// ── SWIPE PAGES ──────────────────────────────────────────────
 let swipeX = 0;
 document.querySelector(".wrapper").addEventListener("touchstart", e => { swipeX = e.touches[0].clientX; });
 document.querySelector(".wrapper").addEventListener("touchend",   e => {
   const diff = swipeX - e.changedTouches[0].clientX;
-  if (diff > 80)       nav("miner.html");
-  else if (diff < -80) {} // already on home
+  if (diff > 80) nav("miner.html");
 });
 
-// ── LIVE MARKET — 7 coins ──────────────────────────────────────
+// ── LIVE MARKET ──────────────────────────────────────────────
 const COINS = [
-  { id:"bitcoin",       symbol:"BTC", img:"https://assets.coingecko.com/coins/images/1/large/bitcoin.png" },
-  { id:"ethereum",      symbol:"ETH", img:"https://assets.coingecko.com/coins/images/279/large/ethereum.png" },
-  { id:"solana",        symbol:"SOL", img:"https://assets.coingecko.com/coins/images/4128/large/solana.png" },
-  { id:"tether",        symbol:"USDT",img:"https://assets.coingecko.com/coins/images/325/large/Tether.png" },
-  { id:"binancecoin",   symbol:"BNB", img:"https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png" },
-  { id:"ripple",        symbol:"XRP", img:"https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png" },
-  { id:"dogecoin",      symbol:"DOGE",img:"https://assets.coingecko.com/coins/images/5/large/dogecoin.png" }
+  { id:"bitcoin",     symbol:"BTC",  img:"https://assets.coingecko.com/coins/images/1/large/bitcoin.png" },
+  { id:"ethereum",    symbol:"ETH",  img:"https://assets.coingecko.com/coins/images/279/large/ethereum.png" },
+  { id:"solana",      symbol:"SOL",  img:"https://assets.coingecko.com/coins/images/4128/large/solana.png" },
+  { id:"tether",      symbol:"USDT", img:"https://assets.coingecko.com/coins/images/325/large/Tether.png" },
+  { id:"binancecoin", symbol:"BNB",  img:"https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png" },
+  { id:"ripple",      symbol:"XRP",  img:"https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png" },
+  { id:"dogecoin",    symbol:"DOGE", img:"https://assets.coingecko.com/coins/images/5/large/dogecoin.png" }
 ];
 let lastPrices = {};
 
@@ -464,16 +469,5 @@ async function loadMarket() {
 }
 loadMarket();
 setInterval(loadMarket, 10000);
-
-// ── LOADER ─────────────────────────────────────────────────────
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    document.getElementById("loader").style.display = "none";
-    document.querySelector(".page-content").style.opacity = "1";
-  }, 1500);
-});
- });
- });
 </script>
-</body>
 </html>
