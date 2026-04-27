@@ -328,8 +328,9 @@ const firebaseConfig = {
   projectId:   "cj-miner"
 };
 firebase.initializeApp(firebaseConfig);
-const db  = firebase.database();
-const uid = localStorage.getItem("uid");
+const db   = firebase.database();
+const auth = firebase.auth();
+const uid  = localStorage.getItem("uid");
 if (!uid) window.location.href = "signin.html";
 
 function nav(p){ window.location.href = p; }
