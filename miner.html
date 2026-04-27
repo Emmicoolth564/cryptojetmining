@@ -489,6 +489,11 @@ async function buyMiner(id, price) {
     [`miners/${instanceKey}`]: { start: Date.now(), lastUpdate: Date.now(), credited: false }
   });
 
+  // Mark hasMiner = true in referrer's teamMembers
+  if (referrer) {
+    db.ref("users/" + referrer + "/teamMembers/" + uid + "/hasMiner").set(true);
+  }
+
   loadPage();
 }
 
@@ -509,12 +514,15 @@ function startTick() {
 
 function nav(page) { window.location.href = page; }
 
-window.addEventListener("load", async () => {
-  await loadPage();
-  startTick();
-  setTimeout(() => document.getElementById("loader").style.display = "none", 1500);
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("tab") === "purchase") showTab("shop");
+window.addEventListener("load", () => {
+  auth.onAuthStateChanged(async user => {
+    if (!user) { window.location.href = "signin.html"; return; }
+    await loadPage();
+    startTick();
+    setTimeout(() => document.getElementById("loader").style.display = "none", 1500);
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("tab") === "purchase") showTab("shop");
+  });
 });
 </script>
 </body>

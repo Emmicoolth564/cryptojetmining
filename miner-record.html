@@ -207,7 +207,10 @@ function loadRecords() {
     });
 }
 
-window.addEventListener("load", loadRecords);
+auth.onAuthStateChanged(user => {
+  if (!user) { window.location.href = "signin.html"; return; }
+  loadRecords();
+});
 </script>
 </body>
 </html>

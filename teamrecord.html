@@ -172,7 +172,9 @@ function formatDate(ts) {
 }
 
 // Real-time listener — updates when new team income arrives
-db.ref("teamIncome/" + uid).on("value", snap => {
+auth.onAuthStateChanged(user => {
+  if (!user) { window.location.href = "signin.html"; return; }
+  db.ref("teamIncome/" + uid).on("value", snap => {
     const data = snap.val() || {};
     allRecords  = Object.entries(data)
         .map(([key, r]) => ({ key, ...r }))
@@ -185,7 +187,6 @@ db.ref("teamIncome/" + uid).on("value", snap => {
     document.getElementById("levelTabs").style.display = "flex";
     render();
 });
-
 function updateSummary() {
     const now     = Date.now();
     const dayMs   = 86400000;
@@ -235,6 +236,7 @@ function render() {
         </div>
     `).join("");
 }
+});
 </script>
 </body>
 </html>

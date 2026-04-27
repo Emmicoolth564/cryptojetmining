@@ -4,143 +4,103 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Team Network • CryptoJet</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+:root { --neon:#00f0ff; --green:#00ffcc; --bg:#020617; --s1:#0c1628; --s2:#111f35; --border:rgba(0,255,204,0.12); --text:#e2e8f0; --muted:#64748b; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { max-width:100vw; overflow-x:hidden; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-    :root { --neon: #00f0ff; --accent: #00ffcc; }
+.header { padding:16px 18px; background:rgba(2,6,23,0.97); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:100; }
+.back { font-size:24px; color:var(--green); cursor:pointer; }
+.header-title { font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:700; color:var(--neon); flex:1; text-align:center; }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-        font-family: 'Inter', system-ui, sans-serif;
-        background: #020617;
-        color: #e2e8f0;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
+.page-loader { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:99999; gap:16px; transition:opacity 0.4s; }
+.page-loader.hidden { opacity:0; pointer-events:none; }
+.spinner { width:44px; height:44px; border:4px solid rgba(0,255,204,0.15); border-top:4px solid var(--green); border-radius:50%; animation:spin 0.9s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg);} }
 
-    .header {
-        padding: 20px 16px;
-        display: flex;
-        align-items: center;
-        background: rgba(2,6,23,0.95);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(34,197,94,0.15);
-    }
-    .back { font-size:28px; color:#22c55e; cursor:pointer; }
-    .header h3 { flex:1; text-align:center; font-size:20px; font-weight:600; }
+.stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:16px; }
+.stat-box { background:var(--s1); border:1px solid var(--border); border-radius:16px; padding:14px; text-align:center; }
+.stat-val { font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:700; color:var(--neon); }
+.stat-lbl { font-size:11px; color:var(--muted); margin-top:3px; text-transform:uppercase; letter-spacing:0.06em; font-weight:600; }
 
-    .tabs {
-        display:flex;
-        background:#0f172a;
-        border-radius:9999px;
-        padding:6px;
-        margin:20px 16px 16px;
-    }
-    .tab {
-        flex:1;
-        padding:12px;
-        text-align:center;
-        font-weight:600;
-        border-radius:9999px;
-        cursor:pointer;
-        color:#94a3b8;
-        font-size:14px;
-    }
-    .tab.active {
-        background:#00ffcc;
-        color:#000;
-        box-shadow:0 4px 15px rgba(0,255,204,0.4);
-    }
+.tabs { display:flex; background:var(--s1); border-radius:999px; padding:5px; margin:0 16px 14px; gap:4px; }
+.tab { flex:1; padding:11px; text-align:center; font-weight:600; font-size:13px; border-radius:999px; cursor:pointer; color:var(--muted); transition:all 0.2s; }
+.tab.active { background:var(--green); color:#000; box-shadow:0 4px 12px rgba(0,255,204,0.3); }
 
-    .content-wrapper { padding:0 16px 30px; }
+.content { padding:0 16px 80px; }
 
-    .stat-row {
-        display:flex;
-        gap:12px;
-        margin-bottom:20px;
-    }
-    .stat-box {
-        flex:1;
-        background:#0f172a;
-        border-radius:16px;
-        padding:16px;
-        text-align:center;
-    }
-    .stat-number { font-size:28px; font-weight:700; color:#00ffcc; }
-    .stat-label { font-size:13px; color:#94a3b8; }
+.member-card {
+  background:var(--s1); border:1px solid var(--border);
+  border-radius:16px; padding:16px 18px; margin-bottom:10px;
+  display:flex; justify-content:space-between; align-items:center;
+  animation:fadeIn 0.25s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(4px);} to{opacity:1;transform:none;} }
 
-    .team-table {
-        background:#0f172a;
-        border-radius:20px;
-        overflow:hidden;
-    }
-    .table-header {
-        display:flex;
-        padding:16px;
-        background:#020617;
-        font-weight:600;
-        color:#94a3b8;
-    }
-    .table-row {
-        display:flex;
-        padding:16px;
-        border-top:1px solid rgba(255,255,255,0.05);
-    }
-    .level1 { color:#22c55e; }
-    .level2 { color:#0ea5e9; }
-    .level3 { color:#f59e0b; }
+.member-left { display:flex; align-items:center; gap:12px; }
+.member-avatar {
+  width:40px; height:40px; border-radius:50%;
+  background:linear-gradient(135deg,#00f0ff,#00ffcc);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:700; color:#000;
+  flex-shrink:0;
+}
+.member-id   { font-size:15px; font-weight:700; color:var(--text); margin-bottom:2px; }
+.member-date { font-size:11px; color:var(--muted); }
 
-    .empty {
-        text-align:center;
-        padding:60px 20px;
-        color:#64748b;
-    }
+.status-badge { padding:5px 12px; border-radius:999px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; }
+.active-badge   { background:rgba(0,255,204,0.12); color:var(--green); border:1px solid rgba(0,255,204,0.2); }
+.inactive-badge { background:rgba(100,116,139,0.12); color:var(--muted); border:1px solid rgba(100,116,139,0.2); }
+
+.empty-state { text-align:center; padding:60px 20px; }
+.empty-icon  { font-size:48px; margin-bottom:14px; }
+.empty-title { font-size:16px; font-weight:700; color:var(--text); margin-bottom:6px; }
+.empty-sub   { font-size:13px; color:var(--muted); line-height:1.6; }
+
+.how-box { background:var(--s1); border:1px solid var(--border); border-radius:16px; padding:16px 18px; margin:0 16px 14px; }
+.how-title { font-size:13px; font-weight:700; color:var(--neon); margin-bottom:10px; }
+.how-row { display:flex; gap:10px; align-items:center; margin-bottom:6px; font-size:13px; color:var(--muted); }
+.how-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 </style>
 </head>
 <body>
 
+<div class="page-loader" id="pageLoader">
+  <div class="spinner"></div>
+</div>
+
 <div class="header">
-    <div class="back" onclick="history.back()">←</div>
-    <h3>Team Network</h3>
+  <div class="back" onclick="history.back()">←</div>
+  <div class="header-title">Team Network</div>
+  <div style="width:24px"></div>
 </div>
 
-<div class="tabs">
-    <div class="tab active" onclick="switchTab(0)">All</div>
-    <div class="tab" onclick="switchTab(1)">Level 1</div>
-    <div class="tab" onclick="switchTab(2)">Level 2</div>
-    <div class="tab" onclick="switchTab(3)">Level 3</div>
+<div class="how-box">
+  <div class="how-title">⚡ Team Income Breakdown</div>
+  <div class="how-row"><div class="how-dot" style="background:#00ffcc"></div>Level 1 (direct referrals) → earn 10% of their mining</div>
+  <div class="how-row"><div class="how-dot" style="background:#f59e0b"></div>Level 2 → earn 4% of their mining</div>
+  <div class="how-row"><div class="how-dot" style="background:#c084fc"></div>Level 3 → earn 2% of their mining</div>
 </div>
 
-<div class="content-wrapper">
-    <div class="stat-row">
-        <div class="stat-box">
-            <div class="stat-number" id="total">0</div>
-            <div class="stat-label">Total Team</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number" id="lvl1">0</div>
-            <div class="stat-label">Level 1</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number" id="lvl2">0</div>
-            <div class="stat-label">Level 2</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number" id="lvl3">0</div>
-            <div class="stat-label">Level 3</div>
-        </div>
-    </div>
-
-    <div class="team-table" id="teamTable">
-        <!-- Populated by JS -->
-    </div>
+<div class="stat-grid" id="statGrid" style="display:none">
+  <div class="stat-box"><div class="stat-val" id="totalCount">0</div><div class="stat-lbl">Total</div></div>
+  <div class="stat-box"><div class="stat-val" id="activeCount">0</div><div class="stat-lbl">Mining</div></div>
+  <div class="stat-box"><div class="stat-val" id="pendingCount">0</div><div class="stat-lbl">No Miner</div></div>
 </div>
+
+<div class="tabs" id="filterTabs" style="display:none">
+  <div class="tab active" onclick="setFilter('all',this)">All</div>
+  <div class="tab" onclick="setFilter('active',this)">⛏ Mining</div>
+  <div class="tab" onclick="setFilter('pending',this)">⏳ No Miner</div>
+</div>
+
+<div class="content" id="content"></div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
@@ -148,113 +108,93 @@ const firebaseConfig = {
   databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "cj-miner"
 };
-
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const db   = firebase.database();
 const auth = firebase.auth();
 
-let uid = localStorage.getItem("uid");
+const uid = localStorage.getItem("uid");
 if (!uid) window.location.href = "signin.html";
 
-let currentLevel = 0;
+let allMembers = [];
+let filter     = "all";
 
-function switchTab(level) {
-    currentLevel = level;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab')[level].classList.add('active');
-    loadTeam();
+function setFilter(f, el) {
+  filter = f;
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+  render();
 }
 
-function loadTeam() {
-    db.ref("users").once("value", snap => {
-        const users = snap.val() || {};
-        let total = 0, l1 = 0, l2 = 0, l3 = 0;
-
-        const map = {};
-        for (let id in users) {
-            let u = users[id] || {};
-            map[id] = {
-                uid: id,
-                minerId: u.minerId || "CJ-" + id.slice(-6),
-                referredBy: u.referredBy
-            };
-        }
-
-        let level1 = [], level2 = [], level3 = [];
-
-        // Level 1
-        for (let id in map) {
-            let u = map[id];
-            if (u.referredBy === uid || u.referredBy === map[uid]?.minerId) {
-                level1.push(u);
-                l1++;
-                total++;
-            }
-        }
-
-        // Level 2
-        level1.forEach(a => {
-            for (let id in map) {
-                let u = map[id];
-                if (u.referredBy === a.uid || u.referredBy === a.minerId) {
-                    level2.push(u);
-                    l2++;
-                    total++;
-                }
-            }
-        });
-
-        // Level 3
-        level2.forEach(a => {
-            for (let id in map) {
-                let u = map[id];
-                if (u.referredBy === a.uid || u.referredBy === a.minerId) {
-                    level3.push(u);
-                    l3++;
-                    total++;
-                }
-            }
-        });
-
-        document.getElementById("total").innerText = total;
-        document.getElementById("lvl1").innerText = l1;
-        document.getElementById("lvl2").innerText = l2;
-        document.getElementById("lvl3").innerText = l3;
-
-        const table = document.getElementById("teamTable");
-        table.innerHTML = `
-            <div style="display:flex;padding:16px;background:#020617;font-weight:600;color:#94a3b8;">
-                <div style="flex:1">Miner ID</div>
-                <div style="flex:1">Level</div>
-            </div>`;
-
-        let list = [];
-        if (currentLevel === 0) list = [...level1, ...level2, ...level3];
-        else if (currentLevel === 1) list = level1;
-        else if (currentLevel === 2) list = level2;
-        else if (currentLevel === 3) list = level3;
-
-        if (list.length === 0) {
-            table.innerHTML += `<div class="empty">No team members in this level yet</div>`;
-            return;
-        }
-
-        list.forEach(u => {
-            let levelClass = currentLevel === 1 ? "level1" : currentLevel === 2 ? "level2" : "level3";
-            let levelText = currentLevel === 0 ? "—" : `Level ${currentLevel}`;
-
-            const row = document.createElement("div");
-            row.style.cssText = "display:flex;padding:16px;border-top:1px solid rgba(255,255,255,0.05);";
-            row.innerHTML = `
-                <div style="flex:1">${u.minerId}</div>
-                <div style="flex:1;color:#00ffcc;">${levelText}</div>
-            `;
-            table.appendChild(row);
-        });
-    });
+function formatDate(ts) {
+  const d   = new Date(ts);
+  const day = d.getDate();
+  const mon = d.toLocaleString("en-NG", { month:"short" });
+  const yr  = d.getFullYear();
+  return `Joined ${day} ${mon} ${yr}`;
 }
 
-window.onload = loadTeam;
+function render() {
+  const content = document.getElementById("content");
+  let filtered  = allMembers;
+  if (filter === "active")  filtered = allMembers.filter(m => m.hasMiner);
+  if (filter === "pending") filtered = allMembers.filter(m => !m.hasMiner);
+
+  if (filtered.length === 0) {
+    const msgs = {
+      all:     { icon:"👥", title:"No team members yet", sub:"Share your referral link to start building your team and earn passive income." },
+      active:  { icon:"⛏️", title:"No active miners yet", sub:"When your referrals buy a miner, they'll appear here." },
+      pending: { icon:"🎉", title:"Everyone is mining!", sub:"All your referrals have already bought miners." }
+    };
+    const m = msgs[filter];
+    content.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">${m.icon}</div>
+        <div class="empty-title">${m.title}</div>
+        <div class="empty-sub">${m.sub}</div>
+      </div>`;
+    return;
+  }
+
+  content.innerHTML = filtered.map(m => `
+    <div class="member-card">
+      <div class="member-left">
+        <div class="member-avatar">${(m.minerId || "CJ??").slice(0,4)}</div>
+        <div>
+          <div class="member-id">${m.minerId || "Unknown"}</div>
+          <div class="member-date">${formatDate(m.joinedAt || Date.now())}</div>
+        </div>
+      </div>
+      <div class="status-badge ${m.hasMiner ? 'active-badge' : 'inactive-badge'}">
+        ${m.hasMiner ? '⛏ Mining' : 'No Miner'}
+      </div>
+    </div>
+  `).join("");
+}
+
+auth.onAuthStateChanged(user => {
+  if (!user) { window.location.href = "signin.html"; return; }
+
+  db.ref("users/" + uid + "/teamMembers").on("value", snap => {
+    const data = snap.val() || {};
+
+    allMembers = Object.entries(data)
+      .map(([memberId, m]) => ({ memberId, ...m }))
+      .sort((a, b) => (b.joinedAt || 0) - (a.joinedAt || 0));
+
+    const active  = allMembers.filter(m => m.hasMiner).length;
+    const pending = allMembers.filter(m => !m.hasMiner).length;
+
+    document.getElementById("totalCount").textContent   = allMembers.length;
+    document.getElementById("activeCount").textContent  = active;
+    document.getElementById("pendingCount").textContent = pending;
+
+    document.getElementById("pageLoader").classList.add("hidden");
+    document.getElementById("statGrid").style.display   = "grid";
+    document.getElementById("filterTabs").style.display = "flex";
+
+    render();
+  });
+});
 </script>
 </body>
 </html>

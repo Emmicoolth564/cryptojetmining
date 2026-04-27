@@ -227,7 +227,9 @@ function switchTab(tab, el) {
 }
 
 // ── FAST: reads only THIS user's node directly — no scan, no filter ──
-db.ref("userTransactions/" + uid).on("value", snap => {
+auth.onAuthStateChanged(user => {
+  if (!user) { window.location.href = "signin.html"; return; }
+  db.ref("userTransactions/" + uid).on("value", snap => {
     const txns = snap.val() || {};
 
     allTransactions = Object.entries(txns)
@@ -298,6 +300,7 @@ function renderTransactions() {
         </div>`;
     }).join("");
 }
+});
 </script>
 </body>
 </html>

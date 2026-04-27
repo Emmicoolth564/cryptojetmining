@@ -435,6 +435,12 @@ async function createUserProfile(uid, name, emailOrPhone, isPhone = false) {
   if (referrer && referrer !== uid) {
     userData.referredBy = referrer;
     db.ref("users/" + referrer + "/referrals").transaction(v => (v || 0) + 1);
+    db.ref("users/" + referrer + "/teamMembers/" + uid).set({
+    minerId: userData.minerId,
+    name: userData.name || "Miner",
+    joinedAt: Date.now(),
+    hasMiner: false
+  });
   }
   await db.ref("users/" + uid).set(userData);
   localStorage.removeItem("referrer");

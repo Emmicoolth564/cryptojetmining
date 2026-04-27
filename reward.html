@@ -354,9 +354,10 @@ function showFloat(text) {
 }
 
 /* INIT */
-window.onload = () => {
-    render();
-};
+auth.onAuthStateChanged(user => {
+  if (!user) { window.location.href = "signin.html"; return; }
+  render();
+});
 </script>
 </body>
 </html>
