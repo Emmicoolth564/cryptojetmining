@@ -470,9 +470,9 @@ function buildDetailHTML(uid, u) {
   const referrer  = u.referredBy ? (allUsers[u.referredBy]?.minerId || u.referredBy.slice(0,8)) : "None";
   const referrals = Object.entries(allUsers).filter(([,x]) => x.referredBy === uid);
   const joined    = u.createdAt ? new Date(u.createdAt).toLocaleDateString("en-NG") : "—";
-  const userTxs   = Object.entries(allTransactions).filter(([,t]) => t.uid === uid).sort((a,b)=>(b[1].date||0)-(a[1].date||0));
-  const approved  = userTxs.filter(([,t]) => t.type==="recharge"&&t.status==="approved").reduce((s,[,t])=>s+(t.amount||0),0);
-  const withdrawn = userTxs.filter(([,t]) => t.type==="withdraw"&&t.status==="approved").reduce((s,[,t])=>s+(t.amount||0),0);
+  const userTxs   = []; // transactions loaded separately per user belows
+  const approved  = 0;
+  const withdrawn = 0;
 
   return `
   <div class="dp-hero">
@@ -518,26 +518,10 @@ function buildDetailHTML(uid, u) {
     </div>
   </div>
 
+  
   <!-- TRANSACTIONS -->
   <div id="dp-transactions" class="dp-content" style="display:none">
-    ${userTxs.length===0?'<div class="empty">No transactions</div>':
-      userTxs.map(([txId,tx])=>`
-      <div class="sec-card" style="margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--neon);margin-bottom:2px;">${(tx.type||"tx").toUpperCase()} · ${tx.method||"—"}</div>
-            <div style="font-size:12px;color:var(--muted);">${tx.date?new Date(tx.date).toLocaleString("en-NG"):"—"}</div>
-            ${tx.bank?`<div style="font-size:12px;color:var(--subtle);">🏦 ${tx.bank} · ${tx.number||""}</div>`:""}
-            ${tx.walletAddress?`<div style="font-size:12px;color:var(--subtle);">💎 ${tx.walletAddress}</div>`:""}
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:16px;font-weight:700;${tx.type==="recharge"?"color:var(--green)":"color:var(--red)"}">
-              ${tx.type==="recharge"?"+":"−"}$${tx.amount}
-            </div>
-            <div class="badge ${tx.status||'pending'}">${(tx.status||"pending").toUpperCase()}</div>
-          </div>
-        </div>
-      </div>`).join("")}
+      <div id="userTxList-${uid}"><div class="empty"><div class="empty-spin"></div></div></div>
   </div>
 
   <!-- MINING -->
@@ -645,16 +629,16 @@ function buildDetailHTML(uid, u) {
 }
 
 // ── SHOW DETAIL SUB-TAB ───────────────────────────────────────
-function showDpTab(name, el) {
+  function showDpTab(name, el) {
   document.querySelectorAll(".dp-tab").forEach(t => t.classList.remove("active"));
   if (el) el.classList.add("active");
   document.querySelectorAll("[id^='dp-']").forEach(d => d.style.display = "none");
   const target = document.getElementById("dp-" + name);
   if (target) target.style.display = "block";
-  if (name === "team")   loadTeamIncome();
-  if (name === "adjust") loadAdjHistory();
+  if (name === "team")         loadTeamIncome();
+  if (name === "adjust")       loadAdjHistory();
+  if (name === "transactions") loadUserTxs();  // ADD THIS
 }
-
 function loadTeamIncome() {
   const uid       = document.getElementById("dpTitle").dataset.uid;
   const container = document.getElementById("teamIncomeRecords-" + uid);
@@ -774,6 +758,32 @@ function toast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg; t.style.opacity = 1;
   setTimeout(() => t.style.opacity = 0, 2800);
+}
+function loadUserTxs() {
+  const uid       = document.getElementById("dpTitle").dataset.uid;
+  const container = document.getElementById("userTxList-" + uid);
+  if (!container || container.dataset.loaded) return;
+  container.dataset.loaded = "1";
+  db.ref("userTransactions/" + uid).once("value", snap => {
+    const txns = snap.val() || {};
+    const sorted = Object.entries(txns).sort((a,b) => (b[1].date||0) - (a[1].date||0));
+    if (!sorted.length) { container.innerHTML = '<div class="empty">No transactions</div>'; return; }
+    container.innerHTML = sorted.map(([txId, tx]) => `
+      <div class="sec-card" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--neon);margin-bottom:2px;">${(tx.type||"tx").toUpperCase()} · ${tx.method||"—"}</div>
+            <div style="font-size:12px;color:var(--muted);">${tx.date?new Date(tx.date).toLocaleString("en-NG"):"—"}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:16px;font-weight:700;${tx.type==="recharge"?"color:var(--green)":"color:var(--red)"}">
+              ${tx.type==="recharge"?"+":"−"}$${tx.amount}
+            </div>
+            <div class="badge ${tx.status||'pending'}">${(tx.status||"pending").toUpperCase()}</div>
+          </div>
+        </div>
+      </div>`).join("");
+  });
 }
 </script>
 </body>
