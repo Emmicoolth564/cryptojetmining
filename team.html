@@ -126,6 +126,7 @@ function setFilter(f, el) {
 }
 
 function formatDate(ts) {
+  if (!ts) return "Existing member";
   const d   = new Date(ts);
   const day = d.getDate();
   const mon = d.toLocaleString("en-NG", { month:"short" });
@@ -160,8 +161,8 @@ function render() {
       <div class="member-left">
         <div class="member-avatar">${(m.minerId || "CJ??").slice(0,4)}</div>
         <div>
-          <div class="member-id">${m.minerId || "Unknown"}</div>
-          <div class="member-date">${formatDate(m.joinedAt || Date.now())}</div>
+          <div class="member-id">${m.minerId || "Member"}</div>
+          <div class="member-date">${formatDate(m.joinedAt)}</div>
         </div>
       </div>
       <div class="status-badge ${m.hasMiner ? 'active-badge' : 'inactive-badge'}">
@@ -171,27 +172,81 @@ function render() {
   `).join("");
 }
 
-auth.onAuthStateChanged(user => {
+auth.onAuthStateChanged(async user => {
   if (!user) { window.location.href = "signin.html"; return; }
 
+  // Read BOTH sources in parallel
+  const [membersSnap, incomeSnap] = await Promise.all([
+    db.ref("users/" + uid + "/teamMembers").once("value"),
+    db.ref("teamIncome/" + uid).once("value")
+  ]);
+
+  // Map of uid → member data (deduped)
+  const memberMap = {};
+
+  // Source 1: teamMembers (new system — has joinedAt, hasMiner)
+  const membersData = membersSnap.val() || {};
+  Object.entries(membersData).forEach(([memberId, m]) => {
+    memberMap[memberId] = {
+      memberId,
+      minerId:  m.minerId  || "Unknown",
+      joinedAt: m.joinedAt || null,
+      hasMiner: m.hasMiner || false
+    };
+  });
+
+  // Source 2: teamIncome — extract unique fromUid entries
+  // These are OLD referrals who have already mined — definitely hasMiner = true
+  const incomeData = incomeSnap.val() || {};
+  Object.values(incomeData).forEach(record => {
+    const fromUid   = record.fromUid;
+    const fromMiner = record.fromMiner || "Unknown";
+    if (!fromUid) return;
+    if (memberMap[fromUid]) {
+      // Already in map — just make sure hasMiner is true since they mined
+      memberMap[fromUid].hasMiner = true;
+    } else {
+      // Old referral not in teamMembers — add them
+      memberMap[fromUid] = {
+        memberId: fromUid,
+        minerId:  fromMiner,
+        joinedAt: null, // we don't know exact join date
+        hasMiner: true  // they have mined so definitely have a miner
+      };
+    }
+  });
+
+  allMembers = Object.values(memberMap)
+    .sort((a, b) => (b.joinedAt || 0) - (a.joinedAt || 0));
+
+  const active  = allMembers.filter(m => m.hasMiner).length;
+  const pending = allMembers.filter(m => !m.hasMiner).length;
+
+  document.getElementById("totalCount").textContent   = allMembers.length;
+  document.getElementById("activeCount").textContent  = active;
+  document.getElementById("pendingCount").textContent = pending;
+
+  document.getElementById("pageLoader").classList.add("hidden");
+  document.getElementById("statGrid").style.display   = "grid";
+  document.getElementById("filterTabs").style.display = "flex";
+
+  render();
+
+  // Live listener for new members going forward
   db.ref("users/" + uid + "/teamMembers").on("value", snap => {
     const data = snap.val() || {};
-
-    allMembers = Object.entries(data)
-      .map(([memberId, m]) => ({ memberId, ...m }))
-      .sort((a, b) => (b.joinedAt || 0) - (a.joinedAt || 0));
-
-    const active  = allMembers.filter(m => m.hasMiner).length;
-    const pending = allMembers.filter(m => !m.hasMiner).length;
-
+    Object.entries(data).forEach(([memberId, m]) => {
+      if (memberMap[memberId]) {
+        memberMap[memberId].hasMiner = m.hasMiner || memberMap[memberId].hasMiner;
+        memberMap[memberId].joinedAt = m.joinedAt || memberMap[memberId].joinedAt;
+      } else {
+        memberMap[memberId] = { memberId, minerId: m.minerId || "Unknown", joinedAt: m.joinedAt || null, hasMiner: m.hasMiner || false };
+      }
+    });
+    allMembers = Object.values(memberMap).sort((a, b) => (b.joinedAt || 0) - (a.joinedAt || 0));
     document.getElementById("totalCount").textContent   = allMembers.length;
-    document.getElementById("activeCount").textContent  = active;
-    document.getElementById("pendingCount").textContent = pending;
-
-    document.getElementById("pageLoader").classList.add("hidden");
-    document.getElementById("statGrid").style.display   = "grid";
-    document.getElementById("filterTabs").style.display = "flex";
-
+    document.getElementById("activeCount").textContent  = allMembers.filter(m => m.hasMiner).length;
+    document.getElementById("pendingCount").textContent = allMembers.filter(m => !m.hasMiner).length;
     render();
   });
 });
