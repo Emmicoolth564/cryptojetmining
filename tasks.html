@@ -235,114 +235,83 @@ const firebaseConfig = {
     projectId: "cj-miner"
 };
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const db   = firebase.database();
 const auth = firebase.auth();
 
 const uid = localStorage.getItem("uid");
 if (!uid) window.location.href = "signin.html";
 
-let currentPoints = 0;
-let claimedDays   = {};
+let currentPoints  = 0;
+let claimedDays    = {};
 let completedTasks = {};
-let activeTimers  = {}; // track countdown timers per task
 
-// Social tasks config
+// ── SOCIAL TASKS CONFIG ───────────────────────────────────────
 const SOCIAL_TASKS = [
     {
-        id: "telegram",
-        name: "Join our Telegram Channel",
-        url: "https://t.me/cryptojet562",
-        points: 2,
-        brand: "brand-telegram",
+        id: "telegram", name: "Join our Telegram Channel",
+        url: "https://t.me/cryptojet562", points: 2,
+        brand: "brand-telegram", comingSoon: false,
         icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>`
     },
     {
-        id: "whatsapp",
-        name: "Follow our WhatsApp Channel",
-        url: "https://whatsapp.com/channel/0029Vb7Tj5b5K3zds3vOhu2a",
-        points: 2,
-        brand: "brand-whatsapp",
+        id: "whatsapp", name: "Follow our WhatsApp Channel",
+        url: "https://whatsapp.com/channel/0029Vb7Tj5b5K3zds3vOhu2a", points: 2,
+        brand: "brand-whatsapp", comingSoon: false,
         icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`
     },
     {
-        id: "facebook",
-        name: "Follow us on Facebook",
-        url: "https://facebook.com/yourpage",
-        points: 2,
-        brand: "brand-facebook",
+        id: "facebook", name: "Follow us on Facebook",
+        url: "", points: 2,
+        brand: "brand-facebook", comingSoon: true,
         icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`
     },
     {
-        id: "twitter",
-        name: "Follow us on X (Twitter)",
-        url: "https://x.com/yourhandle",
-        points: 2,
-        brand: "brand-twitter",
+        id: "twitter", name: "Follow us on X (Twitter)",
+        url: "", points: 2,
+        brand: "brand-twitter", comingSoon: true,
         icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
     },
     {
-        id: "instagram",
-        name: "Follow us on Instagram",
-        url: "https://instagram.com/yourhandle",
-        points: 2,
-        brand: "brand-instagram",
+        id: "instagram", name: "Follow us on Instagram",
+        url: "", points: 2,
+        brand: "brand-instagram", comingSoon: true,
         icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>`
     }
 ];
 
-// Load user data live
-auth.onAuthStateChanged(user => {
-  if (!user) { window.location.href = "signin.html"; return; }
-  db.ref("users/" + uid).on("value", snap => {
-    const d = snap.val() || {};
-    currentPoints   = d.points || 0;
-    claimedDays     = d.claimedDays || {};
-    completedTasks  = d.completedTasks || {};
-    // Re-render current tab silently
-    const activeTab = document.querySelector(".tab.active");
-    if (activeTab) {
-        const idx = activeTab.id === "tab-0" ? 0 : 1;
-        renderContent(idx);
-    }
-});
-
+// ── TAB SWITCH — outside auth so onclick works ───────────────
 function switchTab(tab) {
     document.querySelectorAll(".tab").forEach((t,i) => t.classList.toggle("active", i === tab));
     renderContent(tab);
 }
 
-// ── DAILY CHECK-IN ──────────────────────────────────────────────────────────
 function renderContent(tab) {
     const content = document.getElementById("content");
     if (tab === 0) renderDaily(content);
     else renderSocial(content);
 }
 
+// ── DAILY CHECK-IN ────────────────────────────────────────────
 function renderDaily(content) {
-    const today     = new Date();
-    const todayKey  = today.toISOString().split("T")[0];
+    const today        = new Date();
+    const todayKey     = today.toISOString().split("T")[0];
     const claimedToday = !!claimedDays[todayKey];
     const streakCount  = Object.keys(claimedDays).length;
-
-    const dayLabels = ["Su","Mo","Tu","We","Th","Fr","Sa"];
-    const daysInMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
+    const dayLabels    = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+    const daysInMonth  = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
 
     let calDays = "";
-    // Day labels row
     dayLabels.forEach(l => { calDays += `<div class="day-label">${l}</div>`; });
-
-    // Blank offset for first day of month
     const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
     for (let i = 0; i < firstDay; i++) calDays += `<div></div>`;
-
     for (let i = 1; i <= daysInMonth; i++) {
-        const key     = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`;
-        const claimed = !!claimedDays[key];
-        const isToday = i === today.getDate();
+        const key      = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`;
+        const claimed  = !!claimedDays[key];
+        const isToday  = i === today.getDate();
         const isFuture = i > today.getDate();
         let cls = "day";
-        if (claimed) cls += " claimed";
-        if (isToday) cls += " today";
+        if (claimed)  cls += " claimed";
+        if (isToday)  cls += " today";
         if (isFuture) cls += " future";
         calDays += `<div class="${cls}">${i}</div>`;
     }
@@ -352,7 +321,6 @@ function renderDaily(content) {
             <span class="pts-label">⚡ Your Points</span>
             <span class="pts-value">${currentPoints.toLocaleString()} pts</span>
         </div>
-
         <div class="streak-hero">
             <div class="streak-number">${streakCount}</div>
             <div class="streak-label">Day Streak</div>
@@ -361,12 +329,10 @@ function renderDaily(content) {
                 ${claimedToday ? "✅ Already claimed today" : "Claim Today's Reward  +1 point"}
             </button>
         </div>
-
         <div class="cal-wrap">
             <div class="cal-title">${today.toLocaleString("default",{month:"long"})} ${today.getFullYear()}</div>
             <div class="calendar">${calDays}</div>
         </div>
-
         <div class="how-card">
             <h4>How it works</h4>
             <div class="how-row"><div class="how-dot"></div>Claim once every 24 hours</div>
@@ -378,10 +344,8 @@ function renderDaily(content) {
 
 async function claimDaily() {
     const todayKey = new Date().toISOString().split("T")[0];
-    // Double-check in Firebase to prevent abuse
     const snap = await db.ref("users/" + uid + "/claimedDays/" + todayKey).once("value");
     if (snap.val()) { toast("Already claimed today!"); return; }
-
     await db.ref("users/" + uid).update({
         points: firebase.database.ServerValue.increment(1),
         [`claimedDays/${todayKey}`]: true
@@ -389,7 +353,7 @@ async function claimDaily() {
     toast("✅ +1 point added!");
 }
 
-// ── SOCIAL TASKS ────────────────────────────────────────────────────────────
+// ── SOCIAL TASKS ──────────────────────────────────────────────
 function renderSocial(content) {
     content.innerHTML = `
         <div class="points-bar">
@@ -406,6 +370,24 @@ function renderSocial(content) {
 
 function buildTaskCard(task) {
     const done = !!completedTasks[task.id];
+
+    // Coming soon badge for unavailable tasks
+    if (task.comingSoon) {
+        return `
+        <div class="task-card" id="taskcard-${task.id}" style="opacity:0.7;">
+            <div class="task-top">
+                <div class="brand-icon ${task.brand}">${task.icon}</div>
+                <div class="task-info">
+                    <div class="task-name">${task.name}</div>
+                    <div class="task-reward">Reward: <strong>+${task.points} points</strong></div>
+                </div>
+            </div>
+            <div class="task-done" style="background:rgba(100,116,139,0.1);color:#64748b;margin-top:14px;">
+                🕐 Coming Soon — Not yet available in your region
+            </div>
+        </div>`;
+    }
+
     return `
     <div class="task-card ${done ? "completed" : ""}" id="taskcard-${task.id}">
         <div class="task-top">
@@ -429,19 +411,13 @@ function buildTaskCard(task) {
 
 function openTask(taskId) {
     const task = SOCIAL_TASKS.find(t => t.id === taskId);
-    if (!task) return;
-
-    // Open the link
+    if (!task || task.comingSoon) return;
     window.open(task.url, "_blank");
-
-    // Start 15s countdown — only then enable verify
     const btn = document.getElementById("verifybtn-" + taskId);
     if (!btn || btn.dataset.started) return;
     btn.dataset.started = "1";
-
     let secs = 15;
     btn.textContent = `Wait ${secs}s`;
-
     const interval = setInterval(() => {
         secs--;
         if (secs <= 0) {
@@ -457,33 +433,39 @@ function openTask(taskId) {
 }
 
 async function verifyTask(taskId) {
-    // Check Firebase — prevent double-claim even if they click twice
     const snap = await db.ref("users/" + uid + "/completedTasks/" + taskId).once("value");
     if (snap.val()) { toast("Already claimed!"); return; }
-
-    const task  = SOCIAL_TASKS.find(t => t.id === taskId);
+    const task = SOCIAL_TASKS.find(t => t.id === taskId);
     if (!task) return;
-
     const btn = document.getElementById("verifybtn-" + taskId);
     if (btn) { btn.disabled = true; btn.textContent = "Claiming..."; }
-
     await db.ref("users/" + uid).update({
         points: firebase.database.ServerValue.increment(task.points),
         [`completedTasks/${taskId}`]: true
     });
-
     toast(`✅ +${task.points} points added!`);
 }
 
 function toast(msg) {
     const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.style.opacity = 1;
+    t.textContent = msg; t.style.opacity = 1;
     setTimeout(() => t.style.opacity = 0, 2500);
 }
 
-window.onload = () => renderContent(0);
+// ── AUTH — only DB read inside, all functions outside ────────
+auth.onAuthStateChanged(user => {
+    if (!user) { window.location.href = "signin.html"; return; }
+    db.ref("users/" + uid).on("value", snap => {
+        const d = snap.val() || {};
+        currentPoints  = d.points || 0;
+        claimedDays    = d.claimedDays || {};
+        completedTasks = d.completedTasks || {};
+        const activeTab = document.querySelector(".tab.active");
+        if (activeTab) renderContent(activeTab.id === "tab-0" ? 0 : 1);
+    });
 });
+
+window.onload = () => renderContent(0);
 </script>
 </body>
 </html>
