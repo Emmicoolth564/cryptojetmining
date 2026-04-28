@@ -401,6 +401,7 @@
 </div>
 
 <!-- FIREBASE + LOGIC (UNTOUCHED) -->
+<!-- FIREBASE + LOGIC -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -412,28 +413,14 @@ const firebaseConfig = {
   databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "cj-miner"
 };
-
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const db   = firebase.database();
 const auth = firebase.auth();
 
 let uid = localStorage.getItem("uid");
 if (!uid) window.location.href = "signin.html";
 
-/* LIVE DATA SYNC */
-auth.onAuthStateChanged(user => {
-  if (!user) { window.location.href = "signin.html"; return; }
-  db.ref("users/" + uid).on("value", snap => {
-    let d = snap.val() || {};
-
-    document.getElementById("userId").innerText = d.minerId || "----";
-    document.getElementById("points").innerText = d.points || 0;
-    document.getElementById("balance").innerText = Math.floor(d.balance || 0);
-    document.getElementById("team").innerText = d.team || 0;
-    document.getElementById("minerLevel").innerText = d.level || "Novice Miner";
-});
-
-/* NAV & LINKS (UNTOUCHED) */
+/* NAV & LINKS */
 function nav(p){ window.location.href = p; }
 function goRecharge(){ window.location.href = "recharge.html"; }
 function goWithdraw(){ window.location.href = "withdraw.html"; }
@@ -443,13 +430,25 @@ function goBank(){ window.location.href = "bank.html"; }
 function goTeam(){ window.location.href = "teamrecord.html"; }
 function goMiner(){ window.location.href = "miner-record.html"; }
 
-/* LOADER */
+/* LOADER — outside auth, fires immediately */
 window.addEventListener("load", () => {
-    setTimeout(() => {
-        document.getElementById("loader").style.display = "none";
-        document.querySelector(".page-content").style.opacity = "1";
-    }, 1500);
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+    document.querySelector(".page-content").style.opacity = "1";
+  }, 1500);
 });
+
+/* LIVE DATA — inside auth */
+auth.onAuthStateChanged(user => {
+  if (!user) { window.location.href = "signin.html"; return; }
+  db.ref("users/" + uid).on("value", snap => {
+    const d = snap.val() || {};
+    document.getElementById("userId").innerText    = d.minerId || "----";
+    document.getElementById("points").innerText    = d.points  || 0;
+    document.getElementById("balance").innerText   = Math.floor(d.balance || 0);
+    document.getElementById("team").innerText      = d.team    || 0;
+    document.getElementById("minerLevel").innerText = d.level  || "Novice Miner";
+  });
 });
 </script>
 </body>
