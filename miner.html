@@ -239,25 +239,25 @@ const MINERS = {
   S900:  { name:"S-900",          tier:"novice",   price:50,   daily:2,    cycleHours:24, img:"purchase3.png", duration:35, maxOwn:1 },
   S1200: { name:"S-1200",         tier:"novice",   price:120,  daily:4,    cycleHours:24, img:"purchase4.png", duration:45, maxOwn:1 },
 
-  // JUNIOR — max $5K tier
-  JX200: { name:"JX-200 Turbo",   tier:"junior",   price:200,  daily:8,    cycleHours:24, img:"purchase1.png", duration:40, maxOwn:1, emoji:"💚" },
-  JX500: { name:"JX-500 Boost",   tier:"junior",   price:500,  daily:20,   cycleHours:24, img:"purchase2.png", duration:45, maxOwn:1, emoji:"🟢" },
+  // JUNIOR — max $5K tier  ← swap junior1.png / junior2.png with your real images
+  JX200: { name:"JX-200 Turbo",    tier:"junior",   price:200,  daily:8,    cycleHours:24, img:"junior1.png",   duration:40, maxOwn:1 },
+  JX500: { name:"JX-500 Boost",    tier:"junior",   price:500,  daily:20,   cycleHours:24, img:"junior2.png",   duration:45, maxOwn:1 },
 
-  // PRO
-  PX1K:  { name:"PX-1000 Apex",   tier:"pro",      price:1000, daily:42,   cycleHours:24, img:"purchase3.png", duration:45, maxOwn:1, emoji:"🔵" },
-  PX2K:  { name:"PX-2500 Core",   tier:"pro",      price:2500, daily:100,  cycleHours:24, img:"purchase4.png", duration:50, maxOwn:1, emoji:"💠" },
+  // PRO  ← swap pro1.png / pro2.png with your real images
+  PX1K:  { name:"PX-1000 Apex",    tier:"pro",      price:1000, daily:42,   cycleHours:24, img:"pro1.png",      duration:45, maxOwn:1 },
+  PX2K:  { name:"PX-2500 Core",    tier:"pro",      price:2500, daily:100,  cycleHours:24, img:"pro2.png",      duration:50, maxOwn:1 },
 
-  // ELITE
-  EX3K:  { name:"EX-3000 Blaze",  tier:"elite",    price:3000, daily:130,  cycleHours:24, img:"purchase1.png", duration:50, maxOwn:1, emoji:"🟡" },
-  EX5K:  { name:"EX-5000 Inferno",tier:"elite",    price:5000, daily:220,  cycleHours:24, img:"purchase2.png", duration:55, maxOwn:1, emoji:"🔶" },
+  // ELITE  ← swap elite1.png / elite2.png with your real images
+  EX3K:  { name:"EX-3000 Blaze",   tier:"elite",    price:3000, daily:130,  cycleHours:24, img:"elite1.png",    duration:50, maxOwn:1 },
+  EX5K:  { name:"EX-5000 Inferno", tier:"elite",    price:5000, daily:220,  cycleHours:24, img:"elite2.png",    duration:55, maxOwn:1 },
 
-  // LEGEND
-  LX3K:  { name:"LX-3500 Titan",  tier:"legend",   price:3500, daily:155,  cycleHours:24, img:"purchase3.png", duration:55, maxOwn:1, emoji:"🟣" },
-  LX5K:  { name:"LX-5000 Zeus",   tier:"legend",   price:5000, daily:230,  cycleHours:24, img:"purchase4.png", duration:60, maxOwn:1, emoji:"👾" },
+  // LEGEND  ← swap legend1.png / legend2.png with your real images
+  LX3K:  { name:"LX-3500 Titan",   tier:"legend",   price:3500, daily:155,  cycleHours:24, img:"legend1.png",   duration:55, maxOwn:1 },
+  LX5K:  { name:"LX-5000 Zeus",    tier:"legend",   price:5000, daily:230,  cycleHours:24, img:"legend2.png",   duration:60, maxOwn:1 },
 
-  // EMPLOYEE
-  EM4K:  { name:"EM-4000 Oracle",  tier:"employee", price:4000, daily:185,  cycleHours:24, img:"purchase1.png", duration:60, maxOwn:1, emoji:"🚀" },
-  EM5K:  { name:"EM-5000 Nexus",   tier:"employee", price:5000, daily:250,  cycleHours:24, img:"purchase2.png", duration:60, maxOwn:1, emoji:"🌌" },
+  // EMPLOYEE  ← swap employee1.png / employee2.png with your real images
+  EM4K:  { name:"EM-4000 Oracle",   tier:"employee", price:4000, daily:185,  cycleHours:24, img:"employee1.png", duration:60, maxOwn:1 },
+  EM5K:  { name:"EM-5000 Nexus",    tier:"employee", price:5000, daily:250,  cycleHours:24, img:"employee2.png", duration:60, maxOwn:1 },
 };
 
 const REFERRAL_LEVELS = [
@@ -388,10 +388,8 @@ function renderRunning() {
       card.className = "miner-card";
       card.id = "card-" + key;
 
-      // Use img for novice miners, emoji display for others
-      const imgHTML = cfg.tier === "novice"
-        ? `<img src="${cfg.img}" class="miner-img" alt="${cfg.name}">`
-        : `<div style="position:absolute;top:8px;left:8px;width:72px;height:72px;display:flex;align-items:center;justify-content:center;font-size:40px;filter:drop-shadow(0 0 10px ${getTierColor(LEVELS[cfg.tier].cls)});">${cfg.emoji}</div>`;
+      // All miners use their PNG image — swap filenames in MINERS config above
+      const imgHTML = `<img src="${cfg.img}" class="miner-img" alt="${cfg.name}">`;
 
       const tierColor = getTierColor(LEVELS[cfg.tier].cls);
       const ringColor = cfg.tier === "novice" ? "#00ffcc" : tierColor;
@@ -633,54 +631,52 @@ function renderLevels() {
 
     const tierMiners = Object.entries(MINERS).filter(([, m]) => m.tier === levelKey);
 
-    if (!isUnlocked) {
-      const lockDiv = document.createElement("div");
-      lockDiv.className = "lock-notice";
-      lockDiv.innerHTML = `
-        <div class="lock-emoji">🔒</div>
-        <h4>${lv.name} Miners — Locked</h4>
-        <p>You need <strong>${lv.l1} Level 1 active members</strong> and <strong>${lv.total} total active team</strong> to unlock these miners.<br><br><em>Active = members who currently have a running miner.</em></p>`;
-      section.appendChild(lockDiv);
-    } else {
-      tierMiners.forEach(([id, m]) => {
-        const owned   = (userData.minerUnlocked || {})[id] || 0;
-        const isMaxed = owned >= m.maxOwn;
-        const tierColor = getTierColor(lv.cls);
+    // Always show miners — locked tier just disables the button
+    tierMiners.forEach(([id, m]) => {
+      const owned     = (userData.minerUnlocked || {})[id] || 0;
+      const isMaxed   = owned >= m.maxOwn;
+      const tierColor = getTierColor(lv.cls);
 
-        const imgHTML = m.tier === "novice"
-          ? `<img src="${m.img}" class="shop-img" alt="${m.name}">`
-          : `<div class="shop-emoji" style="color:${tierColor}">${m.emoji}</div>`;
+      let btnHTML = "";
+      if (isMaxed) {
+        btnHTML = `<button class="shop-btn disabled">✅ Already Owned</button>`;
+      } else if (!isUnlocked) {
+        // Visible but locked — clicking shows alert
+        btnHTML = `<button class="shop-btn disabled" onclick="lockedAlert('${lv.name}',${lv.l1},${lv.total})" style="cursor:pointer;opacity:0.6;">🔒 Locked — ${lv.name} Required</button>`;
+      } else {
+        btnHTML = `<button class="shop-btn btn-${lv.cls}" onclick="buyMiner('${id}',${m.price})">Buy for $${m.price.toLocaleString()}</button>`;
+      }
 
-        let btnHTML = "";
-        if (isMaxed) {
-          btnHTML = `<button class="shop-btn disabled">✅ Already Owned</button>`;
-        } else {
-          btnHTML = `<button class="shop-btn btn-${lv.cls}" onclick="buyMiner('${id}',${m.price})">Buy for $${m.price.toLocaleString()}</button>`;
-        }
+      const card = document.createElement("div");
+      card.className = `shop-card shop-${lv.cls}`;
+      // Slightly dim locked tier cards
+      if (!isUnlocked) card.style.opacity = "0.6";
 
-        const card = document.createElement("div");
-        card.className = `shop-card shop-${lv.cls}`;
-        card.innerHTML = `
-          <div class="shop-header">
-            ${imgHTML}
-            <div>
-              <div class="shop-name" style="color:${tierColor};">${m.name}</div>
-              <div class="shop-sub">${m.cycleHours}h cycle • ${m.duration} day plan • Max ${m.maxOwn}×</div>
-            </div>
+      card.innerHTML = `
+        <div class="shop-header">
+          <img src="${m.img}" class="shop-img" alt="${m.name}">
+          <div>
+            <div class="shop-name" style="color:${tierColor};">${m.name}</div>
+            <div class="shop-sub">${m.cycleHours}h cycle • ${m.duration} day plan • Max ${m.maxOwn}×</div>
           </div>
-          <div class="stats-grid">
-            <div class="stat-item"><div class="stat-label">PRICE</div><div class="stat-value">$${m.price.toLocaleString()}</div></div>
-            <div class="stat-item"><div class="stat-label">DAILY</div><div class="stat-value" style="color:#00ff88;">$${m.daily}</div></div>
-            <div class="stat-item"><div class="stat-label">PER CYCLE</div><div class="stat-value">$${(m.daily*(m.cycleHours/24)).toFixed(2)}</div></div>
-            <div class="stat-item"><div class="stat-label">DURATION</div><div class="stat-value">${m.duration}d</div></div>
-          </div>
-          ${btnHTML}`;
-        section.appendChild(card);
-      });
-    }
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item"><div class="stat-label">PRICE</div><div class="stat-value">$${m.price.toLocaleString()}</div></div>
+          <div class="stat-item"><div class="stat-label">DAILY</div><div class="stat-value" style="color:#00ff88;">$${m.daily}</div></div>
+          <div class="stat-item"><div class="stat-label">PER CYCLE</div><div class="stat-value">$${(m.daily*(m.cycleHours/24)).toFixed(2)}</div></div>
+          <div class="stat-item"><div class="stat-label">DURATION</div><div class="stat-value">${m.duration}d</div></div>
+        </div>
+        ${btnHTML}`;
+      section.appendChild(card);
+    });
 
     container.appendChild(section);
   });
+}
+
+// ── LOCKED TIER ALERT ─────────────────────────────────────────
+function lockedAlert(levelName, l1Needed, totalNeeded) {
+  alert(`🔒 ${levelName} Required\n\nTo unlock these miners you need:\n• ${l1Needed} Level 1 active members\n• ${totalNeeded} total active team members\n\n"Active" means they currently have a running miner.`);
 }
 
 // ── BUY MINER ─────────────────────────────────────────────────
