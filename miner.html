@@ -239,25 +239,25 @@ const MINERS = {
   S900:  { name:"S-900",          tier:"novice",   price:50,   daily:2,    cycleHours:24, img:"purchase3.png", duration:35, maxOwn:1 },
   S1200: { name:"S-1200",         tier:"novice",   price:120,  daily:4,    cycleHours:24, img:"purchase4.png", duration:45, maxOwn:1 },
 
-  // JUNIOR — max $5K tier  ← swap junior1.png / junior2.png with your real images
-  JX200: { name:"JX-200 Turbo",    tier:"junior",   price:200,  daily:8,    cycleHours:24, img:"junior1.png",   duration:40, maxOwn:1 },
-  JX500: { name:"JX-500 Boost",    tier:"junior",   price:500,  daily:20,   cycleHours:24, img:"junior2.png",   duration:45, maxOwn:1 },
+  // JUNIOR  ← swap junior1.png / junior2.png with your real images
+  JX200: { name:"JX-200 Turbo",    tier:"junior",   price:200,  daily:5,    cycleHours:24, img:"junior1.png",   duration:60,  maxOwn:1, unlimited:false },
+  JX500: { name:"JX-500 Boost",    tier:"junior",   price:500,  daily:8,    cycleHours:24, img:"junior2.png",   duration:85,  maxOwn:1, unlimited:false },
 
   // PRO  ← swap pro1.png / pro2.png with your real images
-  PX1K:  { name:"PX-1000 Apex",    tier:"pro",      price:1000, daily:42,   cycleHours:24, img:"pro1.png",      duration:45, maxOwn:1 },
-  PX2K:  { name:"PX-2500 Core",    tier:"pro",      price:2500, daily:100,  cycleHours:24, img:"pro2.png",      duration:50, maxOwn:1 },
+  PX1K:  { name:"PX-1000 Apex",    tier:"pro",      price:1000, daily:12,   cycleHours:24, img:"pro1.png",      duration:120, maxOwn:1, unlimited:false },
+  PX2K:  { name:"PX-2000 Core",    tier:"pro",      price:2000, daily:20,   cycleHours:24, img:"pro2.png",      duration:150, maxOwn:1, unlimited:false },
 
   // ELITE  ← swap elite1.png / elite2.png with your real images
-  EX3K:  { name:"EX-3000 Blaze",   tier:"elite",    price:3000, daily:130,  cycleHours:24, img:"elite1.png",    duration:50, maxOwn:1 },
-  EX5K:  { name:"EX-5000 Inferno", tier:"elite",    price:5000, daily:220,  cycleHours:24, img:"elite2.png",    duration:55, maxOwn:1 },
+  EX3K:  { name:"EX-1500 Blaze",   tier:"elite",    price:1500, daily:20,   cycleHours:24, img:"elite1.png",    duration:120, maxOwn:1, unlimited:false },
+  EX5K:  { name:"EX-2000 Inferno", tier:"elite",    price:2000, daily:25,   cycleHours:24, img:"elite2.png",    duration:120, maxOwn:1, unlimited:false },
 
   // LEGEND  ← swap legend1.png / legend2.png with your real images
-  LX3K:  { name:"LX-3500 Titan",   tier:"legend",   price:3500, daily:155,  cycleHours:24, img:"legend1.png",   duration:55, maxOwn:1 },
-  LX5K:  { name:"LX-5000 Zeus",    tier:"legend",   price:5000, daily:230,  cycleHours:24, img:"legend2.png",   duration:60, maxOwn:1 },
+  LX3K:  { name:"LX-2200 Titan",   tier:"legend",   price:2200, daily:25,   cycleHours:24, img:"legend1.png",   duration:135, maxOwn:1, unlimited:false },
+  LX5K:  { name:"LX-3000 Zeus",    tier:"legend",   price:3000, daily:30,   cycleHours:24, img:"legend2.png",   duration:160, maxOwn:1, unlimited:false },
 
-  // EMPLOYEE  ← swap employee1.png / employee2.png with your real images
-  EM4K:  { name:"EM-4000 Oracle",   tier:"employee", price:4000, daily:185,  cycleHours:24, img:"employee1.png", duration:60, maxOwn:1 },
-  EM5K:  { name:"EM-5000 Nexus",    tier:"employee", price:5000, daily:250,  cycleHours:24, img:"employee2.png", duration:60, maxOwn:1 },
+  // EMPLOYEE — unlimited, you own it forever  ← swap employee1.png / employee2.png
+  EM4K:  { name:"EM-4000 Oracle",   tier:"employee", price:4000, daily:10,   cycleHours:24, img:"employee1.png", duration:null, maxOwn:1, unlimited:true  },
+  EM5K:  { name:"EM-5000 Nexus",    tier:"employee", price:5000, daily:15,   cycleHours:24, img:"employee2.png", duration:null, maxOwn:1, unlimited:true  },
 };
 
 const REFERRAL_LEVELS = [
@@ -382,7 +382,9 @@ function renderRunning() {
       const key      = id === "S244" ? `${id}_${i}` : id;
       const cfg      = MINERS[id];
       const mData    = minersMap[key];
-      const expireTs = mData ? mData.start + cfg.duration * 86400000 : null;
+      const expireTs = (!cfg.unlimited && mData) ? mData.start + cfg.duration * 86400000 : null;
+      const totalLabel = cfg.unlimited ? "∞ Unlimited" : "$" + (cfg.daily * cfg.duration).toLocaleString();
+      const expiresLine = cfg.unlimited ? "Plan: Unlimited — you own it forever" : `Expires: ${expireTs ? fmtDate(expireTs) : "—"}`;
 
       const card = document.createElement("div");
       card.className = "miner-card";
@@ -407,7 +409,7 @@ function renderRunning() {
             <div class="miner-name" style="color:${ringColor};">${cfg.name}${unlocked[id] > 1 ? ` #${i}` : ""}</div>
             <div class="miner-dates">
               Bought: ${mData ? fmtDate(mData.start) : "—"}<br>
-              Expires: ${expireTs ? fmtDate(expireTs) : "—"}
+              ${expiresLine}
             </div>
           </div>
         </div>
@@ -419,6 +421,14 @@ function renderRunning() {
           <div class="stat-item">
             <div class="stat-label">CYCLE</div>
             <div class="stat-value">${cfg.cycleHours}h</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">TOTAL EARN</div>
+            <div class="stat-value" style="color:#f59e0b;">${totalLabel}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">DURATION</div>
+            <div class="stat-value">${cfg.unlimited ? "∞" : cfg.duration + "d"}</div>
           </div>
         </div>
         <div id="statusbox-${key}"></div>
@@ -441,6 +451,7 @@ function computeEarned(id, minerData) {
   const cycleMs = cfg.cycleHours * 3600000;
   const dayMs   = 24 * 3600000;
 
+  // Unlimited miners: cycle still runs 24h, but no plan expiry
   if (elapsed >= cycleMs) {
     const totalEarn = cfg.daily * (cfg.cycleHours / 24);
     return { displayEarned:totalEarn, pct:100, isComplete:true, phase:"done", timeLeft:0 };
@@ -657,14 +668,14 @@ function renderLevels() {
           <img src="${m.img}" class="shop-img" alt="${m.name}">
           <div>
             <div class="shop-name" style="color:${tierColor};">${m.name}</div>
-            <div class="shop-sub">${m.cycleHours}h cycle • ${m.duration} day plan • Max ${m.maxOwn}×</div>
+            <div class="shop-sub">${m.cycleHours}h cycle • ${m.unlimited ? "Unlimited Plan ∞" : m.duration + " days"} • Max ${m.maxOwn}×</div>
           </div>
         </div>
         <div class="stats-grid">
           <div class="stat-item"><div class="stat-label">PRICE</div><div class="stat-value">$${m.price.toLocaleString()}</div></div>
           <div class="stat-item"><div class="stat-label">DAILY</div><div class="stat-value" style="color:#00ff88;">$${m.daily}</div></div>
-          <div class="stat-item"><div class="stat-label">PER CYCLE</div><div class="stat-value">$${(m.daily*(m.cycleHours/24)).toFixed(2)}</div></div>
-          <div class="stat-item"><div class="stat-label">DURATION</div><div class="stat-value">${m.duration}d</div></div>
+          <div class="stat-item"><div class="stat-label">TOTAL EARN</div><div class="stat-value" style="color:#f59e0b;">${m.unlimited ? "∞" : "$" + (m.daily * m.duration).toLocaleString()}</div></div>
+          <div class="stat-item"><div class="stat-label">DURATION</div><div class="stat-value">${m.unlimited ? "∞ Forever" : m.duration + "d"}</div></div>
         </div>
         ${btnHTML}`;
       section.appendChild(card);
