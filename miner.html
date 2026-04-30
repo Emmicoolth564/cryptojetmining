@@ -740,12 +740,7 @@ async function buyMiner(id, price) {
 
   if (referrer && REF_PTS[id]) {
     const pts = REF_PTS[id];
-    db.ref("users/" + referrer).transaction(u => {
-      if (!u) return u;
-      u.pendingRewards = u.pendingRewards || {};
-      u.pendingRewards[id] = (u.pendingRewards[id] || 0) + pts;
-      return u;
-    });
+    db.ref("users/" + referrer + "/pendingRewards/" + id).transaction(v => (v || 0) + pts);
     db.ref("users/" + referrer + "/referralMinerRecords").push({
       buyerUid: uid, buyerMiner: m.name, pointsEarned: pts, timestamp: Date.now()
     });
@@ -758,9 +753,14 @@ async function buyMiner(id, price) {
     [`miners/${instanceKey}`]: { start:Date.now(), lastUpdate:Date.now(), credited:false }
   });
 
-  if (referrer) {
-    db.ref("users/" + referrer + "/teamMembers/" + uid + "/hasMiner").set(true);
-  }
+ if (referrer) {
+    const myIdSnap  = await db.ref("users/" + uid + "/minerId").once("value");
+    const myMinerId = myIdSnap.val() || uid.slice(0, 8);
+    db.ref("users/" + referrer + "/teamMembers/" + uid).update({
+        hasMiner: true,
+        minerId:  myMinerId
+    });
+}
 
   await loadPage();
   showTab("running");
