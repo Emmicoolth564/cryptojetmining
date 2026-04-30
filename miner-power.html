@@ -27,16 +27,11 @@ body {
     overflow-x: hidden;
 }
 
-/* ── CANVAS BG ─────────────────────────────── */
 #bg-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0.35;
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none; opacity: 0.35;
 }
 
-/* ── HEADER ────────────────────────────────── */
 .header {
     position: sticky; top:0; z-index:200;
     padding: 18px 20px;
@@ -48,19 +43,15 @@ body {
 .back { font-size:26px; color:var(--neon); cursor:pointer; margin-right:12px; }
 .header-title {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 22px; font-weight:700;
-    letter-spacing: 3px;
-    color: var(--neon);
-    text-shadow: 0 0 20px rgba(0,240,255,0.5);
+    font-size: 22px; font-weight:700; letter-spacing: 3px;
+    color: var(--neon); text-shadow: 0 0 20px rgba(0,240,255,0.5);
     flex:1; text-align:center;
 }
 .header-right { width:38px; }
 
-/* ── HERO STRIP ────────────────────────────── */
 .hero {
     position: relative; z-index:1;
-    padding: 40px 20px 20px;
-    text-align:center;
+    padding: 40px 20px 20px; text-align:center;
 }
 .hero-label {
     font-family:'Rajdhani',sans-serif;
@@ -69,24 +60,47 @@ body {
 }
 .hero-title {
     font-family:'Rajdhani',sans-serif;
-    font-size:38px; font-weight:700;
-    line-height:1.1;
+    font-size:38px; font-weight:700; line-height:1.1;
     background: linear-gradient(90deg, var(--neon), var(--accent), #fff);
     -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     margin-bottom:12px;
 }
 .hero-sub {
-    font-size:15px; color:#64748b; max-width:340px; margin:0 auto;
-    font-weight:300;
+    font-size:15px; color:#64748b; max-width:340px; margin:0 auto; font-weight:300;
 }
 
-/* ── CARDS ─────────────────────────────────── */
 .cards-wrap {
     position:relative; z-index:1;
     padding: 24px 16px 80px;
     display:flex; flex-direction:column; gap:32px;
     max-width:600px; margin:0 auto;
 }
+
+/* TIER SEPARATOR */
+.tier-sep {
+    display:flex; align-items:center; gap:14px;
+    margin-bottom:-10px;
+}
+.tier-sep-line { flex:1; height:1px; }
+.tier-sep-label {
+    font-family:'Rajdhani',sans-serif;
+    font-size:12px; font-weight:700; letter-spacing:4px;
+    text-transform:uppercase; padding:6px 16px;
+    border-radius:999px;
+}
+/* tier sep colors */
+.sep-novice   .tier-sep-line { background:linear-gradient(90deg,transparent,rgba(148,163,184,0.3),transparent); }
+.sep-novice   .tier-sep-label { background:rgba(148,163,184,0.08); border:1px solid rgba(148,163,184,0.25); color:#94a3b8; }
+.sep-junior   .tier-sep-line { background:linear-gradient(90deg,transparent,rgba(34,197,94,0.4),transparent); }
+.sep-junior   .tier-sep-label { background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.35); color:#22c55e; }
+.sep-pro      .tier-sep-line { background:linear-gradient(90deg,transparent,rgba(0,240,255,0.4),transparent); }
+.sep-pro      .tier-sep-label { background:rgba(0,240,255,0.1); border:1px solid rgba(0,240,255,0.35); color:#00f0ff; }
+.sep-elite    .tier-sep-line { background:linear-gradient(90deg,transparent,rgba(245,158,11,0.4),transparent); }
+.sep-elite    .tier-sep-label { background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.35); color:#f59e0b; }
+.sep-legend   .tier-sep-line { background:linear-gradient(90deg,transparent,rgba(168,85,247,0.4),transparent); }
+.sep-legend   .tier-sep-label { background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.35); color:#c084fc; }
+.sep-employee .tier-sep-line { background:linear-gradient(90deg,transparent,rgba(239,68,68,0.4),transparent); }
+.sep-employee .tier-sep-label { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.35); color:#f87171; }
 
 .miner-card {
     background: var(--s1);
@@ -106,30 +120,20 @@ body {
     from { opacity:0; transform:translateY(30px); }
     to   { opacity:1; transform:none; }
 }
-.miner-card:nth-child(1) { animation-delay:0.05s; }
-.miner-card:nth-child(2) { animation-delay:0.15s; }
-.miner-card:nth-child(3) { animation-delay:0.25s; }
-.miner-card:nth-child(4) { animation-delay:0.35s; }
 
-/* ── CARD VISUAL ───────────────────────────── */
 .card-visual {
-    height:200px;
-    position:relative;
-    display:flex; align-items:center; justify-content:center;
-    overflow:hidden;
+    height:200px; position:relative;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
 }
 .card-visual::before {
-    content:'';
-    position:absolute; inset:0;
+    content:''; position:absolute; inset:0;
     background: radial-gradient(circle at 50% 60%, var(--card-glow) 0%, transparent 65%);
     opacity:0.25;
 }
 .scan-line {
-    position:absolute; left:0; right:0;
-    height:2px;
+    position:absolute; left:0; right:0; height:2px;
     background:linear-gradient(90deg,transparent,var(--neon),transparent);
-    animation:scanDown 3s linear infinite;
-    opacity:0.4;
+    animation:scanDown 3s linear infinite; opacity:0.4;
 }
 @keyframes scanDown {
     0%  { top:0%;   opacity:0; }
@@ -158,109 +162,88 @@ body {
     font-family:'Rajdhani',sans-serif;
     font-size:11px; font-weight:700; letter-spacing:2px;
     padding:5px 12px; border-radius:6px;
-    background:rgba(0,240,255,0.1);
-    border:1px solid rgba(0,240,255,0.25);
-    color:var(--neon);
+    background:rgba(0,240,255,0.1); border:1px solid rgba(0,240,255,0.25); color:var(--neon);
 }
 .price-badge {
     position:absolute; top:16px; right:16px; z-index:3;
     font-family:'Rajdhani',sans-serif;
-    font-size:15px; font-weight:700;
-    color:var(--gold);
+    font-size:15px; font-weight:700; color:var(--gold);
     text-shadow:0 0 10px rgba(245,158,11,0.5);
 }
 
-/* ── CARD BODY ─────────────────────────────── */
 .card-body { padding:24px; }
-
 .miner-name {
     font-family:'Rajdhani',sans-serif;
-    font-size:32px; font-weight:700;
-    color:var(--accent);
-    letter-spacing:1px;
-    margin-bottom:4px;
+    font-size:32px; font-weight:700; color:var(--accent);
+    letter-spacing:1px; margin-bottom:4px;
 }
 .miner-tagline {
-    font-size:13px; color:#64748b;
-    font-weight:300; font-style:italic;
-    margin-bottom:20px;
+    font-size:13px; color:#64748b; font-weight:300; font-style:italic; margin-bottom:20px;
 }
 
-/* Stats row */
 .stats-row {
     display:grid; grid-template-columns:1fr 1fr 1fr;
     gap:10px; margin-bottom:20px;
 }
 .stat-box {
-    background:var(--s2);
-    border-radius:14px; padding:12px;
-    text-align:center;
+    background:var(--s2); border-radius:14px; padding:12px; text-align:center;
     border:1px solid rgba(255,255,255,0.05);
 }
 .stat-val {
     font-family:'Rajdhani',sans-serif;
-    font-size:20px; font-weight:700; color:var(--neon);
-    line-height:1;
+    font-size:20px; font-weight:700; color:var(--neon); line-height:1;
 }
 .stat-key {
     font-size:10px; color:#475569; font-weight:600;
-    text-transform:uppercase; letter-spacing:0.08em;
-    margin-top:4px;
+    text-transform:uppercase; letter-spacing:0.08em; margin-top:4px;
 }
 
-/* Power bar */
 .bar-wrap { margin-bottom:16px; }
 .bar-label {
     display:flex; justify-content:space-between;
     font-size:11px; font-weight:600; color:#475569;
-    text-transform:uppercase; letter-spacing:0.07em;
-    margin-bottom:6px;
+    text-transform:uppercase; letter-spacing:0.07em; margin-bottom:6px;
 }
-.bar-track {
-    height:6px; background:#1e2937; border-radius:999px; overflow:hidden;
-}
+.bar-track { height:6px; background:#1e2937; border-radius:999px; overflow:hidden; }
 .bar-fill {
     height:100%; border-radius:999px;
-    box-shadow:0 0 8px var(--bar-color);
-    background:var(--bar-color);
+    box-shadow:0 0 8px var(--bar-color); background:var(--bar-color);
     transition:width 1.5s cubic-bezier(0.16,1,0.3,1);
 }
 
-/* Divider */
-.divider {
-    height:1px; background:var(--border);
-    margin:20px 0;
-}
+.divider { height:1px; background:var(--border); margin:20px 0; }
 
-/* Detail sections */
 .detail-section { margin-bottom:18px; }
 .detail-heading {
     font-family:'Rajdhani',sans-serif;
     font-size:13px; font-weight:700; letter-spacing:2px;
-    color:var(--neon); text-transform:uppercase;
-    margin-bottom:10px;
+    color:var(--neon); text-transform:uppercase; margin-bottom:10px;
     display:flex; align-items:center; gap:8px;
 }
 .detail-heading::after {
     content:''; flex:1; height:1px;
     background:linear-gradient(90deg,var(--border),transparent);
 }
-.detail-text {
-    font-size:14px; color:#94a3b8; line-height:1.7; font-weight:300;
-}
-.detail-list {
-    list-style:none; display:flex; flex-direction:column; gap:7px; margin-top:4px;
-}
+.detail-text { font-size:14px; color:#94a3b8; line-height:1.7; font-weight:300; }
+.detail-list { list-style:none; display:flex; flex-direction:column; gap:7px; margin-top:4px; }
 .detail-list li {
     display:flex; align-items:flex-start; gap:9px;
     font-size:13px; color:#94a3b8; line-height:1.5;
 }
-.detail-list li::before {
-    content:'▸';
-    color:var(--accent); font-size:10px; flex-shrink:0; margin-top:2px;
-}
+.detail-list li::before { content:'▸'; color:var(--accent); font-size:10px; flex-shrink:0; margin-top:2px; }
 
-/* CTA */
+/* LOCK BANNER for locked tiers */
+.lock-banner {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 14px; border-radius:10px; margin-bottom:14px;
+    font-size:12px; font-weight:600;
+}
+.lock-banner.junior  { background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); color:#22c55e; }
+.lock-banner.pro     { background:rgba(0,240,255,0.08); border:1px solid rgba(0,240,255,0.2); color:#00f0ff; }
+.lock-banner.elite   { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); color:#f59e0b; }
+.lock-banner.legend  { background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.2); color:#c084fc; }
+.lock-banner.employee{ background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); color:#f87171; }
+
 .cta-btn {
     width:100%; padding:16px;
     background:linear-gradient(135deg,var(--neon),var(--accent));
@@ -268,8 +251,7 @@ body {
     font-size:17px; font-weight:700; letter-spacing:2px;
     border:none; border-radius:16px; cursor:pointer;
     box-shadow:0 8px 30px rgba(0,240,255,0.3);
-    transition:all 0.2s; margin-top:4px;
-    text-transform:uppercase;
+    transition:all 0.2s; margin-top:4px; text-transform:uppercase;
 }
 .cta-btn:hover { transform:scale(1.02); box-shadow:0 12px 40px rgba(0,240,255,0.45); }
 .cta-btn:active { transform:scale(0.98); }
@@ -293,260 +275,792 @@ body {
 
 <div class="cards-wrap">
 
-    <!-- ══ S-244 ════════════════════════════════════════════════ -->
-    <div class="miner-card" style="--card-glow:#38bdf8">
-        <div class="card-visual" style="background:linear-gradient(160deg,#0a1e2e,#0f172a)">
-            <div class="grid-overlay"></div>
-            <div class="scan-line"></div>
-            <img src="purchase1.png" class="miner-img" alt="S-244">
-            <div class="tier-badge">ENTRY LEVEL</div>
-            <div class="price-badge">$10</div>
-        </div>
-        <div class="card-body">
-            <div class="miner-name">S-244</div>
-            <div class="miner-tagline">"The steady foundation of every miner's journey"</div>
-
-            <div class="stats-row">
-                <div class="stat-box"><div class="stat-val">$0.5</div><div class="stat-key">Daily</div></div>
-                <div class="stat-box"><div class="stat-val">30</div><div class="stat-key">Days</div></div>
-                <div class="stat-box"><div class="stat-val">24%</div><div class="stat-key">Power</div></div>
-            </div>
-
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Hashrate Power</span><span>24%</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:24%;--bar-color:#38bdf8"></div></div>
-            </div>
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Thermal Load</span><span>LOW</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:18%;--bar-color:#00ffcc"></div></div>
-            </div>
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Efficiency Score</span><span>92%</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:92%;--bar-color:#4ade80"></div></div>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="detail-section">
-                <div class="detail-heading">How It Works</div>
-                <div class="detail-text">The S-244 operates on a distributed cloud hashrate model. Your investment activates a dedicated mining slice on CryptoJet's server cluster, which continuously mines BTC and stablecoins. Earnings are calculated every 48 hours and credited directly to your balance.</div>
-            </div>
-
-            <div class="detail-section">
-                <div class="detail-heading">Maintenance</div>
-                <ul class="detail-list">
-                    <li>Zero hardware maintenance — fully managed cloud infrastructure</li>
-                    <li>Automatic firmware updates applied during off-peak hours</li>
-                    <li>Thermal throttling system prevents overload at this tier</li>
-                    <li>99.4% uptime guarantee backed by redundant server nodes</li>
-                </ul>
-            </div>
-
-            <div class="detail-section">
-                <div class="detail-heading">Best For</div>
-                <div class="detail-text">New miners starting out who want reliable daily returns with zero risk of volatility from hardware costs. Ideal for building consistency before upgrading.</div>
-            </div>
-
-            <button class="cta-btn" onclick="goToMiner('S-244')">Check It Out ⚡</button>
-        </div>
-    </div>
-
-    <!-- ══ S-500 ════════════════════════════════════════════════ -->
-    <div class="miner-card" style="--card-glow:#84cc16">
-        <div class="card-visual" style="background:linear-gradient(160deg,#0f2010,#0f172a)">
-            <div class="grid-overlay"></div>
-            <div class="scan-line"></div>
-            <img src="purchase2.png" class="miner-img" alt="S-500">
-            <div class="tier-badge">BALANCED</div>
-            <div class="price-badge">$30</div>
-        </div>
-        <div class="card-body">
-            <div class="miner-name">S-500</div>
-            <div class="miner-tagline">"Where performance meets efficiency"</div>
-
-            <div class="stats-row">
-                <div class="stat-box"><div class="stat-val">$1.5</div><div class="stat-key">Daily</div></div>
-                <div class="stat-box"><div class="stat-val">30</div><div class="stat-key">Days</div></div>
-                <div class="stat-box"><div class="stat-val">52%</div><div class="stat-key">Power</div></div>
-            </div>
-
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Hashrate Power</span><span>52%</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:52%;--bar-color:#84cc16"></div></div>
-            </div>
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Thermal Load</span><span>MEDIUM</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:45%;--bar-color:#facc15"></div></div>
-            </div>
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Efficiency Score</span><span>88%</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:88%;--bar-color:#4ade80"></div></div>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="detail-section">
-                <div class="detail-heading">How It Works</div>
-                <div class="detail-text">The S-500 runs on a dual-pool mining strategy — simultaneously allocating hashrate across BTC and high-yield altcoin pools. A smart routing algorithm shifts load between pools based on real-time profitability, maximising your daily return automatically.</div>
-            </div>
-
-            <div class="detail-section">
-                <div class="detail-heading">Maintenance</div>
-                <ul class="detail-list">
-                    <li>Dynamic load balancing keeps thermal levels in the safe range</li>
-                    <li>Weekly automated pool re-calibration for optimal earnings</li>
-                    <li>Dedicated mid-tier server rack with isolated cooling zones</li>
-                    <li>Real-time performance monitoring with 48 hours manual restart on fault</li>
-                </ul>
-            </div>
-
-            <div class="detail-section">
-                <div class="detail-heading">Best For</div>
-                <div class="detail-text">Miners who've outgrown the entry tier and want meaningfully higher returns without stepping into high-heat territory. A smart long-term hold.</div>
-            </div>
-
-            <button class="cta-btn" onclick="goToMiner('S-500')">Check It Out ⚡</button>
-        </div>
-    </div>
-
-    <!-- ══ S-900 ════════════════════════════════════════════════ -->
-    <div class="miner-card" style="--card-glow:#fb923c">
-        <div class="card-visual" style="background:linear-gradient(160deg,#1f1008,#0f172a)">
-            <div class="grid-overlay"></div>
-            <div class="scan-line"></div>
-            <img src="purchase3.png" class="miner-img" alt="S-900">
-            <div class="tier-badge">HIGH POWER</div>
-            <div class="price-badge">$50</div>
-        </div>
-        <div class="card-body">
-            <div class="miner-name">S-900</div>
-            <div class="miner-tagline">"Serious output for serious miners"</div>
-
-            <div class="stats-row">
-                <div class="stat-box"><div class="stat-val">$2</div><div class="stat-key">Daily</div></div>
-                <div class="stat-box"><div class="stat-val">35</div><div class="stat-key">Days</div></div>
-                <div class="stat-box"><div class="stat-val">78%</div><div class="stat-key">Power</div></div>
-            </div>
-
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Hashrate Power</span><span>78%</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:78%;--bar-color:#fb923c"></div></div>
-            </div>
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Thermal Load</span><span>HIGH</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:72%;--bar-color:#ef4444"></div></div>
-            </div>
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Efficiency Score</span><span>85%</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:85%;--bar-color:#4ade80"></div></div>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="detail-section">
-                <div class="detail-heading">How It Works</div>
-                <div class="detail-text">The S-900 leverages a tri-pool configuration — BTC, ETH equivalent assets, and high-frequency stablecoin yield protocols. It operates at near-peak hashrate with a proprietary burst-mode that activates during peak network profitability windows, pushing earnings significantly above baseline.</div>
-            </div>
-
-            <div class="detail-section">
-                <div class="detail-heading">Maintenance</div>
-                <ul class="detail-list">
-                    <li>Advanced liquid-cooled simulation layer manages high thermal output</li>
-                    <li>Burst-mode auto-cutoff prevents overrun during extended high-load periods</li>
-                    <li>Priority server placement — dedicated high-performance rack space</li>
-                    <li>Daily self-diagnostic checks with instant alerts to operations team</li>
-                    <li>99.7% uptime SLA with instant failover to backup nodes</li>
-                </ul>
-            </div>
-
-            <div class="detail-section">
-                <div class="detail-heading">Best For</div>
-                <div class="detail-text">Experienced miners who understand the value of compounding returns. At this tier, daily earnings start to become a meaningful income stream when reinvested consistently.</div>
-            </div>
-
-            <button class="cta-btn" onclick="goToMiner('S-900')">Check It Out ⚡</button>
-        </div>
-    </div>
-
-    <!-- ══ S-1200 ═══════════════════════════════════════════════ -->
-    <div class="miner-card" style="--card-glow:#a855f7">
-        <div class="card-visual" style="background:linear-gradient(160deg,#150a20,#0f172a)">
-            <div class="grid-overlay"></div>
-            <div class="scan-line"></div>
-            <img src="purchase4.png" class="miner-img" alt="S-1200">
-            <div class="tier-badge" style="background:rgba(168,85,247,0.15);border-color:rgba(168,85,247,0.4);color:#c084fc;">ULTIMATE</div>
-            <div class="price-badge" style="color:#c084fc;text-shadow:0 0 10px rgba(168,85,247,0.5)">$1200</div>
-        </div>
-        <div class="card-body">
-            <div class="miner-name" style="color:#c084fc;">S-1200</div>
-            <div class="miner-tagline">"The pinnacle of cloud mining technology"</div>
-
-            <div class="stats-row">
-                <div class="stat-box"><div class="stat-val" style="color:#c084fc">$4</div><div class="stat-key">Daily</div></div>
-                <div class="stat-box"><div class="stat-val" style="color:#c084fc">45</div><div class="stat-key">Days</div></div>
-                <div class="stat-box"><div class="stat-val" style="color:#c084fc">98%</div><div class="stat-key">Power</div></div>
-            </div>
-
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Hashrate Power</span><span>98%</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:98%;--bar-color:#a855f7"></div></div>
-            </div>
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Thermal Load</span><span>EXTREME</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:95%;--bar-color:#ec4899"></div></div>
-            </div>
-            <div class="bar-wrap">
-                <div class="bar-label"><span>Efficiency Score</span><span>96%</span></div>
-                <div class="bar-track"><div class="bar-fill" style="width:96%;--bar-color:#4ade80"></div></div>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="detail-section">
-                <div class="detail-heading">How It Works</div>
-                <div class="detail-text">The S-1200 is CryptoJet's flagship — running on an exclusive quad-pool architecture with AI-assisted profit switching. The system monitors 12+ mining pools in real time and dynamically reallocates hashrate every 4 hours to whichever pool yields the highest return, ensuring you are always earning at peak capacity.</div>
-            </div>
-
-            <div class="detail-section">
-                <div class="detail-heading">Maintenance</div>
-                <ul class="detail-list">
-                    <li>AI-managed thermal regulation — 24 hours manual intervention required</li>
-                    <li>Immersion-cooled server environment sustains extreme continuous load</li>
-                    <li>Quad-redundant failover: if any node drops, 3 backups activate instantly</li>
-                    <li>Hourly health reports with dedicated VIP operations monitoring</li>
-                    <li>Isolated high-bandwidth network pipeline — no shared throughput</li>
-                    <li>100% uptime commitment backed by CryptoJet infrastructure guarantee</li>
-                </ul>
-            </div>
-
-            <div class="detail-section">
-                <div class="detail-heading">Best For</div>
-                <div class="detail-text">Power users who want the maximum possible return from a single miner. The S-1200 is built for those treating crypto mining as a primary passive income strategy, not a side experiment.</div>
-            </div>
-
-            <button class="cta-btn" style="background:linear-gradient(135deg,#a855f7,#ec4899);box-shadow:0 8px 30px rgba(168,85,247,0.35)" onclick="goToMiner('S-1200')">Check It Out ⚡</button>
-        </div>
-    </div>
-
+<!-- ══════════════════════ NOVICE TIER ══════════════════════════ -->
+<div class="tier-sep sep-novice">
+    <div class="tier-sep-line"></div>
+    <div class="tier-sep-label">⛏️ Novice Miners</div>
+    <div class="tier-sep-line"></div>
 </div>
 
+<!-- ══ S-244 ════════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#38bdf8">
+    <div class="card-visual" style="background:linear-gradient(160deg,#0a1e2e,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line"></div>
+        <img src="purchase1.png" class="miner-img" alt="S-244">
+        <div class="tier-badge">ENTRY LEVEL</div>
+        <div class="price-badge">$10</div>
+    </div>
+    <div class="card-body">
+        <div class="miner-name">S-244</div>
+        <div class="miner-tagline">"The steady foundation of every miner's journey"</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val">$0.5</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val">30d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val">$15</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>24%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:24%;--bar-color:#38bdf8"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>LOW</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:18%;--bar-color:#00ffcc"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>92%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:92%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The S-244 operates on a distributed cloud hashrate model. Your investment activates a dedicated mining slice on CryptoJet's server cluster, which continuously mines BTC and stablecoins. Earnings are calculated every 48 hours and credited directly to your balance.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Zero hardware maintenance — fully managed cloud infrastructure</li>
+                <li>Automatic firmware updates applied during off-peak hours</li>
+                <li>Thermal throttling system prevents overload at this tier</li>
+                <li>99.4% uptime guarantee backed by redundant server nodes</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">New miners starting out who want reliable daily returns with zero risk of volatility from hardware costs. Ideal for building consistency before upgrading.</div>
+        </div>
+        <button class="cta-btn" onclick="goToMiner('S-244')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══ S-500 ════════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#84cc16">
+    <div class="card-visual" style="background:linear-gradient(160deg,#0f2010,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line"></div>
+        <img src="purchase2.png" class="miner-img" alt="S-500">
+        <div class="tier-badge">BALANCED</div>
+        <div class="price-badge">$30</div>
+    </div>
+    <div class="card-body">
+        <div class="miner-name">S-500</div>
+        <div class="miner-tagline">"Where performance meets efficiency"</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val">$1.5</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val">30d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val">$45</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>52%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:52%;--bar-color:#84cc16"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>MEDIUM</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:45%;--bar-color:#facc15"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>88%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:88%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The S-500 runs on a dual-pool mining strategy — simultaneously allocating hashrate across BTC and high-yield altcoin pools. A smart routing algorithm shifts load between pools based on real-time profitability, maximising your daily return automatically.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Dynamic load balancing keeps thermal levels in the safe range</li>
+                <li>Weekly automated pool re-calibration for optimal earnings</li>
+                <li>Dedicated mid-tier server rack with isolated cooling zones</li>
+                <li>Real-time performance monitoring with 48h manual restart on fault</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">Miners who've outgrown the entry tier and want meaningfully higher returns without stepping into high-heat territory. A smart long-term hold.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#84cc16,#00ffcc)" onclick="goToMiner('S-500')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══ S-900 ════════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#fb923c">
+    <div class="card-visual" style="background:linear-gradient(160deg,#1f1008,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line"></div>
+        <img src="purchase3.png" class="miner-img" alt="S-900">
+        <div class="tier-badge">HIGH POWER</div>
+        <div class="price-badge">$50</div>
+    </div>
+    <div class="card-body">
+        <div class="miner-name">S-900</div>
+        <div class="miner-tagline">"Serious output for serious miners"</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val">$2</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val">35d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val">$70</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>78%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:78%;--bar-color:#fb923c"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>HIGH</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:72%;--bar-color:#ef4444"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>85%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:85%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The S-900 leverages a tri-pool configuration — BTC, ETH equivalent assets, and high-frequency stablecoin yield protocols. It operates at near-peak hashrate with a proprietary burst-mode that activates during peak network profitability windows.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Advanced liquid-cooled simulation layer manages high thermal output</li>
+                <li>Burst-mode auto-cutoff prevents overrun during extended high-load periods</li>
+                <li>Priority server placement — dedicated high-performance rack space</li>
+                <li>Daily self-diagnostic checks with instant alerts to operations team</li>
+                <li>99.7% uptime SLA with instant failover to backup nodes</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">Experienced miners who understand the value of compounding returns. At this tier, daily earnings start to become a meaningful income stream when reinvested consistently.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#fb923c,#f59e0b);box-shadow:0 8px 30px rgba(251,146,60,0.35)" onclick="goToMiner('S-900')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══ S-1200 ═══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#a855f7">
+    <div class="card-visual" style="background:linear-gradient(160deg,#150a20,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line"></div>
+        <img src="purchase4.png" class="miner-img" alt="S-1200">
+        <div class="tier-badge" style="background:rgba(168,85,247,0.15);border-color:rgba(168,85,247,0.4);color:#c084fc;">ULTIMATE</div>
+        <div class="price-badge" style="color:#c084fc;text-shadow:0 0 10px rgba(168,85,247,0.5)">$120</div>
+    </div>
+    <div class="card-body">
+        <div class="miner-name" style="color:#c084fc;">S-1200</div>
+        <div class="miner-tagline">"The pinnacle of novice cloud mining technology"</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#c084fc">$4</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#c084fc">45d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#c084fc">$180</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>98%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:98%;--bar-color:#a855f7"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>EXTREME</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:95%;--bar-color:#ec4899"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>96%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:96%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The S-1200 runs on an exclusive quad-pool architecture with AI-assisted profit switching. The system monitors 12+ mining pools in real time and dynamically reallocates hashrate every 4 hours to whichever pool yields the highest return.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>AI-managed thermal regulation — 24h manual intervention required</li>
+                <li>Immersion-cooled server environment sustains extreme continuous load</li>
+                <li>Quad-redundant failover: if any node drops, 3 backups activate instantly</li>
+                <li>Hourly health reports with dedicated VIP operations monitoring</li>
+                <li>100% uptime commitment backed by CryptoJet infrastructure guarantee</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">Power users who want maximum return from the novice tier. The S-1200 is the gateway to the higher tiers — mastering this prepares you for the elite levels above.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#a855f7,#ec4899);box-shadow:0 8px 30px rgba(168,85,247,0.35)" onclick="goToMiner('S-1200')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══════════════════════ JUNIOR TIER ══════════════════════════ -->
+<div class="tier-sep sep-junior">
+    <div class="tier-sep-line"></div>
+    <div class="tier-sep-label">🥈 Junior Miners</div>
+    <div class="tier-sep-line"></div>
+</div>
+
+<!-- ══ JX-200 ═══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#22c55e">
+    <div class="card-visual" style="background:linear-gradient(160deg,#0a1f12,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line" style="background:linear-gradient(90deg,transparent,#22c55e,transparent)"></div>
+        <img src="junior1.png" class="miner-img" alt="JX-200">
+        <div class="tier-badge" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#22c55e;">JUNIOR I</div>
+        <div class="price-badge">$200</div>
+    </div>
+    <div class="card-body">
+        <div class="lock-banner junior">🔒 Requires Junior Miner level — 5 L1 active + 20 total active team</div>
+        <div class="miner-name" style="color:#22c55e;">JX-200 Turbo</div>
+        <div class="miner-tagline">"Your first step beyond the basics — accelerated income starts here"</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#22c55e">$5</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#22c55e">60d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#22c55e">$300</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>40%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:40%;--bar-color:#22c55e"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>MEDIUM</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:35%;--bar-color:#facc15"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>94%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:94%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The JX-200 Turbo activates a dedicated mid-grade server slice on CryptoJet's enterprise cluster. Running a dual-asset strategy across BTC and stablecoin yield pools, it sustains a consistent $5/day output over a 60-day plan — earning you $300 total on a $200 investment.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Dual-redundant server assignment ensures no single point of failure</li>
+                <li>Smart thermal balancing keeps load in the safe mid-range zone</li>
+                <li>Automated daily profit sweeps to your balance at cycle close</li>
+                <li>99.5% uptime backed by CryptoJet's enterprise SLA</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">Miners who've built a small team and are ready for their first real scaling opportunity. The JX-200 delivers 50% ROI over 60 days with zero extra effort required.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#22c55e,#00ffcc);box-shadow:0 8px 30px rgba(34,197,94,0.35)" onclick="goToMiner('JX-200 Turbo')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══ JX-500 ═══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#00ffcc">
+    <div class="card-visual" style="background:linear-gradient(160deg,#081a14,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line" style="background:linear-gradient(90deg,transparent,#00ffcc,transparent)"></div>
+        <img src="junior2.png" class="miner-img" alt="JX-500">
+        <div class="tier-badge" style="background:rgba(0,255,204,0.12);border-color:rgba(0,255,204,0.4);color:#00ffcc;">JUNIOR II</div>
+        <div class="price-badge">$500</div>
+    </div>
+    <div class="card-body">
+        <div class="lock-banner junior">🔒 Requires Junior Miner level — 5 L1 active + 20 total active team</div>
+        <div class="miner-name" style="color:#00ffcc;">JX-500 Boost</div>
+        <div class="miner-tagline">"Double down on your team's momentum"</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#00ffcc">$8</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#00ffcc">85d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#00ffcc">$680</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>58%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:58%;--bar-color:#00ffcc"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>MEDIUM-HIGH</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:52%;--bar-color:#facc15"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>93%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:93%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The JX-500 Boost scales your hashrate allocation to the upper mid-range of our server farm. With an 85-day plan delivering $8/day, you earn $680 total — a 36% ROI on your $500 investment, completely hands-free.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Tri-pool routing automatically shifts between BTC, ETH-linked, and stablecoin pools</li>
+                <li>Thermal zones actively cooled with predictive load management</li>
+                <li>Real-time earnings visibility in your running tab every 24h cycle</li>
+                <li>Dedicated junior-tier server cluster with 99.6% uptime commitment</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">Junior miners looking to maximise their team's passive income. The longer 85-day plan compounds referral earnings while your miner runs in the background.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#00ffcc,#22c55e);box-shadow:0 8px 30px rgba(0,255,204,0.35)" onclick="goToMiner('JX-500 Boost')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══════════════════════ PRO TIER ═════════════════════════════ -->
+<div class="tier-sep sep-pro">
+    <div class="tier-sep-line"></div>
+    <div class="tier-sep-label">💎 Pro Miners</div>
+    <div class="tier-sep-line"></div>
+</div>
+
+<!-- ══ PX-1000 ══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#00f0ff">
+    <div class="card-visual" style="background:linear-gradient(160deg,#061520,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line"></div>
+        <img src="pro1.png" class="miner-img" alt="PX-1000">
+        <div class="tier-badge" style="background:rgba(0,240,255,0.15);border-color:rgba(0,240,255,0.5);color:#00f0ff;">PRO I</div>
+        <div class="price-badge" style="color:#00f0ff;text-shadow:0 0 10px rgba(0,240,255,0.6)">$1,000</div>
+    </div>
+    <div class="card-body">
+        <div class="lock-banner pro">🔒 Requires Pro Miner level — 10 L1 active + 50 total active team</div>
+        <div class="miner-name" style="color:#00f0ff;">PX-1000 Apex</div>
+        <div class="miner-tagline">"Where serious miners separate from the crowd"</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#00f0ff">$12</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#00f0ff">120d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#00f0ff">$1,440</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>65%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:65%;--bar-color:#00f0ff"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>HIGH</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:60%;--bar-color:#fb923c"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>94%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:94%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The PX-1000 Apex runs on a dedicated Pro-tier server slice with quad-pool routing, allocating hashrate to wherever profitability is highest every 6 hours. The 120-day plan returns $1,440 on a $1,000 investment — a 44% ROI without lifting a finger.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Quad-pool AI routing with 6-hour reallocation cycles</li>
+                <li>Dedicated Pro-tier rack with premium cooling infrastructure</li>
+                <li>Automated fault detection with 30-minute manual recovery protocol</li>
+                <li>99.8% uptime guarantee with real-time operations monitoring</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">Team builders who've hit the Pro milestone and want to convert their network momentum into a significant passive income stream over a 4-month plan.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#00f0ff,#00bfff);box-shadow:0 8px 30px rgba(0,240,255,0.4)" onclick="goToMiner('PX-1000 Apex')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══ PX-2000 ══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#00bfff">
+    <div class="card-visual" style="background:linear-gradient(160deg,#041018,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line"></div>
+        <img src="pro2.png" class="miner-img" alt="PX-2000">
+        <div class="tier-badge" style="background:rgba(0,191,255,0.15);border-color:rgba(0,191,255,0.5);color:#00bfff;">PRO II</div>
+        <div class="price-badge" style="color:#00bfff;text-shadow:0 0 10px rgba(0,191,255,0.6)">$2,000</div>
+    </div>
+    <div class="card-body">
+        <div class="lock-banner pro">🔒 Requires Pro Miner level — 10 L1 active + 50 total active team</div>
+        <div class="miner-name" style="color:#00bfff;">PX-2000 Core</div>
+        <div class="miner-tagline">"Maximum Pro output — built for 5-month dominance"</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#00bfff">$20</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#00bfff">150d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#00bfff">$3,000</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>80%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:80%;--bar-color:#00bfff"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>VERY HIGH</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:75%;--bar-color:#ef4444"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>95%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:95%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The PX-2000 Core is the most powerful Pro-tier miner available. Running at 80% peak hashrate across a 150-day plan, it returns $3,000 on your $2,000 — a full 50% ROI. Paired with team referral income, this becomes CryptoJet's most complete earning machine at this level.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Dedicated high-bandwidth Pro-II server node with immersive cooling</li>
+                <li>Dual AI routing layers — short-term and long-term pool optimisation</li>
+                <li>Hourly diagnostic pings with automatic recovery on fault detection</li>
+                <li>Premium SLA: 99.9% uptime with direct operations team escalation</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">Pro miners who want the highest possible return from a single long-running miner. The 150-day span maximises compounding from referral income alongside direct mining yield.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#00bfff,#00f0ff);box-shadow:0 8px 30px rgba(0,191,255,0.4)" onclick="goToMiner('PX-2000 Core')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══════════════════════ ELITE TIER ════════════════════════════ -->
+<div class="tier-sep sep-elite">
+    <div class="tier-sep-line"></div>
+    <div class="tier-sep-label">🔥 Elite Miners</div>
+    <div class="tier-sep-line"></div>
+</div>
+
+<!-- ══ EX-1500 ══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#f59e0b">
+    <div class="card-visual" style="background:linear-gradient(160deg,#1a1000,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line" style="background:linear-gradient(90deg,transparent,#f59e0b,transparent)"></div>
+        <img src="elite1.png" class="miner-img" alt="EX-1500">
+        <div class="tier-badge" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.5);color:#f59e0b;">ELITE I</div>
+        <div class="price-badge" style="color:#f59e0b;text-shadow:0 0 10px rgba(245,158,11,0.6)">$1,500</div>
+    </div>
+    <div class="card-body">
+        <div class="lock-banner elite">🔒 Requires Elite Miner level — 25 L1 active + 75 total active team</div>
+        <div class="miner-name" style="color:#f59e0b;">EX-1500 Blaze</div>
+        <div class="miner-tagline">"Ignite your income — the elite grind starts here"</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#f59e0b">$20</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#f59e0b">120d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#f59e0b">$2,400</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>83%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:83%;--bar-color:#f59e0b"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>VERY HIGH</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:80%;--bar-color:#ef4444"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>96%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:96%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The EX-1500 Blaze burns at 83% peak hashrate across CryptoJet's elite server tier. With $20/day over 120 days, you earn $2,400 on a $1,500 investment — a 60% ROI. The Blaze runs on a dedicated elite-class rack with zero shared bandwidth.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Elite-class dedicated server with zero shared throughput</li>
+                <li>Penta-pool routing with hourly rebalancing for maximum yield</li>
+                <li>Immersive liquid cooling keeps sustained high-load stable</li>
+                <li>Sub-10-minute fault recovery with zero earnings lost during transition</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">Elite miners who've built substantial teams and want a high-daily return that works alongside their growing referral income. The 60% ROI makes this a flagship investment at this level.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);box-shadow:0 8px 30px rgba(245,158,11,0.4);color:#000" onclick="goToMiner('EX-1500 Blaze')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══ EX-2000 ══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#fb923c">
+    <div class="card-visual" style="background:linear-gradient(160deg,#1a0c00,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line" style="background:linear-gradient(90deg,transparent,#fb923c,transparent)"></div>
+        <img src="elite2.png" class="miner-img" alt="EX-2000">
+        <div class="tier-badge" style="background:rgba(251,146,60,0.15);border-color:rgba(251,146,60,0.5);color:#fb923c;">ELITE II</div>
+        <div class="price-badge" style="color:#fb923c;text-shadow:0 0 10px rgba(251,146,60,0.6)">$2,000</div>
+    </div>
+    <div class="card-body">
+        <div class="lock-banner elite">🔒 Requires Elite Miner level — 25 L1 active + 75 total active team</div>
+        <div class="miner-name" style="color:#fb923c;">EX-2000 Inferno</div>
+        <div class="miner-tagline">"Burn hotter. Earn faster. The Inferno never stops."</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#fb923c">$25</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#fb923c">120d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#fb923c">$3,000</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>91%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:91%;--bar-color:#fb923c"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>EXTREME</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:88%;--bar-color:#ef4444"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>97%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:97%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The EX-2000 Inferno is CryptoJet's hottest elite miner — operating at 91% peak hashrate with a 6-pool AI router that never sleeps. $25/day over 120 days returns $3,000 on your $2,000 investment — a full 50% ROI in just 4 months.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>6-pool AI routing with 4-hour micro-rebalancing cycles</li>
+                <li>Dedicated Inferno-class hardware with extreme thermal management</li>
+                <li>Triple-redundant failover — 3 backups ready to activate within seconds</li>
+                <li>VIP operations monitoring with direct escalation for elite tier clients</li>
+                <li>100% uptime commitment at this performance level</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">Elite miners who want the highest daily output at this tier. Combined with a strong referral team, the Inferno turns your network into a serious wealth-building engine.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#fb923c,#f59e0b);box-shadow:0 8px 30px rgba(251,146,60,0.4);color:#000" onclick="goToMiner('EX-2000 Inferno')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══════════════════════ LEGEND TIER ══════════════════════════ -->
+<div class="tier-sep sep-legend">
+    <div class="tier-sep-line"></div>
+    <div class="tier-sep-label">👑 Legend Miners</div>
+    <div class="tier-sep-line"></div>
+</div>
+
+<!-- ══ LX-2200 ══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#a855f7">
+    <div class="card-visual" style="background:linear-gradient(160deg,#130a22,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line" style="background:linear-gradient(90deg,transparent,#a855f7,transparent)"></div>
+        <img src="legend1.png" class="miner-img" alt="LX-2200">
+        <div class="tier-badge" style="background:rgba(168,85,247,0.15);border-color:rgba(168,85,247,0.5);color:#c084fc;">LEGEND I</div>
+        <div class="price-badge" style="color:#c084fc;text-shadow:0 0 10px rgba(168,85,247,0.6)">$2,200</div>
+    </div>
+    <div class="card-body">
+        <div class="lock-banner legend">🔒 Requires Legend Miner level — 50 L1 active + 150 total active team</div>
+        <div class="miner-name" style="color:#c084fc;">LX-2200 Titan</div>
+        <div class="miner-tagline">"Legends don't mine — they command the grid"</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#c084fc">$25</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#c084fc">135d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#c084fc">$3,375</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>93%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:93%;--bar-color:#a855f7"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>EXTREME</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:90%;--bar-color:#ec4899"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>98%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:98%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The LX-2200 Titan sits on CryptoJet's exclusive Legend-tier server cluster — the top 5% of our infrastructure. Running at 93% hashrate across an 8-pool AI network, it delivers $25/day for 135 days, returning $3,375 on a $2,200 investment. A true titan of passive yield.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Legend-exclusive server cluster — zero shared infrastructure with lower tiers</li>
+                <li>8-pool AI network with 2-hour intelligent rebalancing</li>
+                <li>Nitrogen-assisted cooling sustains near-maximum continuous load</li>
+                <li>Dedicated account manager for Legend-tier hardware performance</li>
+                <li>100% uptime SLA with financial compensation on breach</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">Legends who've built empire-scale teams and want a miner that reflects their status. The Titan returns 53% ROI over 135 days — a statement investment for a statement level.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#a855f7,#c084fc);box-shadow:0 8px 30px rgba(168,85,247,0.45)" onclick="goToMiner('LX-2200 Titan')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══ LX-3000 ══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#c084fc">
+    <div class="card-visual" style="background:linear-gradient(160deg,#0f0618,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line" style="background:linear-gradient(90deg,transparent,#c084fc,transparent)"></div>
+        <img src="legend2.png" class="miner-img" alt="LX-3000">
+        <div class="tier-badge" style="background:rgba(192,132,252,0.15);border-color:rgba(192,132,252,0.5);color:#c084fc;">LEGEND II</div>
+        <div class="price-badge" style="color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.6)">$3,000</div>
+    </div>
+    <div class="card-body">
+        <div class="lock-banner legend">🔒 Requires Legend Miner level — 50 L1 active + 150 total active team</div>
+        <div class="miner-name" style="color:#c084fc;">LX-3000 Zeus</div>
+        <div class="miner-tagline">"The god-tier miner. 160 days of pure dominance."</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#c084fc">$30</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#c084fc">160d</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#c084fc">$4,800</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>97%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:97%;--bar-color:#c084fc"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Load</span><span>MAX</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:95%;--bar-color:#ec4899"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>99%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:99%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">LX-3000 Zeus is CryptoJet's most powerful Legend miner — operating at 97% hashrate with a 10-pool AI brain that continuously optimises every 90 minutes. $30/day for 160 days returns $4,800 on your $3,000 — a 60% ROI over the longest plan available in the Legend tier.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Zeus-class dedicated server — the highest-spec hardware in our fleet</li>
+                <li>10-pool AI optimizer with 90-minute ultra-fast rebalancing</li>
+                <li>Cryogenic-assisted cooling for sustained maximum-load operation</li>
+                <li>Sub-5-minute fault recovery — zero earnings lost during transitions</li>
+                <li>Platinum SLA — 100% uptime backed by legal service guarantee</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">The most ambitious Legends who want CryptoJet's highest-earning non-unlimited miner. Zeus is built for those who've reached the top and want their miner to match their ambition.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#c084fc,#a855f7);box-shadow:0 8px 30px rgba(192,132,252,0.5)" onclick="goToMiner('LX-3000 Zeus')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══════════════════════ EMPLOYEE TIER ════════════════════════ -->
+<div class="tier-sep sep-employee">
+    <div class="tier-sep-line"></div>
+    <div class="tier-sep-label">🚀 Employee Miners</div>
+    <div class="tier-sep-line"></div>
+</div>
+
+<!-- ══ EM-4000 ══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#ef4444">
+    <div class="card-visual" style="background:linear-gradient(160deg,#1a0505,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line" style="background:linear-gradient(90deg,transparent,#ef4444,transparent)"></div>
+        <img src="employee1.png" class="miner-img" alt="EM-4000">
+        <div class="tier-badge" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.5);color:#f87171;">EMPLOYEE I</div>
+        <div class="price-badge" style="color:#f87171;text-shadow:0 0 10px rgba(239,68,68,0.6)">$4,000</div>
+    </div>
+    <div class="card-body">
+        <div class="lock-banner employee">🔒 Requires Employee level — 100 L1 active + 500 total active team</div>
+        <div class="miner-name" style="color:#f87171;">EM-4000 Oracle</div>
+        <div class="miner-tagline">"You don't rent this miner. You own it. Forever."</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#f87171">$10</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#f87171">∞</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#f87171">∞</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>UNLIMITED</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%;--bar-color:#ef4444"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Management</span><span>AUTOMATED</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%;--bar-color:#f97316"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>100%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The EM-4000 Oracle is not a plan — it's permanent infrastructure. Once purchased, this miner is yours with no expiry date. It credits $10 every 24-hour cycle indefinitely. Every day you hold it, it earns. There is no end date, no plan expiry, no renewal needed.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Permanent hardware allocation — your dedicated slice never expires</li>
+                <li>Self-healing infrastructure automatically recovers from any fault</li>
+                <li>AI-managed cooling adjusts in real time to sustain indefinite operation</li>
+                <li>Quarterly hardware upgrades at no additional cost to your investment</li>
+                <li>Lifetime uptime guarantee — CryptoJet infrastructure is your infrastructure</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">CryptoJet Employees — the elite who've built 500+ active teams. The Oracle is your reward for reaching the top. It never stops earning, so neither do you.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#ef4444,#f97316);box-shadow:0 8px 30px rgba(239,68,68,0.45)" onclick="goToMiner('EM-4000 Oracle')">Check It Out ⚡</button>
+    </div>
+</div>
+
+<!-- ══ EM-5000 ══════════════════════════════════════════════════ -->
+<div class="miner-card" style="--card-glow:#f97316">
+    <div class="card-visual" style="background:linear-gradient(160deg,#180800,#0f172a)">
+        <div class="grid-overlay"></div>
+        <div class="scan-line" style="background:linear-gradient(90deg,transparent,#f97316,transparent)"></div>
+        <img src="employee2.png" class="miner-img" alt="EM-5000">
+        <div class="tier-badge" style="background:rgba(249,115,22,0.15);border-color:rgba(249,115,22,0.5);color:#f97316;">EMPLOYEE II</div>
+        <div class="price-badge" style="color:#f97316;text-shadow:0 0 10px rgba(249,115,22,0.6)">$5,000</div>
+    </div>
+    <div class="card-body">
+        <div class="lock-banner employee">🔒 Requires Employee level — 100 L1 active + 500 total active team</div>
+        <div class="miner-name" style="color:#f97316;">EM-5000 Nexus</div>
+        <div class="miner-tagline">"The apex of CryptoJet's mining power. Yours. Forever."</div>
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" style="color:#f97316">$15</div><div class="stat-key">Daily</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#f97316">∞</div><div class="stat-key">Duration</div></div>
+            <div class="stat-box"><div class="stat-val" style="color:#f97316">∞</div><div class="stat-key">Total Earn</div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Hashrate Power</span><span>MAXIMUM</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%;--bar-color:#f97316"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Thermal Management</span><span>QUANTUM</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%;--bar-color:#ef4444"></div></div>
+        </div>
+        <div class="bar-wrap">
+            <div class="bar-label"><span>Efficiency Score</span><span>100%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%;--bar-color:#4ade80"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section">
+            <div class="detail-heading">How It Works</div>
+            <div class="detail-text">The EM-5000 Nexus is the single most powerful miner in the CryptoJet ecosystem. Delivering $15 every 24 hours, forever, with no expiry date. It runs on our quantum-tier server node — the most advanced infrastructure we operate — and it never stops. Ever.</div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Maintenance</div>
+            <ul class="detail-list">
+                <li>Quantum-tier dedicated server — CryptoJet's most advanced hardware class</li>
+                <li>Next-gen AI routing across 12 simultaneous mining pools</li>
+                <li>Zero-downtime architecture — rolling updates with no interruption to earnings</li>
+                <li>Annual hardware refresh cycle included at no cost</li>
+                <li>Employee-class platinum SLA: 100% uptime, financial guarantee, personal escalation line</li>
+            </ul>
+        </div>
+        <div class="detail-section">
+            <div class="detail-heading">Best For</div>
+            <div class="detail-text">The apex of CryptoJet. If you've earned Employee status and want the ultimate passive income machine — the Nexus is it. $15/day, forever. No limits. No expiry. Pure yield.</div>
+        </div>
+        <button class="cta-btn" style="background:linear-gradient(135deg,#f97316,#ef4444);box-shadow:0 8px 30px rgba(249,115,22,0.5)" onclick="goToMiner('EM-5000 Nexus')">Check It Out ⚡</button>
+    </div>
+</div>
+
+</div><!-- end cards-wrap -->
+
 <script>
-// ── Navigate to miner.html purchase tab ────────────────────────
 function goToMiner(minerName) {
-    // Store which miner to highlight, then go to miner.html
     localStorage.setItem("openMiner", minerName);
     window.location.href = "miner.html?tab=purchase&miner=" + encodeURIComponent(minerName);
 }
 
-// ── Animated particle canvas background ───────────────────────
 const canvas  = document.getElementById("bg-canvas");
 const ctx     = canvas.getContext("2d");
 let particles = [];
 
-function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 resize();
 window.addEventListener("resize", resize);
 
@@ -574,8 +1088,6 @@ function drawParticles() {
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
     });
-
-    // Draw faint connection lines between nearby particles
     for (let i = 0; i < particles.length; i++) {
         for (let j = i+1; j < particles.length; j++) {
             const dx = particles[i].x - particles[j].x;
@@ -585,7 +1097,7 @@ function drawParticles() {
                 ctx.beginPath();
                 ctx.moveTo(particles[i].x, particles[i].y);
                 ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.strokeStyle = `rgba(0,240,255,${0.06 * (1 - dist/100)})`;
+                ctx.strokeStyle = `rgba(0,240,255,${0.06*(1-dist/100)})`;
                 ctx.lineWidth = 0.5;
                 ctx.stroke();
             }
@@ -595,17 +1107,12 @@ function drawParticles() {
 }
 drawParticles();
 
-// ── Random flash on cards ──────────────────────────────────────
 setInterval(() => {
     const cards = document.querySelectorAll(".miner-card");
     const c = cards[Math.floor(Math.random() * cards.length)];
-    const orig = c.style.borderColor;
     c.style.borderColor = "rgba(0,240,255,0.6)";
     c.style.boxShadow   = "0 0 40px rgba(0,240,255,0.15)";
-    setTimeout(() => {
-        c.style.borderColor = "";
-        c.style.boxShadow   = "";
-    }, 200);
+    setTimeout(() => { c.style.borderColor = ""; c.style.boxShadow = ""; }, 200);
 }, 3000);
 </script>
 </body>
