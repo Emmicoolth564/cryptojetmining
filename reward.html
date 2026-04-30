@@ -402,7 +402,8 @@ function renderSignupTab() {
 // Pattern: read own data (allowed), write own data (allowed).
 // No transaction needed — user owns this node so read+write is fine.
 async function claimMinerPoints(minerKey, minerName) {
-  const uid = localStorage.getItem("uid");
+  const uid = auth.currentUser?.uid;
+  if (!uid) { showToast("Session expired — please sign in again", "error"); return; }
   disableAllButtons();
 
   try {
@@ -437,7 +438,8 @@ async function claimMinerPoints(minerKey, minerName) {
 
 /* ───────────────────────── CLAIM — SIGNUP ──────────────────────── */
 async function claimSignupPoints() {
-  const uid = localStorage.getItem("uid");
+  const uid = auth.currentUser?.uid;
+  if (!uid) { showToast("Session expired — please sign in again", "error"); return; }
   disableAllButtons();
 
   try {
