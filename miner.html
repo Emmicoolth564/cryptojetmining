@@ -599,10 +599,8 @@ async function creditReferralChain(earnerUid, earnedAmount, minerName) {
     const teamCredit = parseFloat((earnedAmount * pct).toFixed(4));
     if (teamCredit <= 0) { currentUid = referrerUid; continue; }
 
-    const teamSnap    = await db.ref(`users/${referrerUid}/team`).once("value");
-    const currentTeam = teamSnap.val() || 0;
     await db.ref(`users/${referrerUid}/team`).set(
-      parseFloat((currentTeam + teamCredit).toFixed(4))
+      firebase.database.ServerValue.increment(teamCredit)
     );
 
     await db.ref(`teamIncome/${referrerUid}`).push({
@@ -740,7 +738,7 @@ async function buyMiner(id, price) {
 
   if (referrer && REF_PTS[id]) {
     const pts = REF_PTS[id];
-    db.ref("users/" + referrer + "/pendingRewards/" + id).transaction(v => (v || 0) + pts);
+    db.ref("users/" + referrer + "/pendingRewards/" + id).set(firebase.database.ServerValue.increment(pts));
     db.ref("users/" + referrer + "/referralMinerRecords").push({
       buyerUid: uid, buyerMiner: m.name, pointsEarned: pts, timestamp: Date.now()
     });

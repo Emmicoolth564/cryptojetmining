@@ -454,8 +454,8 @@ if (!referrer && manualCode) {
 }
   if (referrer && referrer !== uid) {
     userData.referredBy = referrer;
-    db.ref("users/" + referrer + "/referrals").transaction(v => (v || 0) + 1);
-    db.ref("users/" + referrer + "/pendingRewards/signup").transaction(v => (v || 0) + 3);
+    db.ref("users/" + referrer + "/referrals").set(firebase.database.ServerValue.increment(1));
+    db.ref("users/" + referrer + "/pendingRewards/signup").set(firebase.database.ServerValue.increment(3));
     db.ref("users/" + referrer + "/teamMembers/" + uid).set({
         minerId:  userData.minerId,
         name:     userData.name || "Miner",
