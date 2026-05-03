@@ -347,7 +347,7 @@ auth.onAuthStateChanged(user => {
     const d = snap.val() || {};
     document.getElementById("balance").innerText    = Math.floor(d.balance || 0);
     document.getElementById("uiPoints").innerText   = d.points || 0;
-    document.getElementById("teamIncome").innerText = d.team   || 0;
+    document.getElementById("teamIncome").innerText = (d.team || 0).toFixed(2);
 
     // Mining status (same data, same listener)
     const active   = d.mining === true || (d.miners && Object.keys(d.miners).length > 0);
