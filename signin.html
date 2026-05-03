@@ -360,7 +360,7 @@ async function handleEmailAuth() {
     const cred = await auth.signInWithEmailAndPassword(email, password);
     localStorage.setItem("uid", cred.user.uid);
     if (document.getElementById("rememberMe").checked) localStorage.setItem("rememberedEmail", email);
-    showToast("Welcome back! ✅", "success");
+    showToast("Welcome back!", "success");
     setTimeout(() => window.location.href = "dashboard.html", 800);
   }
 }
@@ -385,7 +385,7 @@ async function handlePhoneAuth() {
   } else {
     const cred = await auth.signInWithEmailAndPassword(fakeEmail, password);
     localStorage.setItem("uid", cred.user.uid);
-    showToast("Welcome back! ✅", "success");
+    showToast("Welcome back!", "success");
     setTimeout(() => window.location.href = "dashboard.html", 800);
   }
 }
@@ -404,7 +404,7 @@ async function signInWithGoogle() {
     }
     localStorage.setItem("uid", user.uid);
     if (document.getElementById("rememberMe").checked) localStorage.setItem("rememberedEmail", user.email || "");
-    showToast("Signed in with Google ✅", "success");
+    showToast("Signed in with Google ", "success");
     setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
   } catch (err) {
     if (err.code === "auth/popup-blocked") {
@@ -424,7 +424,7 @@ auth.getRedirectResult().then(async result => {
   const snap = await db.ref("users/" + user.uid).once("value");
   if (!snap.exists()) await createUserProfile(user.uid, user.displayName || "Miner", user.email);
   localStorage.setItem("uid", user.uid);
-  showToast("Signed in with Google ✅", "success");
+  showToast("Signed in with Google ", "success");
   setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
 }).catch(() => {});
 
