@@ -357,13 +357,13 @@ async function handleEmailAuth() {
     localStorage.setItem("uid", cred.user.uid);
     if (document.getElementById("rememberMe").checked) localStorage.setItem("rememberedEmail", email);
     showToast("Account created! Welcome 🚀", "success");
-    setTimeout(() => window.location.href = "dashboard", 800);
+    setTimeout(() => window.location.href = "dashboard/", 800);
   } else {
     const cred = await auth.signInWithEmailAndPassword(email, password);
     localStorage.setItem("uid", cred.user.uid);
     if (document.getElementById("rememberMe").checked) localStorage.setItem("rememberedEmail", email);
     showToast("Welcome back!", "success");
-    setTimeout(() => window.location.href = "dashboard", 800);
+    setTimeout(() => window.location.href = "dashboard/", 800);
   }
 }
 
