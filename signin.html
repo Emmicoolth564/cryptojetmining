@@ -357,13 +357,13 @@ async function handleEmailAuth() {
     localStorage.setItem("uid", cred.user.uid);
     if (document.getElementById("rememberMe").checked) localStorage.setItem("rememberedEmail", email);
     showToast("Account created! Welcome 🚀", "success");
-    setTimeout(() => window.location.href = "dashboard.html", 800);
+    setTimeout(() => window.location.href = "dashboard", 800);
   } else {
     const cred = await auth.signInWithEmailAndPassword(email, password);
     localStorage.setItem("uid", cred.user.uid);
     if (document.getElementById("rememberMe").checked) localStorage.setItem("rememberedEmail", email);
     showToast("Welcome back!", "success");
-    setTimeout(() => window.location.href = "dashboard.html", 800);
+    setTimeout(() => window.location.href = "dashboard", 800);
   }
 }
 
@@ -383,12 +383,12 @@ async function handlePhoneAuth() {
     await createUserProfile(cred.user.uid, name, code + phone, true);
     localStorage.setItem("uid", cred.user.uid);
     showToast("Account created! Welcome 🚀", "success");
-    setTimeout(() => window.location.href = "dashboard.html", 800);
+    setTimeout(() => window.location.href = "dashboard", 800);
   } else {
     const cred = await auth.signInWithEmailAndPassword(fakeEmail, password);
     localStorage.setItem("uid", cred.user.uid);
     showToast("Welcome back!", "success");
-    setTimeout(() => window.location.href = "dashboard.html", 800);
+    setTimeout(() => window.location.href = "dashboard", 800);
   }
 }
 
@@ -407,7 +407,7 @@ async function signInWithGoogle() {
     localStorage.setItem("uid", user.uid);
     if (document.getElementById("rememberMe").checked) localStorage.setItem("rememberedEmail", user.email || "");
     showToast("Signed in with Google ", "success");
-    setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+    setTimeout(() => { window.location.href = "dashboard"; }, 1000);
   } catch (err) {
     if (err.code === "auth/popup-blocked") {
       const provider2 = new firebase.auth.GoogleAuthProvider();
@@ -427,7 +427,7 @@ auth.getRedirectResult().then(async result => {
   if (!snap.exists()) await createUserProfile(user.uid, user.displayName || "Miner", user.email);
   localStorage.setItem("uid", user.uid);
   showToast("Signed in with Google ", "success");
-  setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+  setTimeout(() => { window.location.href = "dashboard"; }, 1000);
 }).catch(() => {});
 
 // ── CREATE USER PROFILE ───────────────────────────────────────

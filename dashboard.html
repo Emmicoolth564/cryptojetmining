@@ -334,13 +334,13 @@ firebase.initializeApp(firebaseConfig);
 const db   = firebase.database();
 const auth = firebase.auth();
 const uid  = localStorage.getItem("uid");
-if (!uid) window.location.href = "signin.html";
+if (!uid) window.location.href = "signin";
 
 function nav(p){ window.location.href = p; }
 
 // ── AUTH + DB LISTENERS ──────────────────────────────────────
 auth.onAuthStateChanged(user => {
-  if (!user) { window.location.href = "signin.html"; return; }
+  if (!user) { window.location.href = "signin"; return; }
 
   // Balance, team, points — live
   db.ref("users/" + uid).on("value", snap => {
@@ -423,7 +423,7 @@ let swipeX = 0;
 document.querySelector(".wrapper").addEventListener("touchstart", e => { swipeX = e.touches[0].clientX; });
 document.querySelector(".wrapper").addEventListener("touchend",   e => {
   const diff = swipeX - e.changedTouches[0].clientX;
-  if (diff > 80) nav("miner.html");
+  if (diff > 80) nav("miner");
 });
 
 // ── LIVE MARKET ──────────────────────────────────────────────

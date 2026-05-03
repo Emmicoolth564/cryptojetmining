@@ -203,7 +203,7 @@ const db   = firebase.database();
 const auth = firebase.auth();
 
 const uid = localStorage.getItem("uid");
-if (!uid) { window.location.href = "signin.html"; }
+if (!uid) { window.location.href = "signin"; }
 
 // Load user data
 db.ref("users/" + uid).on("value", snap => {
@@ -257,7 +257,7 @@ async function changePassword() {
 function confirmLogout() {
   if (confirm("Log out from this device?")) {
     localStorage.removeItem("uid");
-    window.location.href = "signin.html";
+    window.location.href = "signin";
   }
 }
 
@@ -267,7 +267,7 @@ function showToast(msg, type = "success") {
   setTimeout(() => t.style.opacity = 0, 2800);
 }
 auth.onAuthStateChanged(user => {
-  if (!user) { window.location.href = "signin.html"; return; }
+  if (!user) { window.location.href = "signin"; return; }
 });
 </script>
 </body>
