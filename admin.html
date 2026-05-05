@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,29 +16,24 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-/* HEADER */
 .header{padding:18px 20px;background:rgba(2,6,23,0.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;}
 .header-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--neon);letter-spacing:1px;}
 .header-badge{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;}
 
-/* STAT STRIP */
 .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border);}
 .strip-item{background:var(--s1);padding:14px;text-align:center;}
 .strip-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--neon);}
 .strip-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;}
 
-/* TABS */
 .tabs-bar{display:flex;gap:6px;padding:14px 16px;background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;position:sticky;top:65px;z-index:199;}
 .tabs-bar::-webkit-scrollbar{display:none;}
 .tab{flex-shrink:0;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent;color:var(--muted);background:var(--s1);transition:all 0.2s;}
 .tab.active{background:rgba(0,240,255,0.1);border-color:var(--neon);color:var(--neon);}
 
-/* SEARCH */
 .search-wrap{padding:14px 16px;}
 .search-input{width:100%;padding:12px 16px;background:var(--s1);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;transition:border-color 0.2s;}
 .search-input:focus{outline:none;border-color:var(--neon);}
 
-/* USER CARDS */
 .users-grid{padding:0 16px 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
 .user-card{background:var(--s1);border-radius:18px;padding:18px;border:1px solid var(--border);cursor:pointer;transition:all 0.2s;}
 .user-card:hover{border-color:rgba(0,240,255,0.35);transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,240,255,0.08);}
@@ -54,7 +47,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .uc-val.green{color:var(--green);}
 .uc-val.gold{color:var(--gold);}
 
-/* TX CARDS */
 .tx-list{padding:0 16px 80px;display:flex;flex-direction:column;gap:10px;}
 .tx-card{background:var(--s1);border-radius:16px;padding:16px 18px;border:1px solid var(--border);}
 .tx-top{display:flex;justify-content:space-between;align-items:flex-start;}
@@ -65,8 +57,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .badge.approved{background:rgba(34,197,94,0.15);color:var(--green);}
 .badge.pending{background:rgba(245,158,11,0.15);color:var(--gold);}
 .badge.rejected{background:rgba(239,68,68,0.15);color:var(--red);}
+.badge.processing{background:rgba(168,85,247,0.15);color:var(--purple);}
 
-/* ACTION BUTTONS on TX cards */
 .tx-actions{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);}
 .tx-action-btn{flex:1;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
 .tx-action-btn.approve{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3);}
@@ -75,49 +67,42 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .tx-action-btn.reject:hover{background:var(--red);color:#fff;}
 .tx-action-btn:disabled{opacity:0.45;cursor:not-allowed;}
 
-/* LOAD MORE */
+/* TX TYPE LABELS */
+.tx-type-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;text-transform:uppercase;margin-left:6px;}
+.type-recharge{background:rgba(34,197,94,0.12);color:var(--green);}
+.type-withdraw{background:rgba(239,68,68,0.12);color:var(--red);}
+.type-usdt{background:rgba(168,85,247,0.12);color:var(--purple);}
+
 .load-more-btn{display:block;width:calc(100% - 32px);margin:0 16px 80px;padding:14px;background:var(--s1);border:1.5px solid var(--border);border-radius:14px;color:var(--neon);font-size:14px;font-weight:700;cursor:pointer;text-align:center;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
 .load-more-btn:hover{border-color:var(--neon);background:rgba(0,240,255,0.05);}
 
-/* ── USER DETAIL PANEL ───────────────────────── */
 .detail-panel{position:fixed;inset:0;background:var(--bg);z-index:500;overflow-y:auto;display:none;padding-bottom:60px;}
 .detail-panel.open{display:block;}
-
 .dp-header{padding:18px 16px;display:flex;align-items:center;gap:12px;background:rgba(2,6,23,0.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
 .dp-back{font-size:26px;color:var(--neon);cursor:pointer;}
 .dp-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--neon);}
-
 .dp-hero{padding:20px 16px;background:linear-gradient(135deg,#0c1628,#111f35);border-bottom:1px solid var(--border);}
 .dp-name{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--neon);margin-bottom:4px;}
 .dp-uid{font-size:12px;color:var(--muted);word-break:break-all;margin-bottom:14px;}
-
 .dp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .dp-stat{background:rgba(2,6,23,0.6);border-radius:12px;padding:12px;text-align:center;border:1px solid var(--border);}
 .dp-stat-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--neon);}
 .dp-stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-top:3px;}
-
 .dp-tabs{display:flex;gap:6px;padding:14px 16px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);}
 .dp-tabs::-webkit-scrollbar{display:none;}
 .dp-tab{flex-shrink:0;padding:8px 14px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid transparent;color:var(--muted);background:var(--s1);}
 .dp-tab.active{background:rgba(0,240,255,0.1);border-color:var(--neon);color:var(--neon);}
-
 .dp-content{padding:16px;}
-
-/* SECTION CARDS */
 .sec-card{background:var(--s1);border-radius:16px;padding:16px 18px;margin-bottom:12px;border:1px solid var(--border);}
 .sec-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;}
 .sec-row:last-child{border-bottom:none;}
 .sec-lbl{color:var(--muted);}
 .sec-val{font-weight:600;color:var(--text);}
 .sec-title{font-size:13px;font-weight:700;color:var(--neon);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
-
-/* REFERRAL */
 .ref-person{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--s2);border-radius:12px;margin-bottom:8px;cursor:pointer;}
 .ref-avatar{width:36px;height:36px;border-radius:50%;background:rgba(0,255,204,0.1);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--neon);flex-shrink:0;}
 .ref-id{font-size:14px;font-weight:700;color:var(--text);}
 .ref-meta{font-size:11px;color:var(--muted);}
-
-/* BALANCE ADJUST */
 .adjust-form{background:var(--s1);border-radius:16px;padding:18px;border:1px solid var(--border);margin-bottom:12px;}
 .adj-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;margin-top:14px;display:block;}
 .adj-label:first-of-type{margin-top:0;}
@@ -130,11 +115,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .adj-btn.deduct{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3);}
 .adj-btn.deduct:hover{background:var(--red);color:#000;}
 .adj-btn:disabled{opacity:0.5;cursor:not-allowed;}
-
-/* SUCCESS FLASH */
 .adj-success{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--green);font-weight:600;display:none;margin-top:12px;text-align:center;}
-
-/* MINI RECORD */
 .mini-rec{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;}
 .mini-rec:last-child{border-bottom:none;}
 .mini-lbl{color:var(--subtle);}
@@ -142,10 +123,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .mini-val.pos{color:var(--green);}
 .mini-val.neg{color:var(--red);}
 .mini-val.team{color:var(--gold);}
-
-/* TOAST */
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--green);color:#022c22;padding:12px 24px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;transition:opacity 0.3s;z-index:9999;pointer-events:none;white-space:nowrap;}
-
 .lvl-sel{width:100%;padding:12px 14px;background:var(--s2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;}
 .empty{text-align:center;padding:60px 20px;color:var(--muted);}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -154,13 +132,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div class="header-title">⚡ CryptoJet Admin</div>
   <div class="header-badge" id="pendingBadge" onclick="switchTab('pending',this)">0 Pending</div>
 </div>
 
-<!-- STAT STRIP -->
 <div class="stat-strip">
   <div class="strip-item"><div class="strip-val" id="statUsers">—</div><div class="strip-lbl">Users</div></div>
   <div class="strip-item"><div class="strip-val" id="statBalance">—</div><div class="strip-lbl">Total Balance</div></div>
@@ -168,14 +144,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="strip-item"><div class="strip-val" id="statMiners">—</div><div class="strip-lbl">Active Miners</div></div>
 </div>
 
-<!-- TABS -->
 <div class="tabs-bar">
   <div class="tab active" id="tab-users"   onclick="switchTab('users',this)">👥 Users</div>
   <div class="tab"        id="tab-pending" onclick="switchTab('pending',this)">⏳ Pending</div>
   <div class="tab"        id="tab-all-tx"  onclick="switchTab('all-tx',this)">📋 All Tx</div>
+  <div class="tab"        id="tab-manage"  onclick="window.location.href='manage-transactions.html'">🔧 Manage Tx</div>
 </div>
 
-<!-- VIEWS -->
 <div id="view-users">
   <div class="search-wrap">
     <input class="search-input" id="searchInput" placeholder="🔍 Search by Miner ID or name..." oninput="filterUsers(this.value)">
@@ -190,7 +165,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <button class="load-more-btn" id="loadMoreBtn" style="display:none" onclick="loadMoreTx()">Load More Transactions</button>
 </div>
 
-<!-- USER DETAIL PANEL -->
 <div class="detail-panel" id="detailPanel">
   <div class="dp-header">
     <div class="dp-back" onclick="closeDetail()">←</div>
@@ -212,23 +186,25 @@ const firebaseConfig = {
   projectId:   "cj-miner"
 };
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const db   = firebase.database();
 const auth = firebase.auth();
 
-const ADMIN_UID            = "1G40GHwudBcea5GGdEeIIKFT5rL2";
-const myUid                = localStorage.getItem("uid");
+const ADMIN_UID = "1G40GHwudBcea5GGdEeIIKFT5rL2";
+const myUid     = localStorage.getItem("uid");
+const SECRET    = "cryptojet_secret_2024";
+
+// ── ALL CLOUD FUNCTION URLs ────────────────────────────────────
 const URL_APPROVE_RECHARGE = "https://approverecharge-t34xxkwqvq-ew.a.run.app";
 const URL_REJECT_RECHARGE  = "https://rejectrecharge-t34xxkwqvq-ew.a.run.app";
-const SECRET               = "cryptojet_secret_2024";
-const TX_PAGE_SIZE         = 20;
+const URL_APPROVE_WITHDRAW = "https://approvewithdraw-t34xxkwqvq-ew.a.run.app";
+const URL_REJECT_WITHDRAW  = "https://rejectwithdraw-t34xxkwqvq-ew.a.run.app";
+const URL_APPROVE_USDT     = "https://approveusdtwithdraw-t34xxkwqvq-ew.a.run.app";
 
+const TX_PAGE_SIZE = 20;
 let allUsers       = {};
-let currentOpenUid = null;
-// Tx are NEVER bulk-loaded. Each tab fetches only what it needs from Firebase.
-let allTxOldestKey = null;   // cursor for "All Tx" pagination
-let allTxExhausted = false;  // no more pages left
+let allTxOldestKey = null;
+let allTxExhausted = false;
 
-// ── BOOT — only load users, pending count is a separate lightweight query ──
 window.addEventListener("load", () => {
   auth.onAuthStateChanged(async user => {
     if (!user || user.uid !== ADMIN_UID) {
@@ -243,7 +219,7 @@ window.addEventListener("load", () => {
     if (deepUid && allUsers[deepUid]) openDetail(deepUid, allUsers[deepUid]);
   });
 });
-// ── LOAD USERS ────────────────────────────────────────────────
+
 async function loadUsers() {
   const snap = await db.ref("users").once("value");
   allUsers = snap.val() || {};
@@ -251,7 +227,6 @@ async function loadUsers() {
   renderUsers();
 }
 
-// ── PENDING COUNT — only fetches pending status, very small payload ──
 async function loadPendingCount() {
   const snap  = await db.ref("transactions").orderByChild("status").equalTo("pending").once("value");
   const count = snap.numChildren();
@@ -268,7 +243,6 @@ function updateStripStats() {
   document.getElementById("statMiners").textContent  = miners;
 }
 
-// ── TAB SWITCH ────────────────────────────────────────────────
 function switchTab(name, el) {
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
   if (el) el.classList.add("active");
@@ -279,7 +253,6 @@ function switchTab(name, el) {
   if (name === "all-tx")  renderAllTx(true);
 }
 
-// ── RENDER USERS ──────────────────────────────────────────────
 function renderUsers(filter = "") {
   const grid = document.getElementById("usersGrid");
   grid.innerHTML = "";
@@ -311,19 +284,17 @@ function getReferrerName(refUid) {
   return (allUsers[refUid] && allUsers[refUid].minerId) || "Unknown";
 }
 
-// ── PENDING — fetches ONLY pending records from Firebase ──────
 async function renderPending() {
   const list = document.getElementById("pendingList");
   list.innerHTML = `<div class="empty"><div class="empty-spin"></div></div>`;
   const snap    = await db.ref("transactions").orderByChild("status").equalTo("pending").once("value");
   const entries = [];
   snap.forEach(child => entries.push([child.key, child.val()]));
-  entries.sort((a,b) => (b[1].date||0) - (a[1].date||0));
-  list.innerHTML = entries.length ? "" : `<div class="empty">No pending transactions</div>`;
+  entries.sort((a, b) => (b[1].date||0) - (a[1].date||0));
+  list.innerHTML = entries.length ? "" : `<div class="empty">No pending transactions 🎉</div>`;
   entries.forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, true)));
 }
 
-// ── ALL TX — Firebase cursor pagination, 20 records at a time ─
 async function renderAllTx(reset = true) {
   if (reset) {
     allTxOldestKey = null;
@@ -331,66 +302,78 @@ async function renderAllTx(reset = true) {
     document.getElementById("allTxList").innerHTML = `<div class="empty"><div class="empty-spin"></div></div>`;
   }
   if (allTxExhausted) return;
-
   const list = document.getElementById("allTxList");
   const btn  = document.getElementById("loadMoreBtn");
-  btn.disabled = true;
-  btn.textContent = "Loading...";
-
-  // Fetch TX_PAGE_SIZE + 1 so we know if there's a next page
+  btn.disabled = true; btn.textContent = "Loading...";
   let query = db.ref("transactions").orderByKey().limitToLast(TX_PAGE_SIZE + 1);
   if (allTxOldestKey) query = query.endAt(allTxOldestKey);
-
   const snap    = await query.once("value");
   const entries = [];
   snap.forEach(child => entries.push([child.key, child.val()]));
-
-  // If we used a cursor, the first result is the duplicate of the previous page's last item — drop it
   if (allTxOldestKey) entries.shift();
-
-  // Sort newest first (Firebase orderByKey gives oldest first)
-  entries.sort((a,b) => (b[1].date||0) - (a[1].date||0));
-
-  // Determine if more pages exist
+  entries.sort((a, b) => (b[1].date||0) - (a[1].date||0));
   const hasMore = entries.length > TX_PAGE_SIZE;
   const page    = hasMore ? entries.slice(0, TX_PAGE_SIZE) : entries;
-
   if (reset) list.innerHTML = "";
   page.forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, false)));
-
-  // Update cursor to oldest key in this page
   if (page.length) allTxOldestKey = page[page.length - 1][0];
-
   allTxExhausted = !hasMore;
-  btn.disabled    = false;
-  btn.textContent = "Load More Transactions";
+  btn.disabled = false; btn.textContent = "Load More Transactions";
   btn.style.display = allTxExhausted ? "none" : "block";
 }
 
 function loadMoreTx() { renderAllTx(false); }
 
-// ── BUILD TX CARD ─────────────────────────────────────────────
+// ── BUILD TX CARD — handles ALL transaction types ─────────────
 function buildTxCard(txId, tx, u, showUser) {
-  const card  = document.createElement("div");
-  card.id     = "txcard-" + txId;
+  const card     = document.createElement("div");
+  card.id        = "txcard-" + txId;
   card.className = "tx-card";
-  const date  = tx.date ? new Date(tx.date).toLocaleString("en-NG") : "—";
-  const color = tx.type === "recharge" ? "color:#22c55e" : "color:#f87171";
-  const pref  = tx.type === "recharge" ? "+" : "−";
+  const date     = tx.date ? new Date(tx.date).toLocaleString("en-NG") : "—";
+  const isRecharge = tx.type === "recharge";
+  const isWithdraw = tx.type === "withdraw";
+  const isUSDT     = tx.type === "usdt_withdraw" || tx.method === "usdt";
+  const color    = isRecharge ? "color:#22c55e" : "color:#f87171";
+  const pref     = isRecharge ? "+" : "−";
 
-  const actionsHTML = (tx.status === "pending" && tx.type === "recharge") ? `
-    <div class="tx-actions">
-      <button class="tx-action-btn approve" id="approve-${txId}" onclick="handleApprove('${txId}')">✅ Approve</button>
-      <button class="tx-action-btn reject"  id="reject-${txId}"  onclick="handleReject('${txId}')">❌ Reject</button>
-    </div>` : "";
+  // Type badge color
+  let typeBadge = "";
+  if (isRecharge) typeBadge = `<span class="tx-type-badge type-recharge">RECHARGE</span>`;
+  else if (isUSDT) typeBadge = `<span class="tx-type-badge type-usdt">USDT WITHDRAW</span>`;
+  else if (isWithdraw) typeBadge = `<span class="tx-type-badge type-withdraw">BANK WITHDRAW</span>`;
+
+  // Action buttons — shown for ALL pending tx types
+  let actionsHTML = "";
+  if (tx.status === "pending") {
+    if (isRecharge) {
+      actionsHTML = `
+        <div class="tx-actions">
+          <button class="tx-action-btn approve" id="approve-${txId}" onclick="handleApprove('${txId}','recharge')">✅ Approve</button>
+          <button class="tx-action-btn reject"  id="reject-${txId}"  onclick="handleReject('${txId}','recharge')">❌ Reject</button>
+        </div>`;
+    } else if (isUSDT) {
+      actionsHTML = `
+        <div class="tx-actions">
+          <button class="tx-action-btn approve" id="approve-${txId}" onclick="handleApprove('${txId}','usdt')">✅ Approve & Send USDT</button>
+          <button class="tx-action-btn reject"  id="reject-${txId}"  onclick="handleReject('${txId}','withdraw')">❌ Reject</button>
+        </div>`;
+    } else if (isWithdraw) {
+      actionsHTML = `
+        <div class="tx-actions">
+          <button class="tx-action-btn approve" id="approve-${txId}" onclick="handleApprove('${txId}','withdraw')">✅ Approve Withdrawal</button>
+          <button class="tx-action-btn reject"  id="reject-${txId}"  onclick="handleReject('${txId}','withdraw')">❌ Reject</button>
+        </div>`;
+    }
+  }
 
   card.innerHTML = `
     <div class="tx-top">
-      <div class="tx-info" style="cursor:${showUser?'pointer':'default'}" ${showUser&&u.minerId?`onclick="openDetail('${tx.uid}',null)"`:""}> 
-        <div class="tx-type">${(tx.type||"tx").toUpperCase()} ${showUser?`· <span style="color:var(--neon)">${u.minerId||tx.uid.slice(0,8)}</span>`:""}</div>
+      <div style="cursor:${showUser?'pointer':'default'}" ${showUser&&u.minerId?`onclick="openDetail('${tx.uid}',null)"`:""}>
+        <div class="tx-type">${showUser?`<span style="color:var(--neon)">${u.minerId||tx.uid.slice(0,8)}</span>`:""} ${typeBadge}</div>
         <div class="tx-date">${date} · ${tx.method||"—"}</div>
         ${tx.bank?`<div class="tx-date">🏦 ${tx.bank} · ${tx.number||""}</div>`:""}
         ${tx.walletAddress?`<div class="tx-date">💎 ${tx.walletAddress.slice(0,20)}...</div>`:""}
+        ${tx.finalAmount?`<div class="tx-date">After fee: $${tx.finalAmount}</div>`:""}
       </div>
       <div style="text-align:right;flex-shrink:0;margin-left:10px;">
         <div class="tx-amount" style="${color}">${pref}$${tx.amount}</div>
@@ -401,38 +384,48 @@ function buildTxCard(txId, tx, u, showUser) {
   return card;
 }
 
-// ── APPROVE ───────────────────────────────────────────────────
-async function handleApprove(txId) {
-  if (!confirm("Approve this recharge?")) return;
+// ── UNIFIED APPROVE ───────────────────────────────────────────
+async function handleApprove(txId, type) {
+  const labels = { recharge:"recharge", withdraw:"withdrawal", usdt:"USDT withdrawal" };
+  if (!confirm(`Approve this ${labels[type]||"transaction"}?`)) return;
   setTxBtnsDisabled(txId, true);
   try {
-    const resp = await fetch(`${URL_APPROVE_RECHARGE}?txId=${txId}&secret=${SECRET}`);
+    const urls = {
+      recharge: URL_APPROVE_RECHARGE,
+      withdraw: URL_APPROVE_WITHDRAW,
+      usdt:     URL_APPROVE_USDT
+    };
+    const resp = await fetch(`${urls[type]}?txId=${txId}&secret=${SECRET}`);
     const text = await resp.text();
-    if (!resp.ok) throw new Error(text);
+    if (!resp.ok && resp.status !== 200) throw new Error(text);
     updateTxCardStatus(txId, "approved");
-    // Refresh pending count from Firebase
     loadPendingCount();
-    toast("✅ Recharge approved!");
+    toast("✅ Approved!");
   } catch(e) {
     setTxBtnsDisabled(txId, false);
-    toast("❌ Approve failed: " + e.message);
+    toast("❌ Error: " + e.message);
   }
 }
 
-// ── REJECT ────────────────────────────────────────────────────
-async function handleReject(txId) {
-  if (!confirm("Reject this recharge?")) return;
+// ── UNIFIED REJECT ────────────────────────────────────────────
+async function handleReject(txId, type) {
+  if (!confirm("Reject this transaction?")) return;
   setTxBtnsDisabled(txId, true);
   try {
-    const resp = await fetch(`${URL_REJECT_RECHARGE}?txId=${txId}&secret=${SECRET}`);
+    const urls = {
+      recharge: URL_REJECT_RECHARGE,
+      withdraw: URL_REJECT_WITHDRAW,
+      usdt:     URL_REJECT_WITHDRAW
+    };
+    const resp = await fetch(`${urls[type]||URL_REJECT_RECHARGE}?txId=${txId}&secret=${SECRET}`);
     const text = await resp.text();
-    if (!resp.ok) throw new Error(text);
+    if (!resp.ok && resp.status !== 200) throw new Error(text);
     updateTxCardStatus(txId, "rejected");
     loadPendingCount();
-    toast("🗑 Recharge rejected");
+    toast("🗑 Rejected");
   } catch(e) {
     setTxBtnsDisabled(txId, false);
-    toast("❌ Reject failed: " + e.message);
+    toast("❌ Error: " + e.message);
   }
 }
 
@@ -444,10 +437,8 @@ function setTxBtnsDisabled(txId, state) {
 }
 
 function updateTxCardStatus(txId, status) {
-  // Update badge
   const badge = document.getElementById("badge-" + txId);
   if (badge) { badge.textContent = status.toUpperCase(); badge.className = "badge " + status; }
-  // Remove action buttons
   const actions = document.querySelector(`#txcard-${txId} .tx-actions`);
   if (actions) actions.remove();
 }
@@ -455,26 +446,21 @@ function updateTxCardStatus(txId, status) {
 // ── OPEN USER DETAIL ──────────────────────────────────────────
 function openDetail(uid, userData) {
   if (!userData) userData = allUsers[uid] || {};
-  currentOpenUid = uid;
-  document.getElementById("dpTitle").textContent = userData.minerId || "User Detail";
-  document.getElementById("dpTitle").dataset.uid = uid;
-  document.getElementById("dpBody").innerHTML    = buildDetailHTML(uid, userData);
+  document.getElementById("dpTitle").textContent  = userData.minerId || "User Detail";
+  document.getElementById("dpTitle").dataset.uid  = uid;
+  document.getElementById("dpBody").innerHTML     = buildDetailHTML(uid, userData);
   document.getElementById("detailPanel").classList.add("open");
   showDpTab("overview", document.querySelector(".dp-tab"));
 }
 
 function closeDetail() {
   document.getElementById("detailPanel").classList.remove("open");
-  currentOpenUid = null;
 }
 
 function buildDetailHTML(uid, u) {
   const referrer  = u.referredBy ? (allUsers[u.referredBy]?.minerId || u.referredBy.slice(0,8)) : "None";
-  const referrals = Object.entries(allUsers).filter(([,x]) => x.referredBy === uid);
+  const referrals = Object.entries(allUsers).filter(([, x]) => x.referredBy === uid);
   const joined    = u.createdAt ? new Date(u.createdAt).toLocaleDateString("en-NG") : "—";
-  const userTxs   = []; // transactions loaded separately per user belows
-  const approved  = 0;
-  const withdrawn = 0;
 
   return `
   <div class="dp-hero">
@@ -495,12 +481,11 @@ function buildDetailHTML(uid, u) {
     <div class="dp-tab" onclick="showDpTab('adjust',this)">⚙️ Adjust</div>
   </div>
 
-  <!-- OVERVIEW -->
   <div id="dp-overview" class="dp-content">
     <div class="sec-card">
       <div class="sec-title">Profile</div>
       <div class="sec-row"><span class="sec-lbl">Full Name</span><span class="sec-val">${u.name||"—"}</span></div>
-      <div class="sec-row"><span class="sec-lbl">Email / Phone</span><span class="sec-val">${u.email||"—"}</span></div>
+      <div class="sec-row"><span class="sec-lbl">Email / Phone</span><span class="sec-val">${u.email||u.phone||"—"}</span></div>
       <div class="sec-row"><span class="sec-lbl">Level</span><span class="sec-val">${u.level||"Novice Miner"}</span></div>
       <div class="sec-row"><span class="sec-lbl">Joined</span><span class="sec-val">${joined}</span></div>
       <div class="sec-row"><span class="sec-lbl">Referred By</span><span class="sec-val" style="color:var(--gold)">${referrer}</span></div>
@@ -509,9 +494,8 @@ function buildDetailHTML(uid, u) {
       <div class="sec-title">Financial Summary</div>
       <div class="sec-row"><span class="sec-lbl">Current Balance</span><span class="sec-val" style="color:var(--green)">$${Math.floor(u.balance||0)}</span></div>
       <div class="sec-row"><span class="sec-lbl">Team Income</span><span class="sec-val" style="color:var(--gold)">$${(u.team||0).toFixed(2)}</span></div>
-      <div class="sec-row"><span class="sec-lbl">Total Deposited</span><span class="sec-val">$${approved.toFixed(2)}</span></div>
-      <div class="sec-row"><span class="sec-lbl">Total Withdrawn</span><span class="sec-val" style="color:var(--red)">$${withdrawn.toFixed(2)}</span></div>
-      <div class="sec-row"><span class="sec-lbl">Total Transactions</span><span class="sec-val">${userTxs.length}</span></div>
+      <div class="sec-row"><span class="sec-lbl">Points</span><span class="sec-val">${u.points||0}</span></div>
+      <div class="sec-row"><span class="sec-lbl">Referrals</span><span class="sec-val">${u.referrals||0}</span></div>
     </div>
     <div class="sec-card">
       <div class="sec-title">Bank Details</div>
@@ -520,17 +504,14 @@ function buildDetailHTML(uid, u) {
     </div>
   </div>
 
-  
-  <!-- TRANSACTIONS -->
   <div id="dp-transactions" class="dp-content" style="display:none">
-      <div id="userTxList-${uid}"><div class="empty"><div class="empty-spin"></div></div></div>
+    <div id="userTxList-${uid}"><div class="empty"><div class="empty-spin"></div></div></div>
   </div>
 
-  <!-- MINING -->
   <div id="dp-mining" class="dp-content" style="display:none">
     ${Object.keys(u.miners||{}).length===0?'<div class="empty">No mining data</div>':
       Object.entries(u.miners||{}).map(([key,m])=>{
-        const elapsed = m.start?Math.floor((Date.now()-m.start)/3600000):0;
+        const elapsed = m.start ? Math.floor((Date.now()-m.start)/3600000) : 0;
         return `<div class="sec-card" style="margin-bottom:10px;">
           <div class="sec-title">${key}</div>
           <div class="sec-row"><span class="sec-lbl">Started</span><span class="sec-val">${m.start?new Date(m.start).toLocaleDateString("en-NG"):"—"}</span></div>
@@ -548,7 +529,6 @@ function buildDetailHTML(uid, u) {
     </div>
   </div>
 
-  <!-- TEAM -->
   <div id="dp-team" class="dp-content" style="display:none">
     <div class="sec-card">
       <div class="sec-title">Referred By</div>
@@ -559,20 +539,19 @@ function buildDetailHTML(uid, u) {
             <div class="ref-id">${allUsers[u.referredBy]?.minerId||u.referredBy.slice(0,8)}</div>
             <div class="ref-meta">${allUsers[u.referredBy]?.name||"Unknown"}</div>
           </div>
-        </div>`:'<div style="color:var(--muted);font-size:13px;">Not referred by anyone</div>'}
+        </div>`:'<div style="color:var(--muted);font-size:13px;">Not referred</div>'}
     </div>
     <div class="sec-card">
       <div class="sec-title">Direct Referrals · ${referrals.length} members</div>
       ${referrals.length===0?'<div style="color:var(--muted);font-size:13px;">No referrals yet</div>':
         referrals.map(([rUid,rUser])=>{
-          const l2=Object.values(allUsers).filter(x=>x.referredBy===rUid).length;
+          const l2 = Object.values(allUsers).filter(x=>x.referredBy===rUid).length;
           return `<div class="ref-person" onclick="openDetail('${rUid}',null)">
             <div class="ref-avatar">${(rUser.minerId||"?").slice(0,2)}</div>
             <div style="flex:1">
               <div class="ref-id">${rUser.minerId||"Unknown"}</div>
-              <div class="ref-meta">$${Math.floor(rUser.balance||0)} balance · ${l2} sub-referrals</div>
+              <div class="ref-meta">$${Math.floor(rUser.balance||0)} · ${l2} sub-refs</div>
             </div>
-            <div style="font-size:11px;color:var(--gold)">→</div>
           </div>`;
         }).join("")}
     </div>
@@ -582,32 +561,26 @@ function buildDetailHTML(uid, u) {
     </div>
   </div>
 
-  <!-- ADJUST -->
   <div id="dp-adjust" class="dp-content" style="display:none">
     <div class="adjust-form">
       <div class="sec-title" style="margin-bottom:16px;">Manual Balance Adjustment</div>
       <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--gold);margin-bottom:16px;">
-        ⚠️ All adjustments are saved permanently to Firebase and logged with timestamp
+        ⚠️ Changes are saved permanently and logged with timestamp
       </div>
-
       <label class="adj-label">Amount ($)</label>
       <input class="adj-input" type="number" id="adjAmount" placeholder="e.g. 50" min="0.01" step="0.01">
-
       <label class="adj-label">Reason / Note</label>
       <input class="adj-input" type="text" id="adjReason" placeholder="e.g. Bonus reward, Manual correction...">
-
       <label class="adj-label">Apply To</label>
       <select class="adj-input lvl-sel" id="adjTarget">
         <option value="balance">Balance (main wallet)</option>
         <option value="team">Team Income</option>
         <option value="points">Points</option>
       </select>
-
       <div class="adj-btns">
         <button class="adj-btn add"    id="adjAddBtn"    onclick="adjustBalance('${uid}','add')">➕ Add</button>
         <button class="adj-btn deduct" id="adjDeductBtn" onclick="adjustBalance('${uid}','deduct')">➖ Deduct</button>
       </div>
-
       <div class="adj-success" id="adjSuccessMsg"></div>
     </div>
 
@@ -631,8 +604,7 @@ function buildDetailHTML(uid, u) {
   </div>`;
 }
 
-// ── SHOW DETAIL SUB-TAB ───────────────────────────────────────
-  function showDpTab(name, el) {
+function showDpTab(name, el) {
   document.querySelectorAll(".dp-tab").forEach(t => t.classList.remove("active"));
   if (el) el.classList.add("active");
   document.querySelectorAll("[id^='dp-']").forEach(d => d.style.display = "none");
@@ -640,8 +612,9 @@ function buildDetailHTML(uid, u) {
   if (target) target.style.display = "block";
   if (name === "team")         loadTeamIncome();
   if (name === "adjust")       loadAdjHistory();
-  if (name === "transactions") loadUserTxs();  // ADD THIS
+  if (name === "transactions") loadUserTxs();
 }
+
 function loadTeamIncome() {
   const uid       = document.getElementById("dpTitle").dataset.uid;
   const container = document.getElementById("teamIncomeRecords-" + uid);
@@ -674,35 +647,40 @@ function loadAdjHistory() {
       <div class="mini-rec">
         <div>
           <div style="font-size:13px;color:var(--subtle);">${r.reason||"No reason"} · ${r.field}</div>
-          <div style="font-size:11px;color:var(--muted);">${new Date(r.timestamp).toLocaleDateString("en-NG")} · Before: $${r.before} → After: $${r.after}</div>
+          <div style="font-size:11px;color:var(--muted);">${new Date(r.timestamp).toLocaleDateString("en-NG")} · $${r.before} → $${r.after}</div>
         </div>
         <span class="mini-val ${r.type==="add"?"pos":"neg"}">${r.type==="add"?"+":"−"}$${r.amount}</span>
       </div>`).join("");
   });
 }
 
-// ── MANUAL BALANCE ADJUSTMENT ─────────────────────────────────
+// ── BALANCE ADJUSTMENT — fixed with proper error display ──────
 async function adjustBalance(uid, type) {
-  const amount  = parseFloat(document.getElementById("adjAmount").value);
-  const reason  = document.getElementById("adjReason").value.trim() || "Admin adjustment";
-  const field   = document.getElementById("adjTarget").value;
-
-  if (!amount || amount <= 0) return toast("Enter a valid amount");
-
+  const amount    = parseFloat(document.getElementById("adjAmount").value);
+  const reason    = document.getElementById("adjReason").value.trim() || "Admin adjustment";
+  const field     = document.getElementById("adjTarget").value;
+  const successEl = document.getElementById("adjSuccessMsg");
   const addBtn    = document.getElementById("adjAddBtn");
   const deductBtn = document.getElementById("adjDeductBtn");
-  const successEl = document.getElementById("adjSuccessMsg");
+
+  if (!amount || amount <= 0) return toast("❌ Enter a valid amount");
+
   if (addBtn)    addBtn.disabled    = true;
   if (deductBtn) deductBtn.disabled = true;
+  if (successEl) successEl.style.display = "none";
 
   try {
+    // Read current value
     const snap    = await db.ref(`users/${uid}/${field}`).once("value");
-    const current = snap.val() || 0;
+    const current = parseFloat(snap.val()) || 0;
     const newVal  = type === "add"
       ? parseFloat((current + amount).toFixed(4))
       : parseFloat(Math.max(0, current - amount).toFixed(4));
 
+    // Write new value
     await db.ref(`users/${uid}/${field}`).set(newVal);
+
+    // Log the adjustment
     await db.ref(`balanceAdjustments/${uid}`).push({
       type, field, amount, reason,
       before:    current,
@@ -711,67 +689,59 @@ async function adjustBalance(uid, type) {
       timestamp: Date.now()
     });
 
-    allUsers[uid] = { ...(allUsers[uid]||{}), [field]: newVal };
+    // Update local cache
+    if (!allUsers[uid]) allUsers[uid] = {};
+    allUsers[uid][field] = newVal;
 
-    if (field === "balance") {
-      const el = document.getElementById("live-balance");
-      if (el) el.textContent = Math.floor(newVal);
-    }
-    if (field === "team") {
-      const el = document.getElementById("live-team");
-      if (el) el.textContent = newVal.toFixed(2);
-    }
-    if (field === "points") {
-      const el = document.getElementById("live-points");
-      if (el) el.textContent = newVal;
-    }
+    // Update live display in hero stats
+    if (field === "balance" && document.getElementById("live-balance"))
+      document.getElementById("live-balance").textContent = Math.floor(newVal);
+    if (field === "team" && document.getElementById("live-team"))
+      document.getElementById("live-team").textContent = newVal.toFixed(2);
+    if (field === "points" && document.getElementById("live-points"))
+      document.getElementById("live-points").textContent = newVal;
 
     updateStripStats();
+    loadAdjHistory();
+
+    document.getElementById("adjAmount").value = "";
+    document.getElementById("adjReason").value = "";
 
     const label = type === "add" ? "Added" : "Deducted";
     if (successEl) {
-      successEl.textContent = `✅ ${label} $${amount} ${type==="add"?"to":"from"} ${field}. New value: $${newVal}`;
+      successEl.textContent  = `✅ ${label} $${amount} ${type==="add"?"to":"from"} ${field}. New value: $${newVal}`;
       successEl.style.display = "block";
-      setTimeout(() => { successEl.style.display = "none"; }, 4000);
+      setTimeout(() => { successEl.style.display = "none"; }, 5000);
     }
-
-    loadAdjHistory();
-    document.getElementById("adjAmount").value = "";
-    document.getElementById("adjReason").value = "";
     toast(`✅ ${label} $${amount} ${type==="add"?"to":"from"} ${field}`);
 
   } catch (err) {
-    toast("❌ Error: " + err.message);
+    console.error("Adjustment error:", err);
+    toast("❌ Failed: " + err.message);
   } finally {
     if (addBtn)    addBtn.disabled    = false;
     if (deductBtn) deductBtn.disabled = false;
   }
 }
 
-// ── UPDATE USER LEVEL ─────────────────────────────────────────
 async function updateLevel(uid) {
   const level = document.getElementById("lvlSelect").value;
-  await db.ref(`users/${uid}`).update({
-    level: level,
-    levelOverride: true
-  });
-  allUsers[uid] = { ...(allUsers[uid]||{}), level };
-  toast("✅ Level updated to " + level);
+  try {
+    await db.ref(`users/${uid}`).update({ level, levelOverride: true });
+    allUsers[uid] = { ...(allUsers[uid]||{}), level };
+    toast("✅ Level updated to " + level);
+  } catch(e) {
+    toast("❌ Failed: " + e.message);
+  }
 }
 
-// ── TOAST ─────────────────────────────────────────────────────
-function toast(msg) {
-  const t = document.getElementById("toast");
-  t.textContent = msg; t.style.opacity = 1;
-  setTimeout(() => t.style.opacity = 0, 2800);
-}
 function loadUserTxs() {
   const uid       = document.getElementById("dpTitle").dataset.uid;
   const container = document.getElementById("userTxList-" + uid);
   if (!container || container.dataset.loaded) return;
   container.dataset.loaded = "1";
   db.ref("userTransactions/" + uid).once("value", snap => {
-    const txns = snap.val() || {};
+    const txns   = snap.val() || {};
     const sorted = Object.entries(txns).sort((a,b) => (b[1].date||0) - (a[1].date||0));
     if (!sorted.length) { container.innerHTML = '<div class="empty">No transactions</div>'; return; }
     container.innerHTML = sorted.map(([txId, tx]) => `
@@ -780,6 +750,7 @@ function loadUserTxs() {
           <div>
             <div style="font-size:14px;font-weight:700;color:var(--neon);margin-bottom:2px;">${(tx.type||"tx").toUpperCase()} · ${tx.method||"—"}</div>
             <div style="font-size:12px;color:var(--muted);">${tx.date?new Date(tx.date).toLocaleString("en-NG"):"—"}</div>
+            ${tx.bank?`<div style="font-size:11px;color:var(--muted);">🏦 ${tx.bank} · ${tx.number||""}</div>`:""}
           </div>
           <div style="text-align:right;">
             <div style="font-size:16px;font-weight:700;${tx.type==="recharge"?"color:var(--green)":"color:var(--red)"}">
@@ -790,6 +761,15 @@ function loadUserTxs() {
         </div>
       </div>`).join("");
   });
+}
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent  = msg;
+  t.style.opacity = 1;
+  t.style.background = msg.startsWith("❌") ? "#ef4444" : "#22c55e";
+  t.style.color      = msg.startsWith("❌") ? "#fff"    : "#022c22";
+  setTimeout(() => t.style.opacity = 0, 3000);
 }
 </script>
 </body>
