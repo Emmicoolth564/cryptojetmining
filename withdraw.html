@@ -238,7 +238,9 @@ function renderBank() {
     });
 }
 
-function startBankWithdraw() {
+async function startBankWithdraw() {
+    const already = await hasDailyWithdraw();
+    if (already) return toast("You can only withdraw once per day. Try again tomorrow.");
     const amount = parseFloat(document.getElementById("bankAmount").value);
     if (!amount || amount < 3)  return toast("Minimum withdrawal is $3");
     if (amount > currentBalance) return toast("Insufficient balance");
@@ -249,12 +251,25 @@ function startBankWithdraw() {
     document.getElementById("passwordModal").style.display = "flex";
     document.getElementById("withdrawPass").focus();
 }
-
+async function hasDailyWithdraw() {
+    const snap = await db.ref("userTransactions/" + uid).once("value");
+    const txs  = snap.val() || {};
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    return Object.values(txs).some(t =>
+        t.type === "withdraw" && t.date >= todayStart.getTime()
+    );
+}
 // ════════════════════════════════════════════════════════════════
 // USDT WITHDRAWAL — BEP20 ONLY
 // ════════════════════════════════════════════════════════════════
 function renderUSDT() {
     const c = document.getElementById("content");
+    const day = new Date().getDay();
+    if (day === 0 || day === 6) {
+        c.innerHTML = `<div class="weekend-notice">⏸ <strong>Withdrawals are processed Monday – Friday only.</strong><br>Come back on a weekday.</div>`;
+        return;
+    }
     c.innerHTML = `
     <div class="community-bonus">
         <div class="bonus-icon">🏅</div>
@@ -313,7 +328,9 @@ function renderUSDT() {
     });
 }
 
-function startUSDTWithdraw() {
+async function startUSDTWithdraw() {
+    const already = await hasDailyWithdraw();
+    if (already) return toast("You can only withdraw once per day. Try again tomorrow.");
     const address = document.getElementById("usdtAddress").value.trim();
     const amount  = parseFloat(document.getElementById("usdtAmount").value);
     if (!address || !address.startsWith("0x") || address.length < 40) return toast("Please enter a valid BEP20 wallet address");
@@ -325,6 +342,15 @@ function startUSDTWithdraw() {
     window._usdtAddress  = address;
     document.getElementById("passwordModal").style.display = "flex";
     document.getElementById("withdrawPass").focus();
+}
+async function hasDailyWithdraw() {
+    const snap = await db.ref("userTransactions/" + uid).once("value");
+    const txs  = snap.val() || {};
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    return Object.values(txs).some(t =>
+        t.type === "withdraw" && t.date >= todayStart.getTime()
+    );
 }
 
 function verifyPassword() {
@@ -407,6 +433,15 @@ function toast(msg) {
     const t = document.getElementById("toast");
     t.textContent = msg; t.style.opacity = 1;
     setTimeout(() => t.style.opacity = 0, 3200);
+}
+async function hasDailyWithdraw() {
+    const snap = await db.ref("userTransactions/" + uid).once("value");
+    const txs  = snap.val() || {};
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    return Object.values(txs).some(t =>
+        t.type === "withdraw" && t.date >= todayStart.getTime()
+    );
 }
 </script>
 </body>

@@ -721,7 +721,7 @@ function renderLevels() {
 
       let btnHTML = "";
       if (isMaxed) {
-        btnHTML = `<button class="shop-btn disabled">✅ Already Owned</button>`;
+        btnHTML = `<button class="shop-btn disabled">Already Owned</button>`;
       } else if (!isUnlocked) {
         btnHTML = `<button class="shop-btn disabled" onclick="lockedAlert('${lv.name}',${lv.l1},${lv.total})" style="cursor:pointer;opacity:0.6;">🔒 Locked — ${lv.name} Required</button>`;
       } else {

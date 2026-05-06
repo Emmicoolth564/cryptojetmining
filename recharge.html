@@ -319,7 +319,7 @@ async function renderBank() {
 function confirmBankAmount() {
     const amount = parseFloat(document.getElementById("usdAmount").value);
     if (!amount || amount <= 0) return toast("Please enter a valid amount");
-    if (amount < 5) return toast("Minimum deposit is $5");
+    if (amount < 3) return toast("Minimum deposit is $3");
     selectedAmountUSD = amount;
     currentStep = 2;
     saveState();
@@ -473,7 +473,7 @@ async function renderUSDT() {
                 <li class="inst-item"><span class="num">2</span><span class="inst-text">Copy the wallet address carefully and double-check before sending</span></li>
                 <li class="inst-item"><span class="num">3</span><span class="inst-text">After sending, paste your <span class="hi-g">Transaction Hash (TX ID)</span> below — this is how we verify automatically</span></li>
                 <li class="inst-item"><span class="num">4</span><span class="inst-text">Do not close this page until you have submitted your TX hash</span></li>
-                <li class="inst-item"><span class="num">5</span><span class="inst-text">Minimum deposit: <span class="hi-g">$5 USDT</span></span></li>
+                <li class="inst-item"><span class="num">5</span><span class="inst-text">Minimum deposit: <span class="hi-g">$3 USDT</span></span></li>
                 <li class="inst-item"><span class="num">6</span><span class="inst-text">Balance auto-credits within 1–5 minutes after blockchain confirmation</span></li>
             </ul>
         </div>
@@ -535,7 +535,7 @@ function goBackUSDT() {
 async function submitUSDT() {
     const amount = parseFloat(document.getElementById("usdAmountUSDT").value);
     const txHash = document.getElementById("txHash").value.trim();
-    if (!amount || amount < 5) return toast("Minimum deposit is $5 USDT");
+    if (!amount || amount < 3) return toast("Minimum deposit is $3 USDT");
     if (!txHash)               return toast("Please paste your Transaction Hash");
 
     showLoader("Verifying your transaction on blockchain...");
