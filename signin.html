@@ -266,9 +266,9 @@ body {
     </label>
 
     <button class="main-btn" id="mainBtn" onclick="handleAuth()">Create Account</button>
-  
+</div>
 
-  <div class="switch-link" id="switchLink">
+<div class="switch-link">
     Already have an account? <span onclick="setMode('signin')">Sign In</span>
   </div>
 
@@ -495,7 +495,7 @@ window.onload = () => {
   const remembered = localStorage.getItem("rememberedEmail");
   if (remembered) {
     document.getElementById("emailInput").value = remembered;
-    setMode("signin.html");
+    setMode("signin");
   }
   const params = new URLSearchParams(window.location.search);
   const ref    = params.get("ref");
