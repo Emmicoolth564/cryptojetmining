@@ -3,270 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Salary • CryptoJet</title>
-<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<title>My Salary • CryptoJet</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#03080f;
-  --s1:#07111e;
-  --s2:#0c1a2e;
-  --s3:#112238;
+  --bg:#060b14;
+  --card:#0a1220;
+  --card2:#0e1928;
   --neon:#00f0ff;
-  --green:#00ff88;
+  --green:#00e87a;
   --gold:#f5a623;
-  --purple:#9b5de5;
-  --pink:#f72585;
-  --text:#ddeeff;
-  --muted:#4a6a8a;
-  --border:rgba(0,240,255,0.08);
+  --purple:#8b5cf6;
+  --pink:#ec4899;
+  --text:#f0f6ff;
+  --sub:#8ba0b8;
+  --dim:#3a5070;
+  --border:rgba(0,240,255,0.07);
 }
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { min-height:100vh; overflow-x:hidden; }
+body { font-family:'Outfit', sans-serif; background:var(--bg); color:var(--text); font-size:16px; line-height:1.5; }
 
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{min-height:100vh;overflow-x:hidden;}
-body{
-  font-family:'DM Sans',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  background-image:
-    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(0,240,255,0.05) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 100% 100%, rgba(155,93,229,0.06) 0%, transparent 50%);
-}
+/* LOADER */
+#loader { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; }
+.loader-logo { font-size:28px; font-weight:800; color:var(--neon); margin-bottom:20px; animation:glow 1.5s infinite alternate; }
+.loader-bar { width:160px; height:3px; background:#111; border-radius:99px; overflow:hidden; }
+.loader-fill { width:0%; height:100%; background:var(--neon); animation:loadBar 1.8s ease forwards; }
+@keyframes loadBar { to { width:100%; } }
+@keyframes glow { from{text-shadow:0 0 8px var(--neon);} to{text-shadow:0 0 28px var(--neon);} }
 
-/* ── HEADER ── */
-.header{
-  padding:16px 20px;
-  display:flex;align-items:center;gap:12px;
-  background:rgba(3,8,15,0.95);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:100;
-}
-.back{font-size:24px;color:var(--neon);cursor:pointer;flex-shrink:0;}
-.header-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);}
-.header-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+/* HEADER */
+.header { padding:18px 20px; display:flex; align-items:center; gap:14px; background:rgba(6,11,20,0.96); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; }
+.back-btn { width:36px; height:36px; border-radius:10px; background:rgba(0,240,255,0.06); border:1px solid var(--border); color:var(--neon); font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+.header-title { font-size:17px; font-weight:700; color:var(--text); letter-spacing:-0.3px; }
+.header-sub { font-size:12px; color:var(--sub); margin-top:1px; font-weight:400; }
 
-/* ── HERO SALARY CARD ── */
-.hero-wrap{padding:20px 16px 0;}
-.hero-card{
-  border-radius:28px;padding:28px 24px 24px;
-  position:relative;overflow:hidden;
-  background:linear-gradient(145deg,#07111e,#0c1a2e);
-  border:1px solid rgba(0,240,255,0.12);
-  box-shadow:0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(0,240,255,0.06);
-}
-.hero-glow{
-  position:absolute;top:-60px;right:-60px;
-  width:220px;height:220px;border-radius:50%;
-  background:radial-gradient(circle, rgba(0,240,255,0.12) 0%, transparent 70%);
-  pointer-events:none;
-}
-.hero-glow-2{
-  position:absolute;bottom:-40px;left:-40px;
-  width:160px;height:160px;border-radius:50%;
-  background:radial-gradient(circle, rgba(155,93,229,0.1) 0%, transparent 70%);
-  pointer-events:none;
-}
-
-.hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
-.level-pill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:6px 14px;border-radius:999px;
-  font-size:12px;font-weight:700;letter-spacing:0.04em;
-  border:1px solid;
-}
-.hero-qual-badge{
-  padding:5px 12px;border-radius:999px;
-  font-size:11px;font-weight:700;
-  background:rgba(0,255,136,0.12);color:var(--green);
-  border:1px solid rgba(0,255,136,0.2);
-}
-.hero-qual-badge.no{background:rgba(245,158,11,0.12);color:var(--gold);border-color:rgba(245,158,11,0.2);}
-
-.salary-display{margin-bottom:20px;}
-.salary-lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-weight:600;margin-bottom:6px;}
-.salary-amount{
-  font-family:'Syne',sans-serif;
-  font-size:52px;font-weight:800;line-height:1;
-  background:linear-gradient(135deg,#00ffcc,#00f0ff,#a78bfa);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.salary-amount.zero{
-  background:linear-gradient(135deg,#4a6a8a,#2a4a6a);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.salary-per{font-size:14px;color:var(--muted);margin-top:4px;}
+/* HERO */
+.hero { margin:20px 16px 0; border-radius:24px; background:var(--card); border:1px solid var(--border); overflow:hidden; position:relative; }
+.hero-gradient { position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse 70% 60% at 90% 10%, rgba(0,240,255,0.08) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 10% 90%, rgba(139,92,246,0.07) 0%, transparent 60%); }
+.hero-inner { padding:24px; position:relative; }
+.level-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+.level-tag { display:inline-flex; align-items:center; gap:7px; padding:6px 14px; border-radius:99px; font-size:13px; font-weight:600; border:1px solid; letter-spacing:0.01em; }
+.qual-tag { font-size:12px; font-weight:600; padding:5px 12px; border-radius:99px; }
+.qual-yes { background:rgba(0,232,122,0.1); color:var(--green); border:1px solid rgba(0,232,122,0.2); }
+.qual-no  { background:rgba(245,166,35,0.1); color:var(--gold);  border:1px solid rgba(245,166,35,0.2); }
+.salary-section { margin-bottom:24px; }
+.salary-label { font-size:11px; font-weight:600; letter-spacing:0.12em; color:var(--sub); text-transform:uppercase; margin-bottom:8px; }
+.salary-number { font-size:64px; font-weight:800; line-height:1; letter-spacing:-2px; }
+.salary-number.has-salary { background:linear-gradient(120deg,#00ffcc 0%,#00d4ff 50%,#a78bfa 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.salary-number.no-salary { color:var(--dim); }
+.salary-note { font-size:13px; color:var(--sub); margin-top:8px; font-weight:400; }
 
 /* COUNTDOWN */
-.countdown-wrap{
-  background:rgba(0,0,0,0.3);border-radius:16px;padding:14px 16px;
-  border:1px solid rgba(255,255,255,0.04);
-}
-.countdown-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
-.countdown-units{display:flex;gap:8px;}
-.c-unit{flex:1;text-align:center;}
-.c-num{
-  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
-  color:var(--neon);display:block;line-height:1;
-}
-.c-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;display:block;}
-.c-sep{font-family:'Syne',sans-serif;font-size:20px;color:rgba(0,240,255,0.3);line-height:1;padding-top:4px;}
+.countdown-box { background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.05); border-radius:16px; padding:16px 18px; }
+.countdown-title { font-size:11px; font-weight:600; letter-spacing:0.1em; color:var(--sub); text-transform:uppercase; margin-bottom:12px; }
+.countdown-grid { display:flex; gap:8px; align-items:center; }
+.cd-unit { flex:1; text-align:center; }
+.cd-num { font-family:'JetBrains Mono', monospace; font-size:28px; font-weight:700; color:var(--neon); display:block; line-height:1; letter-spacing:-1px; }
+.cd-lbl { font-size:10px; color:var(--dim); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; display:block; font-weight:500; }
+.cd-colon { font-family:'JetBrains Mono', monospace; font-size:24px; color:var(--dim); line-height:1; padding-bottom:14px; }
 
-/* ── NEXT LEVEL CARD ── */
-.section-wrap{padding:16px 16px 0;}
-.sec-title{
-  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
-  color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;
-  margin-bottom:12px;
-}
-.next-card{
-  background:var(--s1);border-radius:20px;padding:20px;
-  border:1px solid var(--border);margin-bottom:16px;
-}
-.next-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-.next-emoji{font-size:28px;}
-.next-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);}
-.next-salary{font-size:13px;font-weight:700;color:var(--green);margin-top:2px;}
-.unlock-label{font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:600;}
+/* SECTION LABEL */
+.section-label { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--sub); padding:20px 16px 10px; }
 
-.req-row{display:flex;gap:10px;margin-bottom:8px;}
-.req-item{
-  flex:1;background:var(--s2);border-radius:12px;padding:12px;
-  text-align:center;border:1px solid var(--border);
-}
-.req-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}
-.req-val.done{color:var(--green);}
-.req-val.need{color:var(--gold);}
-.req-lbl{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.05em;}
-.req-needed{font-size:10px;font-weight:700;margin-top:4px;}
-.req-needed.done{color:var(--green);}
-.req-needed.need{color:var(--gold);}
+/* NEXT CARD */
+.next-card { margin:0 16px 4px; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:20px; }
+.next-top { display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+.next-icon { font-size:32px; }
+.next-level-name { font-size:18px; font-weight:700; color:var(--text); letter-spacing:-0.3px; }
+.next-unlock-earn { font-size:13px; color:var(--green); font-weight:600; margin-top:3px; }
+.req-label { font-size:12px; font-weight:600; color:var(--sub); margin-bottom:12px; }
+.req-boxes { display:flex; gap:10px; margin-bottom:16px; }
+.req-box { flex:1; background:var(--card2); border:1px solid var(--border); border-radius:14px; padding:14px 12px; text-align:center; }
+.req-fraction { font-family:'JetBrains Mono', monospace; font-size:20px; font-weight:700; line-height:1; }
+.req-fraction.ok  { color:var(--green); }
+.req-fraction.not { color:var(--gold); }
+.req-box-label { font-size:11px; color:var(--sub); margin-top:5px; font-weight:500; }
+.req-status { font-size:11px; font-weight:700; margin-top:5px; }
+.req-status.ok  { color:var(--green); }
+.req-status.not { color:var(--gold); }
+.prog-row { margin-bottom:12px; }
+.prog-header { display:flex; justify-content:space-between; font-size:12px; color:var(--sub); font-weight:500; margin-bottom:6px; }
+.prog-header span:last-child { font-family:'JetBrains Mono', monospace; font-weight:600; }
+.prog-track { height:6px; background:rgba(255,255,255,0.05); border-radius:99px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:99px; transition:width 0.8s ease; background:linear-gradient(90deg,var(--gold),#fbbf24); }
+.prog-fill.done { background:linear-gradient(90deg,var(--green),#00ffcc); }
 
-.prog-wrap{margin-top:12px;}
-.prog-label-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px;}
-.prog-bg{height:5px;background:var(--s3);border-radius:999px;overflow:hidden;}
-.prog-fill{height:100%;border-radius:999px;transition:width 0.8s ease;background:linear-gradient(90deg,var(--gold),#f59e0b);}
-.prog-fill.done{background:linear-gradient(90deg,var(--green),#00ffcc);}
+/* LADDER */
+.ladder { padding:0 16px 8px; display:flex; flex-direction:column; gap:8px; }
+.ladder-row { display:flex; align-items:center; gap:14px; padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px; position:relative; overflow:hidden; }
+.ladder-row.is-current { border-color:rgba(0,240,255,0.25); background:linear-gradient(135deg,rgba(0,240,255,0.04),var(--card)); }
+.ladder-row.is-current::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,var(--neon),var(--purple)); }
+.ladder-row.is-locked { opacity:0.45; }
+.ladder-emoji { font-size:26px; flex-shrink:0; }
+.ladder-middle { flex:1; min-width:0; }
+.ladder-lvl-name { font-size:15px; font-weight:700; color:var(--text); letter-spacing:-0.2px; }
+.ladder-req-text { font-size:12px; color:var(--sub); margin-top:3px; font-weight:400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ladder-right { text-align:right; flex-shrink:0; }
+.ladder-amount { font-family:'JetBrains Mono', monospace; font-size:17px; font-weight:700; }
+.ladder-badge { display:inline-block; margin-top:5px; font-size:10px; font-weight:700; letter-spacing:0.04em; padding:3px 9px; border-radius:99px; }
+.badge-curr { background:rgba(0,240,255,0.1); color:var(--neon); }
+.badge-done { background:rgba(0,232,122,0.1); color:var(--green); }
+.badge-lock { background:rgba(58,80,112,0.3); color:var(--dim); }
 
-/* ── SALARY LADDER ── */
-.ladder-wrap{padding:0 16px 16px;}
-.ladder-item{
-  display:flex;align-items:center;gap:14px;
-  padding:14px 16px;border-radius:16px;margin-bottom:8px;
-  border:1px solid var(--border);
-  background:var(--s1);
-  position:relative;overflow:hidden;
-  transition:border-color 0.2s;
-}
-.ladder-item.current{
-  border-color:rgba(0,240,255,0.3);
-  background:linear-gradient(135deg,rgba(0,240,255,0.05),rgba(0,240,255,0.02));
-}
-.ladder-item.current::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:linear-gradient(180deg,var(--neon),var(--purple));
-  border-radius:0 2px 2px 0;
-}
-.ladder-item.unlocked{border-color:rgba(0,255,136,0.15);}
-.ladder-item.locked{opacity:0.5;}
-.ladder-emoji{font-size:24px;flex-shrink:0;}
-.ladder-info{flex:1;}
-.ladder-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;}
-.ladder-req{font-size:11px;color:var(--muted);margin-top:2px;}
-.ladder-right{text-align:right;flex-shrink:0;}
-.ladder-salary{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
-.ladder-badge{
-  display:inline-block;margin-top:4px;
-  padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;
-}
-.badge-current{background:rgba(0,240,255,0.12);color:var(--neon);}
-.badge-unlocked{background:rgba(0,255,136,0.12);color:var(--green);}
-.badge-locked{background:rgba(74,106,138,0.12);color:var(--muted);}
+/* Salary colors */
+.sal-nov { color:var(--dim); } .sal-jun { color:var(--green); } .sal-pro { color:var(--neon); }
+.sal-eli { color:var(--gold); } .sal-leg { color:#a78bfa; } .sal-emp { color:var(--pink); }
 
-/* ── SALARY HISTORY ── */
-.history-wrap{padding:0 16px 100px;}
-.hist-item{
-  background:var(--s1);border-radius:16px;padding:16px;
-  border:1px solid var(--border);margin-bottom:10px;
-  display:flex;align-items:center;gap:14px;
-}
-.hist-icon{
-  width:44px;height:44px;border-radius:12px;flex-shrink:0;
-  background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.2);
-  display:flex;align-items:center;justify-content:center;font-size:20px;
-}
-.hist-month{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);}
-.hist-date{font-size:11px;color:var(--muted);margin-top:2px;}
-.hist-amount{
-  margin-left:auto;font-family:'Syne',sans-serif;
-  font-size:18px;font-weight:800;color:var(--green);
-  flex-shrink:0;
-}
-.hist-level{font-size:11px;color:var(--muted);text-align:right;margin-top:2px;}
+/* Pill colors */
+.pill-nov { background:rgba(58,80,112,0.2); color:#8ba0b8; border-color:rgba(58,80,112,0.4); }
+.pill-jun { background:rgba(0,232,122,0.08); color:var(--green); border-color:rgba(0,232,122,0.2); }
+.pill-pro { background:rgba(0,240,255,0.08); color:var(--neon);  border-color:rgba(0,240,255,0.2); }
+.pill-eli { background:rgba(245,166,35,0.08); color:var(--gold); border-color:rgba(245,166,35,0.2); }
+.pill-leg { background:rgba(139,92,246,0.08); color:#a78bfa;     border-color:rgba(139,92,246,0.2); }
+.pill-emp { background:rgba(236,72,153,0.08); color:var(--pink); border-color:rgba(236,72,153,0.2); }
 
-.empty-hist{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px;}
-.empty-hist .e-icon{font-size:40px;margin-bottom:10px;}
+/* HISTORY */
+.history { padding:0 16px 100px; display:flex; flex-direction:column; gap:10px; }
+.hist-card { display:flex; align-items:center; gap:14px; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; }
+.hist-icon-wrap { width:44px; height:44px; border-radius:12px; flex-shrink:0; background:rgba(0,232,122,0.08); border:1px solid rgba(0,232,122,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; }
+.hist-info { flex:1; min-width:0; }
+.hist-month { font-size:15px; font-weight:700; color:var(--text); letter-spacing:-0.2px; }
+.hist-date  { font-size:12px; color:var(--sub); margin-top:3px; font-weight:400; }
+.hist-right { text-align:right; flex-shrink:0; }
+.hist-amount { font-family:'JetBrains Mono', monospace; font-size:17px; font-weight:700; color:var(--green); }
+.hist-level { font-size:11px; color:var(--sub); margin-top:3px; }
+.empty-state { text-align:center; padding:48px 20px; color:var(--sub); font-size:14px; font-weight:400; }
+.empty-icon { font-size:44px; margin-bottom:12px; display:block; }
+.empty-title { font-size:16px; font-weight:600; color:var(--text); margin-bottom:6px; }
 
-/* ── NAV ── */
-.nav-glass{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  width:90%;height:70px;display:flex;justify-content:space-around;align-items:center;
-  background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);
-  border-radius:25px;box-shadow:0 8px 30px rgba(0,0,0,0.4);
-  border:1px solid rgba(255,255,255,0.07);z-index:999;
-}
-.nav-item{text-align:center;color:#4a6a8a;font-size:11px;cursor:pointer;}
-.nav-item.active{color:#00ffcc;}
-.n-icon{width:26px;height:26px;margin:0 auto 4px;position:relative;}
-.n-icon.home::before{content:"";position:absolute;width:18px;height:18px;background:#4a6a8a;transform:rotate(45deg);top:4px;left:4px;border-radius:3px;}
-.nav-item.active .home::before{background:#00ffcc;}
-.n-icon.me{background:#ffffff18;border-radius:50%;display:flex;align-items:center;justify-content:center;}
-.n-icon.me::before{content:"👤";font-size:14px;}
-.n-icon.sal::before{content:"💰";font-size:20px;position:absolute;left:3px;top:-2px;}
+/* NAV */
+.nav-glass { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:90%; height:68px; display:flex; justify-content:space-around; align-items:center; background:rgba(255,255,255,0.04); backdrop-filter:blur(20px); border-radius:24px; box-shadow:0 8px 32px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.07); z-index:999; }
+.nav-item { text-align:center; color:var(--dim); font-size:11px; cursor:pointer; font-weight:500; }
+.nav-item.active { color:var(--neon); }
+.nav-icon { width:26px; height:26px; margin:0 auto 4px; position:relative; }
+.nav-icon.home::before { content:""; position:absolute; width:18px; height:18px; background:var(--dim); transform:rotate(45deg); top:4px; left:4px; border-radius:3px; }
+.nav-item.active .home::before { background:var(--neon); }
+.nav-icon.me { background:rgba(255,255,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.nav-icon.me::before { content:"👤"; font-size:14px; }
+.nav-icon.sal::before { content:"💰"; font-size:20px; position:absolute; left:3px; top:-1px; }
 
-/* ── LOADER ── */
- /* LOADER - EXACTLY LIKE YOUR OLD ONE */
-    #loader {
-        position:fixed; top:0; left:0; width:100%; height:100%;
-        background:#020617; display:flex; align-items:center;
-        justify-content:center; z-index:9999; flex-direction:column;
-        color:#22c55e; font-size:18px;
-    }
-    .loader-content { text-align:center; }
-    .loader-logo {
-        font-size:30px; font-weight:900; color:#00ffcc;
-        margin-bottom:20px; animation:glow 1.5s infinite alternate;
-    }
-    .loader-bar {
-        width:180px; height:4px; background:#111;
-        border-radius:10px; overflow:hidden;
-    }
-    .loader-fill {
-        width:0%; height:100%; background:#00ffcc;
-        animation:loadBar 2s ease forwards;
-    }
-    @keyframes loadBar { to { width:100%; } }
-    @keyframes glow { from { text-shadow:0 0 5px #00ffcc; } to { text-shadow:0 0 25px #00ffcc; } }
-/* Level pill colors */
-.pill-novice  {background:rgba(100,116,139,0.12);color:#94a3b8;border-color:rgba(100,116,139,0.25);}
-.pill-junior  {background:rgba(0,255,136,0.1);color:var(--green);border-color:rgba(0,255,136,0.25);}
-.pill-pro     {background:rgba(0,240,255,0.1);color:var(--neon);border-color:rgba(0,240,255,0.25);}
-.pill-elite   {background:rgba(245,166,35,0.1);color:var(--gold);border-color:rgba(245,166,35,0.25);}
-.pill-legend  {background:rgba(155,93,229,0.1);color:#c084fc;border-color:rgba(155,93,229,0.25);}
-.pill-employee{background:rgba(247,37,133,0.1);color:var(--pink);border-color:rgba(247,37,133,0.25);}
-
-/* Ladder salary colors */
-.sal-novice  {color:#4a6a8a;}
-.sal-junior  {color:var(--green);}
-.sal-pro     {color:var(--neon);}
-.sal-elite   {color:var(--gold);}
-.sal-legend  {color:#c084fc;}
-.sal-employee{color:var(--pink);}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
-.fade-up{animation:fadeUp 0.4s ease both;}
+@keyframes slideUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:none;} }
+.slide-up { animation:slideUp 0.4s ease both; }
 </style>
 </head>
 <body>
@@ -277,304 +155,202 @@ body{
 </div>
 
 <div class="header">
-  <div class="back" onclick="history.back()">←</div>
+  <div class="back-btn" onclick="history.back()">←</div>
   <div>
     <div class="header-title">Monthly Salary</div>
     <div class="header-sub">Level-based passive income</div>
   </div>
 </div>
 
-<!-- HERO CARD -->
-<div class="hero-wrap">
-  <div class="hero-card fade-up">
-    <div class="hero-glow"></div>
-    <div class="hero-glow-2"></div>
-    <div class="hero-top">
-      <div class="level-pill" id="levelPill">⛏️ Loading...</div>
-      <div class="hero-qual-badge" id="qualBadge">—</div>
+<div class="hero slide-up">
+  <div class="hero-gradient"></div>
+  <div class="hero-inner">
+    <div class="level-row">
+      <div class="level-tag" id="levelTag">⛏️ Loading...</div>
+      <div class="qual-tag" id="qualTag">—</div>
     </div>
-    <div class="salary-display">
-      <div class="salary-lbl">Your Monthly Salary</div>
-      <div class="salary-amount" id="salaryAmount">$0</div>
-      <div class="salary-per">credited to your balance on the 1st of every month</div>
+    <div class="salary-section">
+      <div class="salary-label">Your Monthly Salary</div>
+      <div class="salary-number" id="salaryNum">$0</div>
+      <div class="salary-note">Credited to your balance on the 1st of every month</div>
     </div>
-    <div class="countdown-wrap">
-      <div class="countdown-lbl">⏳ Next salary in</div>
-      <div class="countdown-units">
-        <div class="c-unit"><span class="c-num" id="cd-d">00</span><span class="c-lbl">Days</span></div>
-        <div class="c-sep">:</div>
-        <div class="c-unit"><span class="c-num" id="cd-h">00</span><span class="c-lbl">Hours</span></div>
-        <div class="c-sep">:</div>
-        <div class="c-unit"><span class="c-num" id="cd-m">00</span><span class="c-lbl">Mins</span></div>
-        <div class="c-sep">:</div>
-        <div class="c-unit"><span class="c-num" id="cd-s">00</span><span class="c-lbl">Secs</span></div>
+    <div class="countdown-box">
+      <div class="countdown-title">⏳ Next salary payment in</div>
+      <div class="countdown-grid">
+        <div class="cd-unit"><span class="cd-num" id="cd-d">00</span><span class="cd-lbl">Days</span></div>
+        <div class="cd-colon">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-h">00</span><span class="cd-lbl">Hrs</span></div>
+        <div class="cd-colon">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-m">00</span><span class="cd-lbl">Min</span></div>
+        <div class="cd-colon">:</div>
+        <div class="cd-unit"><span class="cd-num" id="cd-s">00</span><span class="cd-lbl">Sec</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- NEXT LEVEL -->
-<div class="section-wrap" id="nextLevelSection" style="display:none;">
-  <div class="sec-title">Unlock Higher Salary</div>
-  <div class="next-card fade-up" id="nextCard"></div>
+<div id="nextSection" style="display:none;">
+  <div class="section-label">Unlock Higher Salary</div>
+  <div class="next-card slide-up" id="nextCard"></div>
 </div>
 
-<!-- SALARY LADDER -->
-<div class="section-wrap">
-  <div class="sec-title">Salary Ladder</div>
-</div>
-<div class="ladder-wrap" id="ladderWrap"></div>
+<div class="section-label">Salary Ladder</div>
+<div class="ladder" id="ladder"></div>
 
-<!-- HISTORY -->
-<div class="section-wrap">
-  <div class="sec-title">Your Salary History</div>
-</div>
-<div class="history-wrap" id="historyWrap">
-  <div class="empty-hist"><div class="e-icon">⏳</div>Loading...</div>
+<div class="section-label">Payment History</div>
+<div class="history" id="history">
+  <div class="empty-state"><span class="empty-icon">⏳</span>Loading...</div>
 </div>
 
 <div class="nav-glass">
-  <div class="nav-item" onclick="location.href='dashboard.html'"><div class="n-icon home"></div><span>Home</span></div>
-  <div class="nav-item active"><div class="n-icon sal"><div></div></div><span>Salary</span></div>
-  <div class="nav-item" onclick="location.href='me.html'"><div class="n-icon me"></div><span>Me</span></div>
+  <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon home"></div><span>Home</span></div>
+  <div class="nav-item active"><div class="nav-icon sal"></div><span>Salary</span></div>
+  <div class="nav-item" onclick="location.href='me.html'"><div class="nav-icon me"></div><span>Me</span></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
-const firebaseConfig = {
-  apiKey:      "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
-  authDomain:  "cj-miner.firebaseapp.com",
-  databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId:   "cj-miner"
-};
-firebase.initializeApp(firebaseConfig);
-const db   = firebase.database();
-const auth = firebase.auth();
+firebase.initializeApp({
+  apiKey:"AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
+  authDomain:"cj-miner.firebaseapp.com",
+  databaseURL:"https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"cj-miner"
+});
+const db=firebase.database(), auth=firebase.auth();
+const uid=localStorage.getItem("uid");
+if(!uid) window.location.href="signin.html";
 
-const uid = localStorage.getItem("uid");
-if (!uid) { window.location.href = "signin.html"; }
-
-// ── CONFIG ────────────────────────────────────────────────────
-const SALARIES = {
-  "Novice Miner":  0,
-  "Junior Miner":  10,
-  "Pro Miner":     30,
-  "Elite Miner":   50,
-  "Legend Miner":  150,
-  "Employee":      300
+const SALARIES={"Novice Miner":0,"Junior Miner":10,"Pro Miner":30,"Elite Miner":50,"Legend Miner":150,"Employee":300};
+const LEVEL_ORDER=["Novice Miner","Junior Miner","Pro Miner","Elite Miner","Legend Miner","Employee"];
+const META={
+  "Novice Miner":{emoji:"⛏️",pill:"pill-nov",sal:"sal-nov",l1:0,  tot:0,  req:"Default — no requirements"},
+  "Junior Miner":{emoji:"🥈",pill:"pill-jun",sal:"sal-jun",l1:5,  tot:20, req:"5 direct + 20 total active"},
+  "Pro Miner":   {emoji:"💎",pill:"pill-pro",sal:"sal-pro",l1:10, tot:50, req:"10 direct + 50 total active"},
+  "Elite Miner": {emoji:"🔥",pill:"pill-eli",sal:"sal-eli",l1:25, tot:75, req:"25 direct + 75 total active"},
+  "Legend Miner":{emoji:"👑",pill:"pill-leg",sal:"sal-leg",l1:50, tot:150,req:"50 direct + 150 total active"},
+  "Employee":    {emoji:"🚀",pill:"pill-emp",sal:"sal-emp",l1:100,tot:500,req:"100 direct + 500 total active"}
 };
 
-const LEVEL_ORDER = ["Novice Miner","Junior Miner","Pro Miner","Elite Miner","Legend Miner","Employee"];
-
-const LEVEL_META = {
-  "Novice Miner":  { emoji:"⛏️",  cls:"novice",   pillCls:"pill-novice",   salCls:"sal-novice",   l1:0,   total:0,   req:"Default — no requirements" },
-  "Junior Miner":  { emoji:"🥈",  cls:"junior",   pillCls:"pill-junior",   salCls:"sal-junior",   l1:5,   total:20,  req:"5 direct active + 20 total active team" },
-  "Pro Miner":     { emoji:"💎",  cls:"pro",      pillCls:"pill-pro",      salCls:"sal-pro",      l1:10,  total:50,  req:"10 direct active + 50 total active team" },
-  "Elite Miner":   { emoji:"🔥",  cls:"elite",    pillCls:"pill-elite",    salCls:"sal-elite",    l1:25,  total:75,  req:"25 direct active + 75 total active team" },
-  "Legend Miner":  { emoji:"👑",  cls:"legend",   pillCls:"pill-legend",   salCls:"sal-legend",   l1:50,  total:150, req:"50 direct active + 150 total active team" },
-  "Employee":      { emoji:"🚀",  cls:"employee", pillCls:"pill-employee", salCls:"sal-employee", l1:100, total:500, req:"100 direct active + 500 total active team" }
-};
-
-// ── LOAD ──────────────────────────────────────────────────────
-window.addEventListener("load", () => {
-  auth.onAuthStateChanged(async user => {
-    if (!user) { window.location.href = "signin.html"; return; }
-
-    const snap     = await db.ref("users/" + uid).once("value");
-    const userData = snap.val() || {};
-    const level    = userData.level || "Novice Miner";
-    const meta     = LEVEL_META[level];
-    const salary   = SALARIES[level] || 0;
-
-    // Level stats
-    const membersSnap = await db.ref("users/" + uid + "/teamMembers").once("value");
-    const members     = membersSnap.val() || {};
-    const l1Active    = Object.values(members).filter(m => m.hasMiner).length;
-
-    const incomeSnap = await db.ref("teamIncome/" + uid).once("value");
-    const income     = incomeSnap.val() || {};
-    const uniqueSet  = new Set();
-    Object.keys(members).forEach(m => { if (members[m].hasMiner) uniqueSet.add(m); });
-    Object.values(income).forEach(r => { if (r.fromUid) uniqueSet.add(r.fromUid); });
-    const totalActive = uniqueSet.size;
-
-    renderHero(level, salary, meta);
-    renderNextLevel(level, l1Active, totalActive);
+window.addEventListener("load",()=>{
+  auth.onAuthStateChanged(async user=>{
+    if(!user){window.location.href="signin.html";return;}
+    const[uSnap,mSnap,iSnap]=await Promise.all([
+      db.ref("users/"+uid).once("value"),
+      db.ref("users/"+uid+"/teamMembers").once("value"),
+      db.ref("teamIncome/"+uid).once("value")
+    ]);
+    const ud=uSnap.val()||{}, members=mSnap.val()||{}, income=iSnap.val()||{};
+    const level=ud.level||"Novice Miner", meta=META[level], salary=SALARIES[level]||0;
+    const l1=Object.values(members).filter(m=>m.hasMiner).length;
+    const set=new Set();
+    Object.keys(members).forEach(m=>{if(members[m].hasMiner)set.add(m);});
+    Object.values(income).forEach(r=>{if(r.fromUid)set.add(r.fromUid);});
+    renderHero(level,salary,meta);
+    renderNext(level,l1,set.size);
     renderLadder(level);
     renderHistory();
     startCountdown();
-
-    setTimeout(() => document.getElementById("loader").style.display = "none", 1200);
+    setTimeout(()=>document.getElementById("loader").style.display="none",1000);
   });
 });
 
-// ── HERO ──────────────────────────────────────────────────────
-function renderHero(level, salary, meta) {
-  document.getElementById("levelPill").className  = `level-pill ${meta.pillCls}`;
-  document.getElementById("levelPill").textContent = `${meta.emoji} ${level}`;
-
-  const amtEl = document.getElementById("salaryAmount");
-  if (salary > 0) {
-    amtEl.textContent  = "$" + salary;
-    amtEl.className    = "salary-amount";
-    document.getElementById("qualBadge").textContent = "✅ Qualified";
-    document.getElementById("qualBadge").className   = "hero-qual-badge";
+function renderHero(level,salary,meta){
+  const tag=document.getElementById("levelTag");
+  tag.className=`level-tag ${meta.pill}`;
+  tag.textContent=`${meta.emoji} ${level}`;
+  const num=document.getElementById("salaryNum"),qual=document.getElementById("qualTag");
+  if(salary>0){
+    num.textContent="$"+salary; num.className="salary-number has-salary";
+    qual.textContent="✅ Qualified"; qual.className="qual-tag qual-yes";
   } else {
-    amtEl.textContent  = "$0";
-    amtEl.className    = "salary-amount zero";
-    document.getElementById("qualBadge").textContent = "Level up to earn";
-    document.getElementById("qualBadge").className   = "hero-qual-badge no";
+    num.textContent="$0"; num.className="salary-number no-salary";
+    qual.textContent="Level up to earn"; qual.className="qual-tag qual-no";
   }
 }
 
-// ── NEXT LEVEL ────────────────────────────────────────────────
-function renderNextLevel(currentLevel, l1Active, totalActive) {
-  const currentIdx = LEVEL_ORDER.indexOf(currentLevel);
-  if (currentIdx >= LEVEL_ORDER.length - 1) return; // already max
-
-  const nextLevel = LEVEL_ORDER[currentIdx + 1];
-  const nextMeta  = LEVEL_META[nextLevel];
-  const nextSal   = SALARIES[nextLevel];
-  const section   = document.getElementById("nextLevelSection");
-  const card      = document.getElementById("nextCard");
-
-  section.style.display = "block";
-
-  const l1Need    = nextMeta.l1;
-  const totalNeed = nextMeta.total;
-  const l1Done    = l1Active >= l1Need;
-  const totDone   = totalActive >= totalNeed;
-  const l1Pct     = Math.min(100, l1Need > 0 ? Math.floor((l1Active / l1Need) * 100) : 100);
-  const totPct    = Math.min(100, totalNeed > 0 ? Math.floor((totalActive / totalNeed) * 100) : 100);
-  const l1Left    = Math.max(0, l1Need - l1Active);
-  const totLeft   = Math.max(0, totalNeed - totalActive);
-
-  card.innerHTML = `
-    <div class="next-header">
-      <div class="next-emoji">${nextMeta.emoji}</div>
-      <div>
-        <div class="next-name">${nextLevel}</div>
-        <div class="next-salary">+$${nextSal}/month salary unlock</div>
+function renderNext(currentLevel,l1,totalActive){
+  const idx=LEVEL_ORDER.indexOf(currentLevel);
+  if(idx>=LEVEL_ORDER.length-1)return;
+  const nLvl=LEVEL_ORDER[idx+1],nMeta=META[nLvl],nSal=SALARIES[nLvl];
+  const l1n=nMeta.l1,totn=nMeta.tot;
+  const l1ok=l1>=l1n,totok=totalActive>=totn;
+  const l1p=l1n>0?Math.min(100,Math.floor((l1/l1n)*100)):100;
+  const totp=totn>0?Math.min(100,Math.floor((totalActive/totn)*100)):100;
+  document.getElementById("nextSection").style.display="block";
+  document.getElementById("nextCard").innerHTML=`
+    <div class="next-top">
+      <div class="next-icon">${nMeta.emoji}</div>
+      <div><div class="next-level-name">${nLvl}</div><div class="next-unlock-earn">Unlocks $${nSal}/month salary</div></div>
+    </div>
+    <div class="req-label">Requirements to unlock this level:</div>
+    <div class="req-boxes">
+      <div class="req-box">
+        <div class="req-fraction ${l1ok?'ok':'not'}">${l1}/${l1n}</div>
+        <div class="req-box-label">Direct Active</div>
+        <div class="req-status ${l1ok?'ok':'not'}">${l1ok?'✅ Complete':(l1n-l1)+' more needed'}</div>
+      </div>
+      <div class="req-box">
+        <div class="req-fraction ${totok?'ok':'not'}">${totalActive}/${totn}</div>
+        <div class="req-box-label">Total Active Team</div>
+        <div class="req-status ${totok?'ok':'not'}">${totok?'✅ Complete':(totn-totalActive)+' more needed'}</div>
       </div>
     </div>
-    <div class="unlock-label">📋 Requirements to unlock:</div>
-    <div class="req-row">
-      <div class="req-item">
-        <div class="req-val ${l1Done ? 'done' : 'need'}">${l1Active}/${l1Need}</div>
-        <div class="req-lbl">Direct Active</div>
-        <div class="req-needed ${l1Done ? 'done' : 'need'}">${l1Done ? '✅ Done' : l1Left + ' more needed'}</div>
-      </div>
-      <div class="req-item">
-        <div class="req-val ${totDone ? 'done' : 'need'}">${totalActive}/${totalNeed}</div>
-        <div class="req-lbl">Total Active Team</div>
-        <div class="req-needed ${totDone ? 'done' : 'need'}">${totDone ? '✅ Done' : totLeft + ' more needed'}</div>
-      </div>
+    <div class="prog-row">
+      <div class="prog-header"><span>Direct referrals</span><span>${l1p}%</span></div>
+      <div class="prog-track"><div class="prog-fill ${l1ok?'done':''}" style="width:${l1p}%"></div></div>
     </div>
-    <div class="prog-wrap">
-      <div class="prog-label-row"><span>Level 1 progress</span><span>${l1Pct}%</span></div>
-      <div class="prog-bg"><div class="prog-fill ${l1Done ? 'done' : ''}" style="width:${l1Pct}%"></div></div>
-    </div>
-    <div class="prog-wrap" style="margin-top:10px;">
-      <div class="prog-label-row"><span>Total team progress</span><span>${totPct}%</span></div>
-      <div class="prog-bg"><div class="prog-fill ${totDone ? 'done' : ''}" style="width:${totPct}%"></div></div>
+    <div class="prog-row">
+      <div class="prog-header"><span>Total active team</span><span>${totp}%</span></div>
+      <div class="prog-track"><div class="prog-fill ${totok?'done':''}" style="width:${totp}%"></div></div>
     </div>`;
 }
 
-// ── LADDER ────────────────────────────────────────────────────
-function renderLadder(currentLevel) {
-  const wrap = document.getElementById("ladderWrap");
-  wrap.innerHTML = "";
-  const currentIdx = LEVEL_ORDER.indexOf(currentLevel);
-
-  LEVEL_ORDER.forEach((lvl, idx) => {
-    const meta   = LEVEL_META[lvl];
-    const salary = SALARIES[lvl];
-    const isCurr = lvl === currentLevel;
-    const isUnlocked = idx <= currentIdx;
-    const statusCls  = isCurr ? "current" : isUnlocked ? "unlocked" : "locked";
-    const badgeCls   = isCurr ? "badge-current" : isUnlocked ? "badge-unlocked" : "badge-locked";
-    const badgeTxt   = isCurr ? "● YOUR LEVEL" : isUnlocked ? "✓ Unlocked" : "🔒 Locked";
-
-    const item = document.createElement("div");
-    item.className = `ladder-item ${statusCls} fade-up`;
-    item.style.animationDelay = (idx * 60) + "ms";
-    item.innerHTML = `
-      <div class="ladder-emoji">${meta.emoji}</div>
-      <div class="ladder-info">
-        <div class="ladder-name">${lvl}</div>
-        <div class="ladder-req">${meta.req}</div>
-      </div>
-      <div class="ladder-right">
-        <div class="ladder-salary ${meta.salCls}">${salary > 0 ? "$" + salary + "/mo" : "—"}</div>
-        <div class="ladder-badge ${badgeCls}">${badgeTxt}</div>
-      </div>`;
-    wrap.appendChild(item);
-  });
-}
-
-// ── HISTORY ───────────────────────────────────────────────────
-async function renderHistory() {
-  const snap = await db.ref("userTransactions/" + uid).once("value");
-  const txs  = snap.val() || {};
-  const hist = Object.entries(txs)
-    .filter(([, t]) => t.type === "salary" && t.status === "approved")
-    .sort((a, b) => (b[1].date || 0) - (a[1].date || 0));
-
-  const wrap = document.getElementById("historyWrap");
-  if (!hist.length) {
-    wrap.innerHTML = `
-      <div class="empty-hist">
-        <div class="e-icon">💰</div>
-        No salary payments yet.<br>
-        <span style="font-size:12px;color:#2a4a6a;margin-top:6px;display:block;">Your first salary arrives on the 1st of next month</span>
-      </div>`;
-    return;
-  }
-
-  wrap.innerHTML = hist.map(([, t]) => {
-    const lvlMeta = LEVEL_META[t.level] || { emoji:"💰" };
-    const date    = t.date ? new Date(t.date).toLocaleDateString("en-NG", { day:"numeric", month:"long", year:"numeric" }) : "—";
-    const month   = t.monthKey ? getMonthName(t.monthKey) : "—";
-    return `
-      <div class="hist-item fade-up">
-        <div class="hist-icon">${lvlMeta.emoji}</div>
-        <div>
-          <div class="hist-month">${month}</div>
-          <div class="hist-date">${date}</div>
-        </div>
-        <div>
-          <div class="hist-amount">+$${t.amount}</div>
-          <div class="hist-level">${t.level || "—"}</div>
-        </div>
-      </div>`;
+function renderLadder(currentLevel){
+  const wrap=document.getElementById("ladder"),ci=LEVEL_ORDER.indexOf(currentLevel);
+  wrap.innerHTML=LEVEL_ORDER.map((lvl,idx)=>{
+    const m=META[lvl],sal=SALARIES[lvl];
+    const isCurr=lvl===currentLevel,isUnl=idx<=ci;
+    const rc=isCurr?"is-current":isUnl?"is-unlocked":"is-locked";
+    const bc=isCurr?"badge-curr":isUnl?"badge-done":"badge-lock";
+    const bt=isCurr?"● YOUR LEVEL":isUnl?"✓ Unlocked":"🔒 Locked";
+    return`<div class="ladder-row ${rc}">
+      <div class="ladder-emoji">${m.emoji}</div>
+      <div class="ladder-middle"><div class="ladder-lvl-name">${lvl}</div><div class="ladder-req-text">${m.req}</div></div>
+      <div class="ladder-right"><div class="ladder-amount ${m.sal}">${sal>0?'$'+sal+'/mo':'—'}</div><div class="ladder-badge ${bc}">${bt}</div></div>
+    </div>`;
   }).join("");
 }
 
-function getMonthName(key) {
-  if (!key) return "—";
-  const [y, m] = key.split("-");
-  return new Date(y, m - 1, 1).toLocaleDateString("en-NG", { month:"long", year:"numeric" });
+async function renderHistory(){
+  const snap=await db.ref("userTransactions/"+uid).once("value");
+  const txs=snap.val()||{};
+  const hist=Object.entries(txs).filter(([,t])=>t.type==="salary"&&t.status==="approved").sort((a,b)=>(b[1].date||0)-(a[1].date||0));
+  const wrap=document.getElementById("history");
+  if(!hist.length){
+    wrap.innerHTML=`<div class="empty-state"><span class="empty-icon">💰</span><div class="empty-title">No payments yet</div>Your first salary arrives on the 1st of next month</div>`;
+    return;
+  }
+  wrap.innerHTML=hist.map(([,t])=>{
+    const m=META[t.level]||{emoji:"💰"};
+    const date=t.date?new Date(t.date).toLocaleDateString("en-NG",{day:"numeric",month:"long",year:"numeric"}):"—";
+    const month=t.monthKey?getMonthName(t.monthKey):"—";
+    return`<div class="hist-card"><div class="hist-icon-wrap">${m.emoji}</div><div class="hist-info"><div class="hist-month">${month}</div><div class="hist-date">${date}</div></div><div class="hist-right"><div class="hist-amount">+$${t.amount}</div><div class="hist-level">${t.level||"—"}</div></div></div>`;
+  }).join("");
 }
 
-// ── COUNTDOWN to 1st of next month ────────────────────────────
-function startCountdown() {
-  function update() {
-    const now  = new Date();
-    const next = new Date(now.getFullYear(), now.getMonth() + 1, 1, 7, 0, 0); // 7am next 1st
-    const diff = Math.max(0, next - now);
-    const d    = Math.floor(diff / 86400000);
-    const h    = Math.floor((diff % 86400000) / 3600000);
-    const m    = Math.floor((diff % 3600000) / 60000);
-    const s    = Math.floor((diff % 60000) / 1000);
-    document.getElementById("cd-d").textContent = String(d).padStart(2,"0");
-    document.getElementById("cd-h").textContent = String(h).padStart(2,"0");
-    document.getElementById("cd-m").textContent = String(m).padStart(2,"0");
-    document.getElementById("cd-s").textContent = String(s).padStart(2,"0");
+function getMonthName(key){if(!key)return"—";const[y,m]=key.split("-");return new Date(y,m-1,1).toLocaleDateString("en-NG",{month:"long",year:"numeric"});}
+
+function startCountdown(){
+  function tick(){
+    const now=new Date(),next=new Date(now.getFullYear(),now.getMonth()+1,1,7,0,0),diff=Math.max(0,next-now);
+    document.getElementById("cd-d").textContent=String(Math.floor(diff/86400000)).padStart(2,"0");
+    document.getElementById("cd-h").textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,"0");
+    document.getElementById("cd-m").textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,"0");
+    document.getElementById("cd-s").textContent=String(Math.floor((diff%60000)/1000)).padStart(2,"0");
   }
-  update();
-  setInterval(update, 1000);
+  tick(); setInterval(tick,1000);
 }
 </script>
 </body>
