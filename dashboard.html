@@ -53,10 +53,10 @@ body {
 .pulse-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:88px;height:88px;border-radius:50%;border:1px solid rgba(0,255,204,0.3);animation:pulseRing 2s ease-out infinite;}
 @keyframes pulseRing{0%{transform:translate(-50%,-50%) scale(0.9);opacity:0.8;}70%,100%{transform:translate(-50%,-50%) scale(1.15);opacity:0;}}
 .orbit-wrap{position:absolute;top:50%;left:50%;width:0;height:0;animation:spinRing 3s linear infinite;}
-.coin{position:absolute;width:10px;height:10px;background:#f5a623;border-radius:50%;box-shadow:0 0 6px rgba(245,166,35,0.6);}
-.coin-1{top:-60px;left:-5px;animation:coinPulse 1.2s ease-in-out infinite;}
-.coin-2{top:-5px;left:55px;animation:coinPulse 1.2s ease-in-out 0.4s infinite;}
-.coin-3{top:50px;left:-5px;animation:coinPulse 1.2s ease-in-out 0.8s infinite;}
+.lcoin{position:absolute;width:10px;height:10px;background:#f5a623;border-radius:50%;box-shadow:0 0 6px rgba(245,166,35,0.6);}
+.lcoin-1{top:-60px;left:-5px;animation:coinPulse 1.2s ease-in-out infinite;}
+.lcoin-2{top:-5px;left:55px;animation:coinPulse 1.2s ease-in-out 0.4s infinite;}
+.lcoin-3{top:50px;left:-5px;animation:coinPulse 1.2s ease-in-out 0.8s infinite;}
 @keyframes coinPulse{0%,100%{opacity:0.5;transform:scale(0.8);}50%{opacity:1;transform:scale(1.1);}}
 .brand-name{font-size:22px;font-weight:800;color:#00ffcc;letter-spacing:-0.5px;text-shadow:0 0 30px rgba(0,255,204,0.35);}
 .brand-sub{font-size:11px;color:rgba(139,160,184,0.7);margin-top:4px;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;}
@@ -290,9 +290,9 @@ body {
         </svg>
       </div>
       <div class="orbit-wrap">
-        <div class="coin coin-1"></div>
-        <div class="coin coin-2"></div>
-        <div class="coin coin-3"></div>
+        <div class="lcoin lcoin-1"></div>
+        <div class="lcoin lcoin-2"></div>
+        <div class="lcoin lcoin-3"></div>
       </div>
     </div>
     <div class="brand-name">CryptoJet</div>
