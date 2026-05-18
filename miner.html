@@ -519,9 +519,9 @@ function renderRunning() {
           </div>
         </div>
         <div class="stats-grid">
-          <div class="stat-label">DAILY INCOME</div>
-          <div class="stat-value" style="color:#00ff88;">
-            $${effectiveDaily.toFixed(2)}${effectiveDaily !== cfg.daily ? ' <span style="font-size:9px;background:rgba(245,158,11,0.2);color:#f59e0b;padding:1px 5px;border-radius:4px;font-weight:700;">PROMO</span>' : ''}
+          <div class="stat-item">
+            <div class="stat-label">DAILY INCOME</div>
+            <div class="stat-value" style="color:#00ff88;">$${effectiveDaily.toFixed(2)}${effectiveDaily !== cfg.daily ? ' <span style="font-size:9px;background:rgba(245,158,11,0.2);color:#f59e0b;padding:1px 5px;border-radius:4px;font-weight:700;">PROMO</span>' : ''}</div>
           </div>
           <div class="stat-item"><div class="stat-label">CYCLE</div><div class="stat-value">${cfg.cycleHours}h</div></div>
           <div class="stat-item"><div class="stat-label">TOTAL EARN</div><div class="stat-value" style="color:#f59e0b;">${totalEarnLabel}</div></div>
