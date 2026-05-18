@@ -256,7 +256,7 @@ function updateStripStats() {
   const total  = users.reduce((s, u) => s + (u.balance || 0), 0);
   const miners = users.reduce((s, u) => s + Object.keys(u.minerUnlocked || {}).length, 0);
   document.getElementById("statUsers").textContent   = users.length;
-  document.getElementById("statBalance").textContent = "$" + Math.floor(total);
+  document.getElementById("statBalance").textContent = "$" + total.toFixed(2);
   document.getElementById("statMiners").textContent  = miners;
 }
 
@@ -306,7 +306,7 @@ function renderUsers(filter = "") {
         <div class="uc-level">${u.level || "Novice"}</div>
       </div>
       <div class="uc-row"><span class="uc-lbl">Name</span><span class="uc-val">${u.name||"—"}</span></div>
-      <div class="uc-row"><span class="uc-lbl">Balance</span><span class="uc-val green">$${Math.floor(u.balance||0)}</span></div>
+      <div class="uc-row"><span class="uc-lbl">Balance</span><span class="uc-val green">$${(u.balance||0).toFixed(2)}</span></div>
       <div class="uc-row"><span class="uc-lbl">Team Income</span><span class="uc-val gold">$${(u.team||0).toFixed(2)}</span></div>
       <div class="uc-row"><span class="uc-lbl">Team Size</span><span class="uc-val">${teamSize} members</span></div>
       <div class="uc-row"><span class="uc-lbl">Referred By</span><span class="uc-val">${getReferrerName(u.referredBy)}</span></div>`;
@@ -504,7 +504,7 @@ function buildDetailHTML(uid, u) {
     <div class="dp-name">${u.minerId||"Unknown"}</div>
     <div class="dp-uid">UID: ${uid}</div>
     <div class="dp-stats">
-      <div class="dp-stat"><div class="dp-stat-val" id="live-balance">${Math.floor(u.balance||0)}</div><div class="dp-stat-lbl">Balance ($)</div></div>
+      <div class="dp-stat"><div class="dp-stat-val" id="live-balance">${(u.balance||0).toFixed(2)}</div><div class="dp-stat-lbl">Balance ($)</div></div>
       <div class="dp-stat"><div class="dp-stat-val" id="live-team">${(u.team||0).toFixed(2)}</div><div class="dp-stat-lbl">Team ($)</div></div>
       <div class="dp-stat"><div class="dp-stat-val" id="live-points">${u.points||0}</div><div class="dp-stat-lbl">Points</div></div>
     </div>
@@ -529,7 +529,7 @@ function buildDetailHTML(uid, u) {
     </div>
     <div class="sec-card">
       <div class="sec-title">Financial Summary</div>
-      <div class="sec-row"><span class="sec-lbl">Current Balance</span><span class="sec-val" style="color:var(--green)">$${Math.floor(u.balance||0)}</span></div>
+      <div class="sec-row"><span class="sec-lbl">Current Balance</span><span class="sec-val" style="color:var(--green)">$${(u.balance||0).toFixed(2)}</span></div>
       <div class="sec-row"><span class="sec-lbl">Team Income</span><span class="sec-val" style="color:var(--gold)">$${(u.team||0).toFixed(2)}</span></div>
       <div class="sec-row"><span class="sec-lbl">Points</span><span class="sec-val">${u.points||0}</span></div>
       <div class="sec-row"><span class="sec-lbl">Referrals</span><span class="sec-val">${u.referrals||0}</span></div>
