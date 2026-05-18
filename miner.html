@@ -377,12 +377,55 @@ function showTab(tab) {
 
 let _listenersAttached = false;
 
+// ── AUTO-MIGRATE OLD MINERS ───────────────────────────────────
+// Runs once for any miner missing totalCredited
+// Calculates from miningRecords what they've already earned
+async function autoMigrateEarnings() {
+  const minersMap = userData.miners    || {};
+  const unlocked  = userData.minerUnlocked || {};
+
+  // Read all mining records once
+  const recSnap = await db.ref(`users/${uid}/miningRecords`).once("value");
+  const records = Object.values(recSnap.val() || {});
+
+  for (const id of Object.keys(unlocked)) {
+    const cfg   = MINERS[id];
+    if (!cfg) continue;
+    const count = unlocked[id];
+
+    // Sum all records for this miner type, split equally across instances
+    const totalEarned = records
+      .filter(r => r.miner === cfg.name)
+      .reduce((sum, r) => sum + (r.amount || 0), 0);
+    const perMiner = parseFloat((totalEarned / count).toFixed(4));
+
+    for (let i = 1; i <= count; i++) {
+      const key   = (id === "S244" || id === "S100") ? `${id}_${i}` : id;
+      const mData = minersMap[key];
+
+      // Only migrate miners that have never had totalCredited set
+      if (!mData || mData.totalCredited !== undefined) continue;
+
+      const planTotal = cfg.unlimited ? Infinity : parseFloat((cfg.daily * cfg.duration).toFixed(4));
+      const safeCredited = Math.min(perMiner, planTotal);
+
+      await db.ref(`users/${uid}/miners/${key}`).update({
+        totalCredited: safeCredited
+      });
+      // Update local copy so renderRunning shows correct days immediately
+      userData.miners[key].totalCredited = safeCredited;
+      console.log(`✅ Migrated ${key}: totalCredited = $${safeCredited}`);
+    }
+  }
+}
+
 async function loadPage() {
   const snap = await db.ref("users/" + uid).once("value");
   userData   = snap.val() || {};
   const launchSnap = await db.ref("platformSettings/launchDate").once("value");
   LAUNCH_DATE = launchSnap.val() || null;
   document.getElementById("liveBalance").textContent = "$" + (userData.balance || 0).toFixed(2);
+  await autoMigrateEarnings();
   await checkAndUpdateLevel();
   renderRunning();
   renderLevels();
