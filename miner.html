@@ -10,12 +10,40 @@
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Inter',system-ui,sans-serif; background:#020617; color:#e2e8f0; min-height:100vh; overflow-x:hidden; }
 
-    #loader { position:fixed; top:0; left:0; width:100%; height:100%; background:#020617; display:flex; align-items:center; justify-content:center; z-index:9999; flex-direction:column; }
-    .loader-logo { font-size:30px; font-weight:900; color:#00ffcc; margin-bottom:20px; animation:glow 1.5s infinite alternate; }
-    .loader-bar  { width:180px; height:4px; background:#111; border-radius:10px; overflow:hidden; }
-    .loader-fill { width:0%; height:100%; background:#00ffcc; animation:loadBar 1.5s ease forwards; }
-    @keyframes loadBar { to{ width:100%; } }
-    @keyframes glow { from{text-shadow:0 0 5px #00ffcc;} to{text-shadow:0 0 25px #00ffcc;} }
+    /* LOADER */
+    #loader{position:fixed;inset:0;background:#060b14;display:flex;align-items:center;justify-content:center;z-index:9999;}
+    .loader-wrap{display:flex;flex-direction:column;align-items:center;}
+    .ring-outer{position:relative;width:140px;height:140px;margin-bottom:28px;}
+    .ring-svg{position:absolute;top:0;left:0;width:140px;height:140px;}
+    .ring-track{fill:none;stroke:rgba(0,240,255,0.06);stroke-width:2;}
+    .ring-spin{fill:none;stroke:url(#ringGrad);stroke-width:2;stroke-linecap:round;stroke-dasharray:180 250;animation:spinRing 1.8s linear infinite;transform-origin:70px 70px;}
+    .ring-spin-2{fill:none;stroke:rgba(0,255,136,0.25);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:60 370;animation:spinRing 2.4s linear infinite reverse;transform-origin:70px 70px;}
+    @keyframes spinRing{to{transform:rotate(360deg);}}
+    .dollar-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:72px;height:72px;background:rgba(0,240,255,0.06);border:1px solid rgba(0,240,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+    .dollar-svg{width:36px;height:36px;}
+    .dollar-path{fill:none;stroke:#00ffcc;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:120;stroke-dashoffset:120;animation:drawDollar 1.2s cubic-bezier(0.4,0,0.2,1) 0.2s forwards;}
+    .dollar-line{stroke:#00ffcc;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:24;stroke-dashoffset:24;animation:drawDollar 0.5s ease 0.8s forwards;}
+    @keyframes drawDollar{to{stroke-dashoffset:0;}}
+    .pulse-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:88px;height:88px;border-radius:50%;border:1px solid rgba(0,255,204,0.3);animation:pulseRing 2s ease-out infinite;}
+    @keyframes pulseRing{0%{transform:translate(-50%,-50%) scale(0.9);opacity:0.8;}70%,100%{transform:translate(-50%,-50%) scale(1.15);opacity:0;}}
+    .orbit-wrap{position:absolute;top:50%;left:50%;width:0;height:0;animation:spinRing 3s linear infinite;}
+    .lcoin{position:absolute;width:10px;height:10px;background:#f5a623;border-radius:50%;box-shadow:0 0 6px rgba(245,166,35,0.6);}
+    .lcoin-1{top:-60px;left:-5px;animation:coinPulse 1.2s ease-in-out infinite;}
+    .lcoin-2{top:-5px;left:55px;animation:coinPulse 1.2s ease-in-out 0.4s infinite;}
+    .lcoin-3{top:50px;left:-5px;animation:coinPulse 1.2s ease-in-out 0.8s infinite;}
+    @keyframes coinPulse{0%,100%{opacity:0.5;transform:scale(0.8);}50%{opacity:1;transform:scale(1.1);}}
+    .brand-name{font-size:22px;font-weight:800;color:#00ffcc;letter-spacing:-0.5px;text-shadow:0 0 30px rgba(0,255,204,0.35);}
+    .brand-sub{font-size:11px;color:rgba(139,160,184,0.7);margin-top:4px;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;}
+    .progress-wrap{width:140px;margin-top:20px;}
+    .progress-track{height:2px;background:rgba(0,240,255,0.08);border-radius:99px;overflow:hidden;}
+    .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#00ffcc,#00f0ff);border-radius:99px;animation:fillBar 2s cubic-bezier(0.4,0,0.2,1) 0.5s forwards;}
+    @keyframes fillBar{to{width:85%;}}
+    .progress-dots{display:flex;gap:5px;justify-content:center;margin-top:12px;}
+    .dot{width:5px;height:5px;border-radius:50%;background:rgba(0,240,255,0.2);}
+    .dot:nth-child(1){animation:dotBlink 1.2s ease-in-out 0s infinite;}
+    .dot:nth-child(2){animation:dotBlink 1.2s ease-in-out 0.2s infinite;}
+    .dot:nth-child(3){animation:dotBlink 1.2s ease-in-out 0.4s infinite;}
+    @keyframes dotBlink{0%,100%{background:rgba(0,240,255,0.2);}50%{background:#00f0ff;}}
 
     .header { padding:30px 20px 20px; text-align:center; font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:700; color:var(--neon); text-shadow:0 0 30px rgba(0,240,255,0.6); }
 
@@ -157,8 +185,43 @@
 <body>
 
 <div id="loader">
-  <div class="loader-logo">CryptoJet</div>
-  <div class="loader-bar"><div class="loader-fill"></div></div>
+  <div class="loader-wrap">
+    <div class="ring-outer">
+      <svg class="ring-svg" viewBox="0 0 140 140">
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00ffcc" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#00f0ff" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#00ffcc" stop-opacity="0.3"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring-track" cx="70" cy="70" r="65"/>
+        <circle class="ring-spin"  cx="70" cy="70" r="65"/>
+        <circle class="ring-spin-2" cx="70" cy="70" r="65"/>
+      </svg>
+      <div class="pulse-ring"></div>
+      <div class="dollar-center">
+        <svg class="dollar-svg" viewBox="0 0 36 44">
+          <path class="dollar-path" d="M26 10c-2-2.5-5-4-8-4C12.5 6 9 9 9 13c0 4 3 6 9 8s9 4.5 9 9c0 4.5-3.5 8-9 8-4 0-7-1.5-9-4.5"/>
+          <line class="dollar-line" x1="18" y1="2" x2="18" y2="6"/>
+          <line class="dollar-line" x1="18" y1="38" x2="18" y2="42" style="animation-delay:0.9s"/>
+        </svg>
+      </div>
+      <div class="orbit-wrap">
+        <div class="lcoin lcoin-1"></div>
+        <div class="lcoin lcoin-2"></div>
+        <div class="lcoin lcoin-3"></div>
+      </div>
+    </div>
+    <div class="brand-name">CryptoJet</div>
+    <div class="brand-sub">Loading mining output</div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="header">CryptoJet Miner</div>
