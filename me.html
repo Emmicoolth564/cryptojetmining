@@ -196,7 +196,7 @@
    #loader{position:fixed;inset:0;background:#060b14;display:flex;align-items:center;justify-content:center;z-index:9999;}
     .loader-wrap{display:flex;flex-direction:column;align-items:center;}
     .ring-outer{position:relative;width:140px;height:140px;margin-bottom:28px;}
-    .loader-ring-svg{position:absolute;top:0;left:0;width:140px;height:140px;}
+    .ring-svg{position:absolute;top:0;left:0;width:140px;height:140px;}
     .ring-track{fill:none;stroke:rgba(0,240,255,0.06);stroke-width:2;}
     .ring-spin{fill:none;stroke:url(#ringGrad);stroke-width:2;stroke-linecap:round;stroke-dasharray:180 250;animation:spinRing 1.8s linear infinite;transform-origin:70px 70px;}
     .ring-spin-2{fill:none;stroke:rgba(0,255,136,0.25);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:60 370;animation:spinRing 2.4s linear infinite reverse;transform-origin:70px 70px;}
@@ -282,7 +282,7 @@
 <div id="loader">
   <div class="loader-wrap">
     <div class="ring-outer">
-      <svg class="loader-ring-svg" viewBox="0 0 140 140">
+      <svg class="ring-svg" viewBox="0 0 140 140">
         <defs>
           <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#00ffcc" stop-opacity="0"/>
@@ -309,7 +309,7 @@
       </div>
     </div>
     <div class="brand-name">CryptoJet</div>
-    <div class="brand-sub">Loading data</div>
+    <div class="brand-sub">Loading salary data</div>
     <div class="progress-wrap">
       <div class="progress-track"><div class="progress-fill"></div></div>
       <div class="progress-dots">
