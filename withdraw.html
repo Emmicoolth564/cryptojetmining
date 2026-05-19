@@ -242,7 +242,7 @@ async function startBankWithdraw() {
     const already = await hasDailyWithdraw();
     if (already) return toast("You can only withdraw once per day. Try again tomorrow.");
     const amount = parseFloat(document.getElementById("bankAmount").value);
-    if (!amount || amount < 2)  return toast("Minimum withdrawal is $2");
+    if (!amount || amount < 2) return toast("Minimum withdrawal is $2");
     if (amount > currentBalance) return toast("Insufficient balance");
     if (!savedBank)              return toast("Please set your bank details first");
     if (!withdrawalPassword)     { toast("Please set a withdrawal password first"); setTimeout(() => window.location.href = "bank", 1800); return; }
