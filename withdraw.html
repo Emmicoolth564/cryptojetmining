@@ -334,7 +334,7 @@ async function startUSDTWithdraw() {
     const address = document.getElementById("usdtAddress").value.trim();
     const amount  = parseFloat(document.getElementById("usdtAmount").value);
     if (!address || !address.startsWith("0x") || address.length < 40) return toast("Please enter a valid BEP20 wallet address");
-    if (!amount || amount < 3)  return toast("Minimum withdrawal is $2");
+    if (!amount || amount < 2)  return toast("Minimum withdrawal is $2");
     if (amount > currentBalance) return toast("Insufficient balance");
     if (!withdrawalPassword) { toast("Please set a withdrawal password first"); setTimeout(() => window.location.href = "bank", 1800); return; }
     pendingAmount = amount;
