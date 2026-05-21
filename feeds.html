@@ -4,283 +4,129 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Feeds • CryptoJet</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',system-ui,sans-serif; background:#020617; color:#e2e8f0; min-height:100vh; overflow-x:hidden; }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-        font-family: 'Inter', system-ui, sans-serif;
-        background: #020617;
-        color: #e2e8f0;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
+.header { padding:25px 16px 15px; text-align:center; font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:700; color:#00f0ff; text-shadow:0 0 25px rgba(0,240,255,0.5); position:relative; }
+.feeds-badge { position:absolute; top:22px; right:20px; background:#ef4444; color:white; font-size:12px; font-weight:700; padding:3px 8px; border-radius:9999px; min-width:22px; text-align:center; display:none; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.12);} }
 
-    .header {
-        padding: 25px 16px 15px;
-        text-align: center;
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 26px;
-        font-weight: 700;
-        color: #00f0ff;
-        text-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
-        position: relative;
-    }
+.tabs { display:flex; background:#0f172a; border-radius:9999px; padding:6px; margin:0 16px 20px; gap:4px; overflow-x:auto; scrollbar-width:none; }
+.tabs::-webkit-scrollbar { display:none; }
+.tab { flex-shrink:0; padding:13px 14px; text-align:center; font-weight:600; font-size:13px; border-radius:9999px; cursor:pointer; color:#94a3b8; white-space:nowrap; transition:all 0.2s; }
+.tab.active { background:#22c55e; color:#022c22; box-shadow:0 4px 15px rgba(34,197,94,0.4); }
+.tab.nigeria-tab { position:relative; }
+.tab.nigeria-tab.has-unread::after { content:attr(data-count); position:absolute; top:-4px; right:-4px; background:#ef4444; color:#fff; font-size:10px; font-weight:800; padding:2px 5px; border-radius:999px; min-width:16px; line-height:1.4; text-align:center; }
 
-    .feeds-badge {
-        position: absolute;
-        top: 22px;
-        right: 20px;
-        background: #ef4444;
-        color: white;
-        font-size: 12px;
-        font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 9999px;
-        min-width: 22px;
-        text-align: center;
-        display: none;
-        animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-        0%,100% { transform: scale(1); }
-        50% { transform: scale(1.12); }
-    }
+.content-wrapper { padding:0 16px 100px; }
 
-    .tabs {
-        display: flex;
-        background: #0f172a;
-        border-radius: 9999px;
-        padding: 6px;
-        margin: 0 16px 20px;
-        gap: 4px;
-        overflow-x: auto;
-        scrollbar-width: none;
-    }
-    .tabs::-webkit-scrollbar { display: none; }
-    .tab {
-        flex: 1;
-        padding: 13px 12px;
-        text-align: center;
-        font-weight: 600;
-        font-size: 14px;
-        border-radius: 9999px;
-        cursor: pointer;
-        color: #94a3b8;
-        white-space: nowrap;
-        transition: all 0.2s;
-    }
-    .tab.active {
-        background: #22c55e;
-        color: #022c22;
-        box-shadow: 0 4px 15px rgba(34,197,94,0.4);
-    }
+/* ── NIGERIA PINNED CARD ── */
+.pinned-card { background:linear-gradient(145deg,#071a10,#0a2016); border:1.5px solid rgba(34,197,94,0.4); border-radius:22px; padding:22px; margin-bottom:18px; position:relative; overflow:hidden; }
+.pinned-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#22c55e,#00ffcc); }
+.pinned-label { display:inline-flex; align-items:center; gap:6px; background:rgba(34,197,94,0.15); color:#22c55e; font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; margin-bottom:12px; }
+.pinned-title { font-size:17px; font-weight:700; line-height:1.45; margin-bottom:14px; color:#f0fdf4; }
+.pinned-body { font-size:13px; color:#94a3b8; line-height:1.65; margin-bottom:18px; }
+.pinned-actions { display:flex; flex-direction:column; gap:10px; }
+.join-btn { display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:linear-gradient(90deg,#22c55e,#00ffcc); color:#022c22; font-weight:800; font-size:15px; border-radius:14px; text-decoration:none; border:none; cursor:pointer; box-shadow:0 6px 20px rgba(34,197,94,0.35); transition:transform 0.2s; }
+.join-btn:active { transform:scale(0.97); }
+.manager-btn { display:flex; align-items:center; justify-content:center; gap:8px; padding:13px; background:rgba(34,197,94,0.08); color:#22c55e; font-weight:700; font-size:14px; border-radius:14px; text-decoration:none; border:1.5px solid rgba(34,197,94,0.25); }
 
-    .content-wrapper { padding: 0 16px 30px; }
+/* Tutorial highlight pulse on pinned card */
+.pinned-card.tut-highlight { animation:tutPulse 1.2s ease-in-out infinite; }
+@keyframes tutPulse { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4);} 50%{box-shadow:0 0 0 8px rgba(34,197,94,0);} }
+.required-badge { display:inline-block; background:#ef4444; color:#fff; font-size:11px; font-weight:800; padding:3px 10px; border-radius:999px; margin-bottom:12px; }
 
-    .new-badge {
-        display: inline-block;
-        background: #22c55e;
-        color: #022c22;
-        font-size: 10px;
-        font-weight: 700;
-        padding: 2px 7px;
-        border-radius: 9999px;
-        margin-left: 6px;
-        vertical-align: middle;
-    }
+/* ── NIGERIA FEED POSTS ── */
+.nigeria-post { background:#0f172a; border-radius:18px; padding:18px; margin-bottom:14px; border:1px solid rgba(34,197,94,0.12); }
+.ng-post-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12px; color:#64748b; }
+.ng-cat { background:#071a10; color:#22c55e; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; }
+.ng-post-title { font-size:15px; font-weight:600; line-height:1.5; color:#e2e8f0; }
 
-    .feed-card {
-        background: #0f172a;
-        border-radius: 22px;
-        padding: 22px;
-        margin-bottom: 18px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        transition: transform 0.3s, box-shadow 0.3s;
-        position: relative;
-    }
-    .feed-card.new-post {
-        border: 1px solid rgba(34,197,94,0.25);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,197,94,0.1);
-    }
-    .feed-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 25px 50px rgba(0,240,255,0.12);
-    }
+/* ── REGION SECTION LABEL ── */
+.region-label { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 16px; }
+.region-label::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.05); }
 
-    .feed-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 14px;
-        font-size: 13px;
-        color: #64748b;
-    }
+/* ── GLOBAL FEED (existing) ── */
+.feed-card { background:#0f172a; border-radius:22px; padding:22px; margin-bottom:18px; box-shadow:0 15px 35px rgba(0,0,0,0.5); transition:transform 0.3s,box-shadow 0.3s; position:relative; }
+.feed-card.new-post { border:1px solid rgba(34,197,94,0.25); }
+.feed-card:hover { transform:translateY(-4px); box-shadow:0 25px 50px rgba(0,240,255,0.12); }
+.feed-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-size:13px; color:#64748b; }
+.cat-tag { background:#1e2937; padding:4px 12px; border-radius:9999px; font-size:12px; color:#94a3b8; }
+.feed-title { font-weight:600; font-size:17px; line-height:1.45; margin-bottom:18px; }
+.new-badge { display:inline-block; background:#22c55e; color:#022c22; font-size:10px; font-weight:700; padding:2px 7px; border-radius:9999px; margin-left:6px; vertical-align:middle; }
+.section-label { font-size:12px; font-weight:600; color:#475569; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 14px; padding:0 2px; }
 
-    .cat-tag {
-        background: #1e2937;
-        padding: 4px 12px;
-        border-radius: 9999px;
-        font-size: 12px;
-        color: #94a3b8;
-    }
+/* ── REACTIONS ── */
+.reactions-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding-top:14px; border-top:1px solid rgba(255,255,255,0.06); }
+.reaction-btn { display:inline-flex; align-items:center; gap:5px; padding:7px 13px; background:#1e2937; border-radius:9999px; font-size:15px; cursor:pointer; border:1.5px solid transparent; transition:all 0.15s; user-select:none; -webkit-tap-highlight-color:transparent; }
+.reaction-btn:hover { background:#263548; }
+.reaction-btn.reacted { background:rgba(34,197,94,0.12); border-color:rgba(34,197,94,0.35); }
+.reaction-count { font-size:13px; font-weight:700; color:#64748b; min-width:10px; }
+.reaction-btn.reacted .reaction-count { color:#22c55e; }
+.more-emoji-btn { padding:7px 12px; background:#1e2937; border-radius:9999px; font-size:16px; cursor:pointer; border:1.5px solid rgba(255,255,255,0.07); transition:background 0.15s; }
+.more-emoji-btn:hover { background:#263548; }
 
-    .feed-title {
-        font-weight: 600;
-        font-size: 17px;
-        line-height: 1.45;
-        margin-bottom: 18px;
-    }
+/* ── EMOJI PICKER ── */
+.picker-overlay { position:fixed; inset:0; background:rgba(2,6,23,0.75); z-index:99998; display:none; }
+.picker-overlay.open { display:block; }
+.emoji-sheet { position:fixed; bottom:0; left:0; right:0; background:#0f172a; border-radius:28px 28px 0 0; padding:16px 16px 40px; border-top:1px solid rgba(255,255,255,0.07); z-index:99999; transform:translateY(100%); transition:transform 0.3s ease; }
+.emoji-sheet.open { transform:translateY(0); }
+.sheet-handle { width:38px; height:4px; background:#334155; border-radius:2px; margin:0 auto 16px; }
+.emoji-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:4px; }
+.emoji-opt { font-size:26px; padding:8px 2px; text-align:center; cursor:pointer; border-radius:10px; transition:background 0.1s; }
+.emoji-opt:hover,.emoji-opt:active { background:#1e2937; }
 
-    /* ── REACTIONS ─────────────────────────────────────────── */
-    .reactions-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        padding-top: 14px;
-        border-top: 1px solid rgba(255,255,255,0.06);
-    }
+/* ── FLOAT ANIMATION ── */
+.float-emoji { position:fixed; font-size:26px; pointer-events:none; z-index:999999; animation:floatUp 1.1s ease forwards; }
+@keyframes floatUp { 0%{opacity:1;transform:translateY(0) scale(1);} 60%{opacity:1;transform:translateY(-70px) scale(1.25);} 100%{opacity:0;transform:translateY(-130px) scale(0.8);} }
 
-    .reaction-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 7px 13px;
-        background: #1e2937;
-        border-radius: 9999px;
-        font-size: 15px;
-        cursor: pointer;
-        border: 1.5px solid transparent;
-        transition: all 0.15s;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .reaction-btn:hover { background: #263548; }
-    .reaction-btn.reacted {
-        background: rgba(34,197,94,0.12);
-        border-color: rgba(34,197,94,0.35);
-    }
-    .reaction-count {
-        font-size: 13px;
-        font-weight: 700;
-        color: #64748b;
-        min-width: 10px;
-    }
-    .reaction-btn.reacted .reaction-count { color: #22c55e; }
+/* ── TUTORIAL OVERLAY ── */
+.tut-overlay { position:fixed; inset:0; background:rgba(2,6,23,0.92); z-index:100000; display:none; align-items:flex-end; justify-content:center; padding-bottom:100px; }
+.tut-overlay.show { display:flex; }
+.tut-card { background:#0f172a; border-radius:24px; padding:24px; margin:0 20px; border:1.5px solid rgba(34,197,94,0.3); max-width:380px; width:100%; text-align:center; animation:slideUp 0.4s ease; }
+@keyframes slideUp { from{transform:translateY(30px);opacity:0;} to{transform:none;opacity:1;} }
+.tut-emoji { font-size:48px; margin-bottom:12px; }
+.tut-title { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; color:#00ffcc; margin-bottom:8px; }
+.tut-text { font-size:14px; color:#94a3b8; line-height:1.6; margin-bottom:18px; }
+.tut-unread { display:inline-flex; align-items:center; gap:6px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#f87171; font-size:13px; font-weight:700; padding:6px 14px; border-radius:999px; margin-bottom:16px; }
+.tut-btn { width:100%; padding:15px; background:linear-gradient(90deg,#22c55e,#00ffcc); color:#022c22; font-weight:800; font-size:15px; border:none; border-radius:14px; cursor:pointer; box-shadow:0 6px 20px rgba(34,197,94,0.35); }
+.tut-arrow { font-size:28px; color:#22c55e; margin-top:12px; animation:bounce 1s infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
 
-    .more-emoji-btn {
-        padding: 7px 12px;
-        background: #1e2937;
-        border-radius: 9999px;
-        font-size: 16px;
-        cursor: pointer;
-        border: 1.5px solid rgba(255,255,255,0.07);
-        transition: background 0.15s;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .more-emoji-btn:hover { background: #263548; }
-
-    /* ── EMOJI PICKER SHEET ─────────────────────────────────── */
-    .picker-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(2,6,23,0.75);
-        z-index: 99998;
-        display: none;
-    }
-    .picker-overlay.open { display: block; }
-
-    .emoji-sheet {
-        position: fixed;
-        bottom: 0; left: 0; right: 0;
-        background: #0f172a;
-        border-radius: 28px 28px 0 0;
-        padding: 16px 16px 40px;
-        border-top: 1px solid rgba(255,255,255,0.07);
-        z-index: 99999;
-        transform: translateY(100%);
-        transition: transform 0.3s ease;
-    }
-    .emoji-sheet.open { transform: translateY(0); }
-    .sheet-handle {
-        width: 38px; height: 4px;
-        background: #334155;
-        border-radius: 2px;
-        margin: 0 auto 16px;
-    }
-    .emoji-grid {
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        gap: 4px;
-    }
-    .emoji-opt {
-        font-size: 26px;
-        padding: 8px 2px;
-        text-align: center;
-        cursor: pointer;
-        border-radius: 10px;
-        transition: background 0.1s;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .emoji-opt:hover, .emoji-opt:active { background: #1e2937; }
-
-    /* ── FLOAT ANIMATION ─────────────────────────────────────── */
-    .float-emoji {
-        position: fixed;
-        font-size: 26px;
-        pointer-events: none;
-        z-index: 999999;
-        animation: floatUp 1.1s ease forwards;
-    }
-    @keyframes floatUp {
-        0%   { opacity: 1; transform: translateY(0) scale(1); }
-        60%  { opacity: 1; transform: translateY(-70px) scale(1.25); }
-        100% { opacity: 0; transform: translateY(-130px) scale(0.8); }
-    }
-
-    .section-label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #475569;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin: 0 0 14px;
-        padding: 0 2px;
-    }
-
-    .toast {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #22c55e;
-        color: #022c22;
-        padding: 12px 26px;
-        border-radius: 9999px;
-        font-weight: 600;
-        opacity: 0;
-        transition: opacity 0.3s;
-        z-index: 999999;
-        pointer-events: none;
-        white-space: nowrap;
-    }
+/* ── TOAST ── */
+.toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#22c55e; color:#022c22; padding:12px 26px; border-radius:9999px; font-weight:600; opacity:0; transition:opacity 0.3s; z-index:999999; pointer-events:none; white-space:nowrap; }
 </style>
 </head>
 <body>
 
-<div class="header">
-    Feeds
-    <div class="feeds-badge" id="feedsBadge"></div>
+<!-- TUTORIAL OVERLAY -->
+<div class="tut-overlay" id="tutOverlay">
+  <div class="tut-card">
+    <div class="tut-emoji">🇳🇬</div>
+    <div class="tut-title">Welcome to CryptoJet!</div>
+    <div class="tut-unread">🔴 1 Unread Message</div>
+    <div class="tut-text">You have a welcome message waiting in the <strong style="color:#22c55e;">Nigeria community feed</strong>. Tap below to view it and join our official group.</div>
+    <button class="tut-btn" onclick="goNigeriaTab()">🇳🇬 View Nigeria Feed</button>
+    <div class="tut-arrow">↓</div>
+  </div>
 </div>
 
+<!-- HEADER -->
+<div class="header">
+  Feeds
+  <div class="feeds-badge" id="feedsBadge"></div>
+</div>
+
+<!-- TABS -->
 <div class="tabs">
-    <div class="tab active" onclick="switchTab(0,this)">All</div>
-    <div class="tab" onclick="switchTab(1,this)">News</div>
-    <div class="tab" onclick="switchTab(2,this)">Updates</div>
-    <div class="tab" onclick="switchTab(3,this)">Community</div>
-    <div class="tab" onclick="switchTab(4,this)">Feedback</div>
+  <div class="tab nigeria-tab" id="tabNigeria" data-count="" onclick="switchTab('nigeria',this)">🇳🇬 Nigeria</div>
+  <div class="tab active" id="tabAll"       onclick="switchTab('all',this)">🌎 Global</div>
+  <div class="tab" onclick="switchTab('news',this)">News</div>
+  <div class="tab" onclick="switchTab('update',this)">Updates</div>
+  <div class="tab" onclick="switchTab('community',this)">Community</div>
+  <div class="tab" onclick="switchTab('feedback',this)">Feedback</div>
 </div>
 
 <div id="content" class="content-wrapper"></div>
@@ -288,8 +134,8 @@
 <!-- Emoji picker -->
 <div class="picker-overlay" id="pickerOverlay" onclick="closePicker()"></div>
 <div class="emoji-sheet" id="emojiSheet">
-    <div class="sheet-handle"></div>
-    <div class="emoji-grid" id="emojiGrid"></div>
+  <div class="sheet-handle"></div>
+  <div class="emoji-grid" id="emojiGrid"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -297,274 +143,366 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
 <script>
-const firebaseConfig = {
-    apiKey: "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
-    authDomain: "cj-miner.firebaseapp.com",
-    databaseURL: "https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "cj-miner"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+firebase.initializeApp({
+  apiKey:"AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
+  authDomain:"cj-miner.firebaseapp.com",
+  databaseURL:"https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"cj-miner"
+});
+const db   = firebase.database();
 const auth = firebase.auth();
 
 const uid = localStorage.getItem("uid") || ("g_" + Math.random().toString(36).slice(2,8));
-let currentTab = 0;
-let livePosts   = [];
-let myReactions = JSON.parse(localStorage.getItem("cj_reactions") || "{}");
-let currentPickerPostId = null;
 
-// ── Default + full emoji lists ────────────────────────────────
+// ── CONFIG — Fill in your details ────────────────────────────
+const GROUP_LINK      = "https://chat.whatsapp.com/LQcTtNPAi2gDvWwBXei6zw?mode=gi_t"; // ← replace
+const MANAGER_NUMBER  = "https://wa.me/19707808174"; // ← replace with manager WA link
+const MANAGER_DISPLAY = "+1 970-780-8174"; 
+
+let currentTab       = "all";
+let livePosts        = [];
+let nigeriaLivePosts = [];
+let myReactions      = JSON.parse(localStorage.getItem("cj_reactions") || "{}");
+let currentPickerPostId = null;
+let tutorialActive   = false;
+let tutorialStep     = 1;
+
 const DEFAULT_EMOJIS = ["🔥","❤️","🚀","💎"];
 const ALL_EMOJIS = [
-    "🔥","❤️","🚀","💎","🤑","💯","😍","🙌",
-    "👏","⚡","💪","🏆","🎯","✅","😎","🤩",
-    "💰","📈","🌙","⭐","🎉","🥳","😂","👍",
-    "😮","🫡","🫶","❤️‍🔥","💥","✨","🌊","🦁",
-    "👀","🙏","😤","💫","🤯","🔑","🏅","🎊"
+  "🔥","❤️","🚀","💎","🤑","💯","😍","🙌",
+  "👏","⚡","💪","🏆","🎯","✅","😎","🤩",
+  "💰","📈","🌙","⭐","🎉","🥳","😂","👍",
+  "😮","🫡","🫶","❤️‍🔥","💥","✨","🌊","🦁",
+  "👀","🙏","😤","💫","🤯","🔑","🏅","🎊"
 ];
 
-// ── Static posts with real timestamps ─────────────────────────
 const NOW = Date.now();
-const dy = d => d * 86400000, wk = w => w * dy(7),
-      mo = m => m * dy(30),   yr = y => y * dy(365);
+const dy=d=>d*86400000, wk=w=>w*dy(7), mo=m=>m*dy(30), yr=y=>y*dy(365);
 
 const staticPosts = [
-    { id:"p1",  type:"news",      category:"Crypto News",    title:"Bitcoin ETF Inflows Hit Record $2.3 Billion This Week",           ts: NOW - 11*60000     },
-    { id:"p2",  type:"update",    category:"Product Update", title:"CryptoJet v2.4 Released – Faster Withdrawals & New Miner Tiers",  ts: NOW - yr(2)        },
-    { id:"p3",  type:"community", category:"Top Earner",     title:"@CryptoQueenNG just earned $8,420 this month with S-900!",        ts: NOW - yr(3)        },
-    { id:"p4",  type:"news",      category:"Crypto News",    title:"Ethereum Pectra Upgrade Live – What Miners Need to Know",         ts: NOW - dy(1)        },
-    { id:"p5",  type:"community", category:"Rewards",        title:"Double Points Weekend – Refer & Earn 2x on All Miner Purchases",  ts: NOW - mo(6)        },
-    { id:"p6",  type:"update",    category:"Product Update", title:"USDT Withdrawals Now Instant – No More 30min Wait",               ts: NOW - mo(10)       },
-    { id:"p7",  type:"community", category:"Community",      title:"Share your mining journey and win $500 in rewards!",              ts: NOW - mo(4)        },
-    { id:"p8",  type:"news",      category:"Crypto News",    title:"Solana Hits New ATH – Is This the Next 10x?",                    ts: NOW - yr(1)        },
-    { id:"p9",  type:"feedback",  category:"Feedback",       title:"User suggestion: Add dark mode toggle for dashboard",             ts: NOW - dy(5)        },
-    { id:"p10", type:"update",    category:"Product Update", title:"New S-1500 Miner Coming Soon – 2.5x Hashrate",                   ts: NOW - mo(4)        },
-    { id:"p11", type:"community", category:"Community",      title:"Weekly Mining Contest – Top 10 earners get bonus USDT",           ts: NOW - wk(4)        },
-    { id:"p12", type:"news",      category:"Crypto News",    title:"Nigeria Crypto Regulation Update – Good News for Miners",         ts: NOW - wk(1)        },
-    { id:"p13", type:"community", category:"Rewards",        title:"Referral Leaderboard – Top 5 this month get free S-500",          ts: NOW - wk(2)        },
-    { id:"p14", type:"update",    category:"Product Update", title:"Bank withdrawals now support 28 Nigerian banks",                  ts: NOW - wk(2)        },
-    { id:"p15", type:"community", category:"Community",      title:"Meet our top miner from Lagos – @MiningBossNG",                   ts: NOW - wk(3)        },
+  {id:"p1",  type:"news",      category:"Crypto News",    title:"Bitcoin ETF Inflows Hit Record $2.3 Billion This Week",          ts:NOW-11*60000},
+  {id:"p2",  type:"update",    category:"Product Update", title:"CryptoJet v2.4 Released – Faster Withdrawals & New Miner Tiers", ts:NOW-yr(2)},
+  {id:"p3",  type:"community", category:"Top Earner",     title:"@CryptoQueenNG just earned $8,420 this month with S-900!",       ts:NOW-yr(3)},
+  {id:"p4",  type:"news",      category:"Crypto News",    title:"Ethereum Pectra Upgrade Live – What Miners Need to Know",        ts:NOW-dy(1)},
+  {id:"p5",  type:"community", category:"Rewards",        title:"Double Points Weekend – Refer & Earn 2x on All Miner Purchases", ts:NOW-mo(6)},
+  {id:"p6",  type:"update",    category:"Product Update", title:"USDT Withdrawals Now Instant – No More 30min Wait",              ts:NOW-mo(10)},
+  {id:"p7",  type:"community", category:"Community",      title:"Share your mining journey and win $500 in rewards!",             ts:NOW-mo(4)},
+  {id:"p8",  type:"news",      category:"Crypto News",    title:"Solana Hits New ATH – Is This the Next 10x?",                   ts:NOW-yr(1)},
+  {id:"p9",  type:"feedback",  category:"Feedback",       title:"User suggestion: Add dark mode toggle for dashboard",            ts:NOW-dy(5)},
+  {id:"p10", type:"update",    category:"Product Update", title:"New S-1500 Miner Coming Soon – 2.5x Hashrate",                  ts:NOW-mo(4)},
+  {id:"p11", type:"community", category:"Community",      title:"Weekly Mining Contest – Top 10 earners get bonus USDT",          ts:NOW-wk(4)},
+  {id:"p12", type:"news",      category:"Crypto News",    title:"Nigeria Crypto Regulation Update – Good News for Miners",        ts:NOW-wk(1)},
+  {id:"p13", type:"community", category:"Rewards",        title:"Referral Leaderboard – Top 5 this month get free S-500",         ts:NOW-wk(2)},
+  {id:"p14", type:"update",    category:"Product Update", title:"Bank withdrawals now support 28 Nigerian banks",                 ts:NOW-wk(2)},
+  {id:"p15", type:"community", category:"Community",      title:"Meet our top miner from Lagos – @MiningBossNG",                  ts:NOW-wk(3)},
 ];
 
-function timeAgo(ts) {
-    const d = Date.now() - ts;
-    const m = Math.floor(d/60000), h = Math.floor(d/3600000),
-          dy = Math.floor(d/86400000), mo = Math.floor(dy/30), yr = Math.floor(dy/365);
-    if (m < 1)   return "just now";
-    if (m < 60)  return m + "m ago";
-    if (h < 24)  return h + "h ago";
-    if (dy < 7)  return dy + "d ago";
-    if (dy < 30) return Math.floor(dy/7) + "w ago";
-    if (mo < 12) return mo + " mo ago";
-    return yr + "yr" + (yr > 1 ? "s" : "") + " ago";
+// ── Tutorial check ────────────────────────────────────────────
+async function checkTutorial() {
+  if (!uid || uid.startsWith("g_")) return;
+  const snap = await db.ref(`users/${uid}/tutorialDone`).once("value");
+  if (snap.val() !== true) {
+    tutorialActive = true;
+    tutorialStep   = 1;
+    // Mark Nigeria tab as having 1 unread
+    const t = document.getElementById("tabNigeria");
+    t.setAttribute("data-count","1");
+    t.classList.add("has-unread");
+    // Show tutorial overlay after short delay
+    setTimeout(() => {
+      document.getElementById("tutOverlay").classList.add("show");
+    }, 800);
+  }
+}
+
+function goNigeriaTab() {
+  document.getElementById("tutOverlay").classList.remove("show");
+  tutorialStep = 2;
+  switchTab("nigeria", document.getElementById("tabNigeria"));
+}
+
+function completeTutorial() {
+  tutorialActive = false;
+  tutorialStep   = 0;
+  const t = document.getElementById("tabNigeria");
+  t.removeAttribute("data-count");
+  t.classList.remove("has-unread");
+  db.ref(`users/${uid}/tutorialDone`).set(true);
+  showToast("✅ Welcome to CryptoJet! You're all set!");
 }
 
 // ── Tab switching ─────────────────────────────────────────────
-function switchTab(n, el) {
-    currentTab = n;
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    el.classList.add("active");
-    renderContent();
+function switchTab(name, el) {
+  currentTab = name;
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+  if (name === "nigeria") {
+    // Update last seen
+    localStorage.setItem("ngFeedSeen", Date.now().toString());
+    // Clear badge
+    const t = document.getElementById("tabNigeria");
+    if (tutorialStep !== 2) { // Don't clear if tutorial still needs step 2
+      t.removeAttribute("data-count");
+      t.classList.remove("has-unread");
+    }
+  }
+  renderContent();
 }
 
+// ── Render ────────────────────────────────────────────────────
 function renderContent() {
-    const content = document.getElementById("content");
-    content.innerHTML = "";
-    const typeMap = [null,"news","update","community","feedback"];
-    const filter  = typeMap[currentTab];
+  const content = document.getElementById("content");
+  content.innerHTML = "";
 
-    const fLive   = filter ? livePosts.filter(p => p.type === filter)   : livePosts;
-    const fStatic = filter ? staticPosts.filter(p => p.type === filter) : staticPosts;
+  if (currentTab === "nigeria") {
+    renderNigeria(content);
+    return;
+  }
 
-    if (fLive.length > 0) {
-        addLabel(content, "New Posts");
-        fLive.forEach((p, i) => content.appendChild(makeCard(p, true, i)));
-    }
-    if (fStatic.length > 0) {
-        if (fLive.length > 0) addLabel(content, "Older Posts");
-        fStatic.forEach((p, i) => content.appendChild(makeCard(p, false, i)));
-    }
+  const filter = currentTab === "all" ? null : currentTab;
+  const fLive   = filter ? livePosts.filter(p=>p.type===filter)   : livePosts;
+  const fStatic = filter ? staticPosts.filter(p=>p.type===filter) : staticPosts;
+
+  // Region label
+  const rl = document.createElement("div");
+  rl.className = "region-label";
+  rl.textContent = "🌎 US Central — Global Feed";
+  content.appendChild(rl);
+
+  if (fLive.length > 0) {
+    addLabel(content,"New Posts");
+    fLive.forEach((p,i) => content.appendChild(makeCard(p,true,i)));
+  }
+  if (fStatic.length > 0) {
+    if (fLive.length > 0) addLabel(content,"Older Posts");
+    fStatic.forEach((p,i) => content.appendChild(makeCard(p,false,i)));
+  }
+}
+
+function renderNigeria(content) {
+  const rl = document.createElement("div");
+  rl.className = "region-label";
+  rl.textContent = "🇳🇬 Nigeria Community Feed";
+  content.appendChild(rl);
+
+  // Pinned welcome card
+  const pinned = document.createElement("div");
+  pinned.className = "pinned-card" + (tutorialStep===2 ? " tut-highlight" : "");
+  pinned.id = "pinnedCard";
+
+  const isRequired = tutorialStep === 2;
+  pinned.innerHTML = `
+    <div class="pinned-label">📌 Pinned Welcome Message</div>
+    ${isRequired ? '<div class="required-badge">⚠️ Required: Join to continue</div>' : ''}
+    <div class="pinned-title">🇳🇬 Welcome to CryptoJet Nigeria Community!</div>
+    <div class="pinned-body">
+      You're now part of the fastest-growing crypto mining platform in Nigeria!<br><br>
+      Join our official WhatsApp community group to:<br>
+      • Get real-time updates & announcements<br>
+      • Connect with other miners across Nigeria<br>
+      • Get support from our community managers<br>
+      • Earn exclusive bonuses for active members<br><br>
+      <strong style="color:#22c55e;">Tap the button below to join — it's required to access all features.</strong>
+    </div>
+    <div class="pinned-actions">
+      <a href="${GROUP_LINK}" target="_blank" class="join-btn" onclick="onGroupLinkClick()">
+        💬 Join Nigeria WhatsApp Group
+      </a>
+      <a href="${MANAGER_NUMBER}" target="_blank" class="manager-btn">
+        📞 Contact Manager: ${MANAGER_DISPLAY}
+      </a>
+    </div>`;
+  content.appendChild(pinned);
+
+  // Nigeria live posts from Firebase
+  if (nigeriaLivePosts.length > 0) {
+    addLabel(content, "Community Updates");
+    nigeriaLivePosts.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "nigeria-post";
+      card.innerHTML = `
+        <div class="ng-post-header">
+          <span class="ng-cat">${esc(p.category || "Update")}</span>
+          <span>${timeAgo(p.timestamp || Date.now())}</span>
+        </div>
+        <div class="ng-post-title">${esc(p.title || p.message || "")}</div>`;
+      content.appendChild(card);
+    });
+  }
+
+  // Tutorial step 2 instruction bubble
+  if (tutorialStep === 2) {
+    const bubble = document.createElement("div");
+    bubble.style.cssText = "background:rgba(34,197,94,0.1);border:1.5px solid rgba(34,197,94,0.3);border-radius:16px;padding:16px;margin-top:12px;text-align:center;";
+    bubble.innerHTML = `
+      <div style="font-size:24px;margin-bottom:8px;">👆</div>
+      <div style="font-size:14px;font-weight:700;color:#22c55e;margin-bottom:4px;">Tap "Join Nigeria WhatsApp Group"</div>
+      <div style="font-size:12px;color:#64748b;">Join the group to complete your setup and unlock all features</div>`;
+    content.appendChild(bubble);
+  }
+}
+
+function onGroupLinkClick() {
+  if (tutorialActive && tutorialStep === 2) {
+    setTimeout(completeTutorial, 1500);
+  }
 }
 
 function addLabel(parent, text) {
-    const d = document.createElement("div");
-    d.className = "section-label";
-    d.textContent = text;
-    parent.appendChild(d);
+  const d = document.createElement("div");
+  d.className = "section-label";
+  d.textContent = text;
+  parent.appendChild(d);
 }
 
 function makeCard(post, isNew, index) {
-    const card = document.createElement("div");
-    card.className = "feed-card" + (isNew ? " new-post" : "");
-    card.id = "card-" + post.id;
-
-    const ts = post.ts || post.timestamp || Date.now();
-
-    card.innerHTML = `
-        <div class="feed-header">
-            <span class="cat-tag">${post.category}</span>
-            <span>${timeAgo(ts)}${isNew ? '<span class="new-badge">NEW</span>' : ''}</span>
-        </div>
-        <div class="feed-title">${esc(post.title)}</div>
-        <div class="reactions-row" id="rx-${post.id}"></div>
-    `;
-
-    // Live reaction listener
-    db.ref("feedReactions/" + post.id).on("value", snap => {
-        drawReactions(post.id, snap.val() || {});
-    });
-
-    return card;
+  const card = document.createElement("div");
+  card.className = "feed-card" + (isNew ? " new-post" : "");
+  card.id = "card-" + post.id;
+  const ts = post.ts || post.timestamp || Date.now();
+  card.innerHTML = `
+    <div class="feed-header">
+      <span class="cat-tag">${post.category}</span>
+      <span>${timeAgo(ts)}${isNew?'<span class="new-badge">NEW</span>':''}</span>
+    </div>
+    <div class="feed-title">${esc(post.title)}</div>
+    <div class="reactions-row" id="rx-${post.id}"></div>`;
+  db.ref("feedReactions/" + post.id).on("value", snap => {
+    drawReactions(post.id, snap.val() || {});
+  });
+  return card;
 }
 
-// ── Draw reaction buttons from Firebase data ──────────────────
 function drawReactions(postId, data) {
-    const row = document.getElementById("rx-" + postId);
-    if (!row) return;
-
-    // Count each emoji across all users
-    const counts = {};
-    Object.values(data).forEach(userObj => {
-        Object.entries(userObj).forEach(([key, val]) => {
-            if (val) {
-                const emoji = decodeKey(key);
-                counts[emoji] = (counts[emoji] || 0) + 1;
-            }
-        });
+  const row = document.getElementById("rx-" + postId);
+  if (!row) return;
+  const counts = {};
+  Object.values(data).forEach(userObj => {
+    Object.entries(userObj).forEach(([key,val]) => {
+      if (val) { const e=decodeKey(key); counts[e]=(counts[e]||0)+1; }
     });
-
-    // Show default emojis + any others that have reactions
-    const shown = new Set([...DEFAULT_EMOJIS, ...Object.keys(counts)]);
-    const myRx  = myReactions[postId] || {};
-
-    row.innerHTML = "";
-    [...shown].slice(0, 8).forEach(emoji => {
-        const count   = counts[emoji] || 0;
-        const reacted = !!myRx[emoji];
-        const btn = document.createElement("div");
-        btn.className = "reaction-btn" + (reacted ? " reacted" : "");
-        btn.innerHTML = `${emoji} <span class="reaction-count">${count > 0 ? fmtCount(count) : ""}</span>`;
-        btn.onclick = (e) => toggleReaction(postId, emoji, e);
-        row.appendChild(btn);
-    });
-
-    const plus = document.createElement("div");
-    plus.className = "more-emoji-btn";
-    plus.textContent = "＋";
-    plus.onclick = () => openPicker(postId);
-    row.appendChild(plus);
+  });
+  const shown  = new Set([...DEFAULT_EMOJIS,...Object.keys(counts)]);
+  const myRx   = myReactions[postId] || {};
+  row.innerHTML = "";
+  [...shown].slice(0,8).forEach(emoji => {
+    const count=counts[emoji]||0, reacted=!!myRx[emoji];
+    const btn = document.createElement("div");
+    btn.className="reaction-btn"+(reacted?" reacted":"");
+    btn.innerHTML=`${emoji} <span class="reaction-count">${count>0?fmtCount(count):""}</span>`;
+    btn.onclick=(e)=>toggleReaction(postId,emoji,e);
+    row.appendChild(btn);
+  });
+  const plus=document.createElement("div");
+  plus.className="more-emoji-btn"; plus.textContent="＋";
+  plus.onclick=()=>openPicker(postId);
+  row.appendChild(plus);
 }
 
 function fmtCount(n) {
-    if (n >= 1000000) return (n/1000000).toFixed(1).replace(".0","") + "M";
-    if (n >= 1000)    return (n/1000).toFixed(1).replace(".0","") + "K";
-    return n;
+  if(n>=1000000) return (n/1000000).toFixed(1).replace(".0","")+"M";
+  if(n>=1000)    return (n/1000).toFixed(1).replace(".0","")+"K";
+  return n;
 }
 
-// ── Toggle a reaction ─────────────────────────────────────────
 function toggleReaction(postId, emoji, e) {
-    if (!myReactions[postId]) myReactions[postId] = {};
-    const already = myReactions[postId][emoji];
-    const key     = encodeKey(emoji);
-    const path    = `feedReactions/${postId}/${uid}/${key}`;
-
-    if (already) {
-        myReactions[postId][emoji] = false;
-        db.ref(path).set(false);
-    } else {
-        myReactions[postId][emoji] = true;
-        db.ref(path).set(true);
-        spawnFloat(emoji, e);
-    }
-    localStorage.setItem("cj_reactions", JSON.stringify(myReactions));
+  if(!myReactions[postId]) myReactions[postId]={};
+  const already=myReactions[postId][emoji];
+  const key=encodeKey(emoji);
+  const path=`feedReactions/${postId}/${uid}/${key}`;
+  if(already) { myReactions[postId][emoji]=false; db.ref(path).set(false); }
+  else        { myReactions[postId][emoji]=true;  db.ref(path).set(true); spawnFloat(emoji,e); }
+  localStorage.setItem("cj_reactions",JSON.stringify(myReactions));
 }
 
-// ── Firebase key encoding (no special chars) ──────────────────
-function encodeKey(emoji) {
-    return [...emoji].map(c => c.codePointAt(0).toString(16)).join("_");
-}
-function decodeKey(key) {
-    try {
-        return key.split("_").map(h => String.fromCodePoint(parseInt(h, 16))).join("");
-    } catch { return "❓"; }
+function encodeKey(e) { return [...e].map(c=>c.codePointAt(0).toString(16)).join("_"); }
+function decodeKey(k) { try{return k.split("_").map(h=>String.fromCodePoint(parseInt(h,16))).join("");}catch{return"❓";} }
+
+function spawnFloat(emoji,e) {
+  const el=document.createElement("div"); el.className="float-emoji"; el.textContent=emoji;
+  el.style.left=(e?.clientX??window.innerWidth/2)-13+"px";
+  el.style.top =(e?.clientY??window.innerHeight/2)-13+"px";
+  document.body.appendChild(el); setTimeout(()=>el.remove(),1200);
 }
 
-// ── Float emoji on react ──────────────────────────────────────
-function spawnFloat(emoji, e) {
-    const el = document.createElement("div");
-    el.className = "float-emoji";
-    el.textContent = emoji;
-    const x = e?.clientX ?? window.innerWidth / 2;
-    const y = e?.clientY ?? window.innerHeight / 2;
-    el.style.left = (x - 13) + "px";
-    el.style.top  = (y - 13) + "px";
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 1200);
-}
-
-// ── Emoji picker ──────────────────────────────────────────────
 function openPicker(postId) {
-    currentPickerPostId = postId;
-    const grid = document.getElementById("emojiGrid");
-    grid.innerHTML = ALL_EMOJIS.map(e =>
-        `<div class="emoji-opt" onclick="pickEmoji('${e}',event)">${e}</div>`
-    ).join("");
-    document.getElementById("emojiSheet").classList.add("open");
-    document.getElementById("pickerOverlay").classList.add("open");
+  currentPickerPostId=postId;
+  const grid=document.getElementById("emojiGrid");
+  grid.innerHTML=ALL_EMOJIS.map(e=>`<div class="emoji-opt" onclick="pickEmoji('${e}',event)">${e}</div>`).join("");
+  document.getElementById("emojiSheet").classList.add("open");
+  document.getElementById("pickerOverlay").classList.add("open");
 }
 function closePicker() {
-    document.getElementById("emojiSheet").classList.remove("open");
-    document.getElementById("pickerOverlay").classList.remove("open");
-    currentPickerPostId = null;
+  document.getElementById("emojiSheet").classList.remove("open");
+  document.getElementById("pickerOverlay").classList.remove("open");
+  currentPickerPostId=null;
 }
-function pickEmoji(emoji, e) {
-    if (!currentPickerPostId) return;
-    toggleReaction(currentPickerPostId, emoji, e);
-    closePicker();
-}
-
-// ── Helpers ───────────────────────────────────────────────────
-function esc(s) {
-    return String(s||"")
-        .replace(/&/g,"&amp;").replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-}
-function toast(msg) {
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.style.opacity = 1;
-    setTimeout(() => t.style.opacity = 0, 2500);
+function pickEmoji(emoji,e) {
+  if(!currentPickerPostId)return;
+  toggleReaction(currentPickerPostId,emoji,e); closePicker();
 }
 
-// ── Unread badge ──────────────────────────────────────────────
-function checkBadge() {
-    const lastSeen = parseInt(localStorage.getItem("lastSeenFeed") || "0");
-    db.ref("feedPosts").orderByChild("timestamp").startAt(lastSeen + 1).once("value", snap => {
-        const count = snap.numChildren();
-        if (count > 0) {
-            const b = document.getElementById("feedsBadge");
-            b.textContent = count;
-            b.style.display = "inline-block";
-        }
-    });
+function esc(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function timeAgo(ts) {
+  const d=Date.now()-ts, m=Math.floor(d/60000), h=Math.floor(d/3600000),
+        dy=Math.floor(d/86400000), mo=Math.floor(dy/30), yr=Math.floor(dy/365);
+  if(m<1)return"just now"; if(m<60)return m+"m ago"; if(h<24)return h+"h ago";
+  if(dy<7)return dy+"d ago"; if(dy<30)return Math.floor(dy/7)+"w ago";
+  if(mo<12)return mo+" mo ago"; return yr+"yr"+(yr>1?"s":"")+" ago";
 }
-function markSeen() {
-    localStorage.setItem("lastSeenFeed", Date.now().toString());
-    document.getElementById("feedsBadge").style.display = "none";
+function showToast(msg) {
+  const t=document.getElementById("toast"); t.textContent=msg; t.style.opacity=1;
+  setTimeout(()=>t.style.opacity=0,3000);
+}
+
+// ── Nigeria unread badge ──────────────────────────────────────
+function checkNigeriaBadge() {
+  const lastSeen = parseInt(localStorage.getItem("ngFeedSeen") || "0");
+  db.ref("nigeriaFeed").orderByChild("timestamp").startAt(lastSeen+1).once("value", snap => {
+    const count = snap.numChildren();
+    if (count > 0 && !tutorialActive) {
+      const t = document.getElementById("tabNigeria");
+      t.setAttribute("data-count", count);
+      t.classList.add("has-unread");
+    }
+  });
+}
+
+// ── Global unread badge (header) ─────────────────────────────
+function checkGlobalBadge() {
+  const lastSeen = parseInt(localStorage.getItem("lastSeenFeed")||"0");
+  db.ref("feedPosts").orderByChild("timestamp").startAt(lastSeen+1).once("value", snap => {
+    const count = snap.numChildren();
+    if (count > 0) {
+      const b=document.getElementById("feedsBadge");
+      b.textContent=count; b.style.display="inline-block";
+    }
+  });
+  localStorage.setItem("lastSeenFeed", Date.now().toString());
 }
 
 // ── Boot ──────────────────────────────────────────────────────
-db.ref("feedPosts").orderByChild("timestamp").on("value", snap => {
-    livePosts = [];
-    snap.forEach(c => livePosts.push({ id: c.key, ...c.val() }));
-    livePosts.reverse();
-    renderContent();
+// Live Nigeria posts
+db.ref("nigeriaFeed").orderByChild("timestamp").on("value", snap => {
+  nigeriaLivePosts = [];
+  snap.forEach(c => nigeriaLivePosts.push({id:c.key,...c.val()}));
+  nigeriaLivePosts.reverse();
+  if (currentTab === "nigeria") renderContent();
 });
 
-checkBadge();
-markSeen();
+// Live global posts
+db.ref("feedPosts").orderByChild("timestamp").on("value", snap => {
+  livePosts = [];
+  snap.forEach(c => livePosts.push({id:c.key,...c.val()}));
+  livePosts.reverse();
+  if (currentTab !== "nigeria") renderContent();
+});
+
+checkGlobalBadge();
+checkNigeriaBadge();
+renderContent();
+checkTutorial();
 </script>
 </body>
 </html>

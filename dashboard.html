@@ -416,11 +416,12 @@ body {
       Tasks
     </div>
 
-    <div class="box" onclick="nav('feeds.html')">
-      <div class="box-icon">
-        <svg viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h7"/><circle cx="18" cy="18" r="3"/></svg>
+    <div class="box" onclick="nav('feeds.html')" style="position:relative;">
+      <div class="icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00ffcc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h7"/><circle cx="18" cy="18" r="3"/></svg>
       </div>
-      Feeds
+      <div>Feeds</div>
+      <div id="dashFeedsBadge" style="display:none;position:absolute;top:6px;right:6px;background:#ef4444;color:#fff;font-size:10px;font-weight:800;padding:2px 6px;border-radius:999px;min-width:16px;text-align:center;"></div>
     </div>
 
   </div>
@@ -556,7 +557,19 @@ async function loadUser() {
   }
   await initBanners(d);
 }
-
+// Nigeria feed unread badge on dashboard
+function checkDashFeedBadge() {
+  const lastSeen = parseInt(localStorage.getItem("ngFeedSeen") || "0");
+  db.ref("nigeriaFeed").orderByChild("timestamp").startAt(lastSeen + 1).once("value", snap => {
+    const count = snap.numChildren();
+    const badge = document.getElementById("dashFeedsBadge");
+    if (badge && count > 0) {
+      badge.textContent = count;
+      badge.style.display = "block";
+    }
+  });
+}
+checkDashFeedBadge();
 // ── SLIDER + LOADER (outside auth — no auth needed) ──────────
 let slideIdx = 0;
 window.addEventListener("load", () => {
