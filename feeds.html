@@ -336,11 +336,12 @@ function renderNigeria(content) {
       const card = document.createElement("div");
       card.className = "nigeria-post";
       card.innerHTML = `
-        <div class="ng-post-header">
-          <span class="ng-cat">${esc(p.category || "Update")}</span>
-          <span>${timeAgo(p.timestamp || Date.now())}</span>
-        </div>
-        <div class="ng-post-title">${esc(p.title || p.message || "")}</div>`;
+      <div class="ng-post-header">
+        <span class="ng-cat">${esc(p.category || "Update")}</span>
+        <span>${timeAgo(p.timestamp || Date.now())}</span>
+      </div>
+      <div class="ng-post-title">${esc(p.title || p.message || "")}</div>
+      ${p.body && p.body !== p.title ? `<div style="font-size:13px;color:#94a3b8;margin-top:10px;line-height:1.7;white-space:pre-line;">${esc(p.body)}</div>` : ""}`;
       content.appendChild(card);
     });
   }
