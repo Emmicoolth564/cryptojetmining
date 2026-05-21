@@ -201,8 +201,22 @@ const staticPosts = [
 // ── Tutorial check ────────────────────────────────────────────
 async function checkTutorial() {
   if (!uid || uid.startsWith("g_")) return;
+  const fromDashboard = new URLSearchParams(window.location.search).get("tutorial") === "1";
   const snap = await db.ref(`users/${uid}/tutorialDone`).once("value");
   if (snap.val() !== true) {
+    if (fromDashboard) {
+      // Auto-switch to Nigeria tab immediately
+      tutorialActive = true;
+      tutorialStep   = 1;
+      const t = document.getElementById("tabNigeria");
+      t.setAttribute("data-count","1");
+      t.classList.add("has-unread");
+      switchTab("nigeria", t);
+      setTimeout(() => {
+        document.getElementById("tutOverlay").classList.add("show");
+      }, 600);
+      return;
+    }
     tutorialActive = true;
     tutorialStep   = 1;
     // Mark Nigeria tab as having 1 unread

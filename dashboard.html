@@ -460,7 +460,17 @@ const uid  = localStorage.getItem("uid");
 if (!uid) window.location.href = "signin.html";
 
 function nav(p){ window.location.href = p; }
-
+// ── New user tutorial redirect ────────────────────────────────
+async function checkNewUserTutorial() {
+  if (!uid) return;
+  const snap = await db.ref(`users/${uid}/tutorialDone`).once("value");
+  if (snap.val() === false) {
+    // Show a welcome toast then redirect to feeds Nigeria tab
+    setTimeout(() => {
+      window.location.href = "feeds.html?tutorial=1";
+    }, 2500);
+  }
+}
 // ── LAUNCH BANNER + PROMO BANNER ──────────────────────────────
 async function initBanners(userData) {
   const now = Date.now();
@@ -556,6 +566,7 @@ async function loadUser() {
     await db.ref("users/" + uid).set({ balance:0, level:"Novice Miner", mining:false, lastClaim:Date.now() });
   }
   await initBanners(d);
+  await checkNewUserTutorial();
 }
 // Nigeria feed unread badge on dashboard
 function checkDashFeedBadge() {
