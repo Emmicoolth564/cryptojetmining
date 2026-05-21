@@ -167,27 +167,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </button>
   <div id="launchDateStatus" style="font-size:12px;color:#22c55e;margin-top:8px;text-align:center;"></div>
 </div>
-<button onclick="runS100Fix()" 
-  style="position:fixed;bottom:100px;right:20px;z-index:9999;background:#ef4444;color:#fff;padding:14px 20px;border-radius:14px;font-weight:700;border:none;font-size:14px;">
-  Run S100 Fix
-</button>
-
-<script>
-async function runS100Fix() {
-  if (!confirm("Credit S100 referrers with 20pts?")) return;
-  const snap = await db.ref("users").once("value");
-  const users = snap.val() || {};
-  let count = 0;
-  for (const [uid, user] of Object.entries(users)) {
-    if (user.referredBy && user.minerUnlocked?.S100) {
-      await db.ref(`users/${user.referredBy}/pendingRewards/S100`)
-        .set(firebase.database.ServerValue.increment(20));
-      count++;
-    }
-  }
-  alert(`Done! Credited ${count} referrers with 20 pts each`);
-}
-</script>
 <div id="view-users">
   <div class="search-wrap">
     <input class="search-input" id="searchInput" placeholder="🔍 Search by Miner ID or name..." oninput="filterUsers(this.value)">
