@@ -122,8 +122,8 @@ body { font-family:'Inter',system-ui,sans-serif; background:#020617; color:#e2e8
 
 <!-- TABS -->
 <div class="tabs">
-  <div class="tab nigeria-tab" id="tabNigeria" data-count="" onclick="switchTab('nigeria',this)">🇳🇬 Nigeria</div>
-  <div class="tab active" id="tabAll"       onclick="switchTab('all',this)">🌎 Global</div>
+  <div class="tab nigeria-tab active" id="tabNigeria" data-count="" onclick="switchTab('nigeria',this)">🇳🇬 Nigeria</div>
+  <div class="tab" id="tabAll" onclick="switchTab('all',this)">🌎 Global</div>
   <div class="tab" onclick="switchTab('news',this)">News</div>
   <div class="tab" onclick="switchTab('update',this)">Updates</div>
   <div class="tab" onclick="switchTab('community',this)">Community</div>
@@ -161,7 +161,7 @@ const GROUP_LINK      = "https://chat.whatsapp.com/LQcTtNPAi2gDvWwBXei6zw?mode=g
 const MANAGER_NUMBER  = "https://wa.me/19707808174"; // ← replace with manager WA link
 const MANAGER_DISPLAY = "+1 970-780-8174"; 
 
-let currentTab       = "all";
+let currentTab = "nigeria";
 let livePosts        = [];
 let nigeriaLivePosts = [];
 let myReactions      = JSON.parse(localStorage.getItem("cj_reactions") || "{}");
