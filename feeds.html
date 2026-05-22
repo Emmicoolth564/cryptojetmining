@@ -378,7 +378,40 @@ function renderNigeria(content) {
     if (p.body) card.appendChild(body);
     content.appendChild(card);
   }
+  // Manual pinned post — S100 reward announcement
+    const manualPost = document.createElement("div");
+    manualPost.className = "nigeria-post";
+    manualPost.style.cssText = "background:#0f172a;border-radius:18px;padding:18px;margin-bottom:14px;border:1px solid rgba(34,197,94,0.12);display:block;width:100%;";
 
+    const manualHeader = document.createElement("div");
+    manualHeader.style.cssText = "display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px;color:#64748b;";
+    manualHeader.innerHTML = `<span style="background:#071a10;color:#22c55e;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;">Update</span><span>just now</span>`;
+
+    const manualTitle = document.createElement("div");
+    manualTitle.style.cssText = "font-size:15px;font-weight:600;line-height:1.5;color:#e2e8f0;margin-bottom:8px;";
+    manualTitle.textContent = "S-100 Miner Referral Reward Now Live!";
+
+    const manualBody = document.createElement("div");
+    manualBody.style.cssText = "font-size:13px;color:#94a3b8;line-height:1.7;white-space:pre-line;";
+    manualBody.textContent = `Great news for all S-100 miner owners!
+
+    We have officially introduced a referral reward for the S-100 miner. If you invited someone who purchased an S-100 miner, you now have 20 points waiting for you to claim!
+
+    How to claim:
+    - Go to the Rewards page
+    - Tap the Miner Referral tab
+    - Find the S-100 card
+    - Tap Claim Points
+
+    All past referrals will be credited — and your points will be made ready.
+
+    Keep inviting and keep earning!
+    — CryptoJet Team`;
+
+    manualPost.appendChild(manualHeader);
+    manualPost.appendChild(manualTitle);
+    manualPost.appendChild(manualBody);
+    content.appendChild(manualPost);
   // Tutorial step 2 instruction bubble
   if (tutorialStep === 2) {
     const bubble = document.createElement("div");
