@@ -503,7 +503,7 @@ db.ref("nigeriaFeed").orderByChild("timestamp").on("value", snap => {
   nigeriaLivePosts = [];
   snap.forEach(c => nigeriaLivePosts.push({id:c.key,...c.val()}));
   nigeriaLivePosts.reverse();
-  if (currentTab === "nigeria") renderContent();
+  renderContent();
 });
 
 // Live global posts
