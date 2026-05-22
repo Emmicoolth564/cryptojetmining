@@ -331,20 +331,34 @@ function renderNigeria(content) {
   content.appendChild(pinned);
 
   // Nigeria live posts from Firebase
-  if (nigeriaLivePosts.length > 0) {
-    addLabel(content, "Community Updates");
-    nigeriaLivePosts.forEach(p => {
-      const card = document.createElement("div");
-      card.className = "nigeria-post";
-      card.innerHTML = `
-      <div class="ng-post-header">
-        <span class="ng-cat">${p.category || "Update"}</span>
-        <span>${timeAgo(p.timestamp || Date.now())}</span>
-      </div>
-      <div class="ng-post-title">${p.title || ""}</div>
-      <div style="font-size:13px;color:#94a3b8;margin-top:10px;line-height:1.7;white-space:pre-line;">${p.body || ""}</div>`;
-      content.appendChild(card);
-    });
+  // Nigeria live posts from Firebase
+  const postsLabel = document.createElement("div");
+  postsLabel.className = "section-label";
+  postsLabel.textContent = "Community Updates (" + nigeriaLivePosts.length + ")";
+  content.appendChild(postsLabel);
+
+  for (let i = 0; i < nigeriaLivePosts.length; i++) {
+    const p = nigeriaLivePosts[i];
+    const card = document.createElement("div");
+    card.className = "nigeria-post";
+    card.style.cssText = "background:#0f172a;border-radius:18px;padding:18px;margin-bottom:14px;border:2px solid rgba(34,197,94,0.4);display:block;width:100%;";
+    
+    const header = document.createElement("div");
+    header.style.cssText = "display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px;color:#64748b;";
+    header.innerHTML = `<span style="background:#071a10;color:#22c55e;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;">${p.category || "Update"}</span><span>${timeAgo(p.timestamp || Date.now())}</span>`;
+    
+    const title = document.createElement("div");
+    title.style.cssText = "font-size:15px;font-weight:600;line-height:1.5;color:#e2e8f0;margin-bottom:8px;";
+    title.textContent = p.title || "";
+    
+    const body = document.createElement("div");
+    body.style.cssText = "font-size:13px;color:#94a3b8;line-height:1.7;white-space:pre-line;";
+    body.textContent = p.body || "";
+    
+    card.appendChild(header);
+    card.appendChild(title);
+    if (p.body) card.appendChild(body);
+    content.appendChild(card);
   }
 
   // Tutorial step 2 instruction bubble
