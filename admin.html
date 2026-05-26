@@ -151,6 +151,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="tab"        id="tab-manage"  onclick="window.location.href='manage-transactions.html'">🔧 Manage Tx</div>
   <div class="tab" onclick="window.location.href='miner-monitor.html'">⛏ Miner Monitor</div>
   <div class="tab" onclick="window.location.href='salary.html'">💰 Salary</div>
+  <div class="tab" onclick="switchTab('active-teams',this)">🟢 Active Teams</div>
 
 </div>
 
@@ -180,6 +181,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="tx-list" id="allTxList"></div>
   <button class="load-more-btn" id="loadMoreBtn" style="display:none" onclick="loadMoreTx()">Load More Transactions</button>
 </div>
+<div id="view-active-teams" style="display:none;padding:0 16px 80px;"></div>
 
 <div class="detail-panel" id="detailPanel">
   <div class="dp-header">
@@ -285,6 +287,8 @@ function switchTab(name, el) {
   document.getElementById("view-users").style.display   = name === "users"   ? "block" : "none";
   document.getElementById("view-pending").style.display = name === "pending" ? "block" : "none";
   document.getElementById("view-all-tx").style.display  = name === "all-tx"  ? "block" : "none";
+  document.getElementById("view-active-teams").style.display = name === "active-teams" ? "block" : "none";
+  if (name === "active-teams") renderActiveTeams();
   if (name === "pending") renderPending();
   if (name === "all-tx")  renderAllTx(true);
 }
@@ -330,7 +334,96 @@ async function renderPending() {
   list.innerHTML = entries.length ? "" : `<div class="empty">No pending transactions 🎉</div>`;
   entries.forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, true)));
 }
+async function renderActiveTeams() {
+  const container = document.getElementById("view-active-teams");
+  container.innerHTML = `<div class="empty"><div class="empty-spin"></div><p style="margin-top:12px;color:var(--muted);">Loading active teams...</p></div>`;
 
+  // Find all users with active miners
+  const activeUids = new Set();
+  Object.entries(allUsers).forEach(([uid, u]) => {
+    const miners  = u.miners || {};
+    const hasActive = Object.values(miners).some(m =>
+      m && m.start && !m.planComplete
+    );
+    if (hasActive) activeUids.add(uid);
+  });
+
+  // Group active users under their referrer
+  const teams = {}; // { referrerUid: [activeMembers] }
+  activeUids.forEach(uid => {
+    const u = allUsers[uid];
+    const referrer = u.referredBy;
+    if (referrer && allUsers[referrer]) {
+      if (!teams[referrer]) teams[referrer] = [];
+      teams[referrer].push({ uid, ...u });
+    }
+  });
+
+  // Sort team leaders by team size
+  const sorted = Object.entries(teams).sort((a,b) => b[1].length - a[1].length);
+
+  if (!sorted.length) {
+    container.innerHTML = `<div class="empty">No active teams found</div>`;
+    return;
+  }
+
+  // Stats strip
+  const totalActive = activeUids.size;
+  container.innerHTML = `
+    <div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.15);border-radius:16px;padding:14px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Total Active Miners</div>
+        <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:#00ff88;">${totalActive}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Team Leaders</div>
+        <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--neon);">${sorted.length}</div>
+      </div>
+    </div>`;
+
+  sorted.forEach(([leaderUid, members]) => {
+    const leader = allUsers[leaderUid];
+    const leaderActive = activeUids.has(leaderUid);
+
+    const card = document.createElement("div");
+    card.style.cssText = "background:var(--s1);border-radius:18px;margin-bottom:14px;border:1px solid var(--border);overflow:hidden;";
+    card.innerHTML = `
+      <div style="padding:14px 18px;background:var(--s2);display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.2);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--neon);">${(leader.minerId||"?").slice(0,2)}</div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--neon);">${leader.minerId||"Unknown"}</div>
+            <div style="font-size:12px;color:var(--muted);">${leader.name||"—"} · ${leader.level||"Novice"}</div>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#00ff88;">${members.length}</div>
+          <div style="font-size:11px;color:var(--muted);">active members</div>
+        </div>
+      </div>
+      <div style="display:none;">
+        ${members.map(m => {
+          const minerCount = Object.values(m.miners||{}).filter(x => x && x.start && !x.planComplete).length;
+          const minerNames = Object.keys(m.minerUnlocked||{}).join(", ") || "—";
+          return `
+          <div style="padding:12px 18px;border-top:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="openDetail('${m.uid}',null)">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#00ff88;box-shadow:0 0 6px #00ff88;flex-shrink:0;"></div>
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--text);">${m.minerId||"—"}</div>
+                <div style="font-size:11px;color:var(--muted);">${minerNames}</div>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:13px;font-weight:700;color:#00ff88;">$${(m.balance||0).toFixed(2)}</div>
+              <div style="font-size:11px;color:var(--muted);">${minerCount} miner${minerCount!==1?"s":""} running</div>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>`;
+    container.appendChild(card);
+  });
+}
 async function renderAllTx(reset = true) {
   if (reset) {
     allTxOldestKey = null;
