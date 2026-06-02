@@ -1005,28 +1005,5 @@ window.addEventListener("load", async () => {
   });
 });
 </script>
-<button onclick="fixMiners()" style="position:fixed;bottom:100px;right:16px;z-index:9999;background:#ef4444;color:#fff;padding:14px 20px;border-radius:14px;font-weight:700;border:none;font-size:14px;box-shadow:0 4px 20px rgba(239,68,68,0.4);">
-  🔧 Fix Miners
-</button>
-
-<script>
-async function fixMiners() {
-  if (!confirm("Reset wrongly credited second miners?")) return;
-  const snap  = await db.ref("users").once("value");
-  const users = snap.val() || {};
-  let fixed   = 0;
-  for (const [uid, user] of Object.entries(users)) {
-    const miners = user.miners || {};
-    for (const key of ["S100_2","S244_2"]) {
-      const m = miners[key];
-      if (m && m.totalCredited > 0 && m.purchaseDate) {
-        await db.ref(`users/${uid}/miners/${key}/totalCredited`).set(0);
-        fixed++;
-      }
-    }
-  }
-  alert(`✅ Done! Fixed ${fixed} miners.`);
-}
-</script>
 </body>
 </html>
