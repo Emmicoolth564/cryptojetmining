@@ -1199,7 +1199,7 @@ async function initiateJoint(id, perUser) {
   if (!cfg) return;
 
   const stockSnap = await db.ref("platformSettings/jointMinerStock").once("value");
-  const stock     = stockSnap.val() ?? 0;
+  const stock     = stockSnap.val() ?? 30;
   if (stock <= 0) return alert("Sorry! All 30 joint miner slots are full.");
 
   const partnerInput = prompt(`Enter your teammate's Miner ID:\n(e.g. CJ1234)\n\nThey must be in your team tree.`);
