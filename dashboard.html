@@ -208,11 +208,14 @@ body {
   display:none;
 }
 .promo-banner {
-  margin:10px 14px 0;border-radius:16px;padding:12px 16px;
+  margin:10px 14px 0;
+  border-radius:16px;
+  padding:12px 16px;
   background:linear-gradient(135deg,rgba(0,255,136,0.08),rgba(0,240,255,0.05));
   border:1px solid rgba(0,255,136,0.2);
-  display:none;            /* ← keep only this */
-  align-items:center;gap:12px;  /* ← remove the display:flex, keep these */
+  display:none;
+  align-items:center;
+  gap:12px;
 }
 .lb-top {
   background:linear-gradient(90deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));
@@ -231,12 +234,7 @@ body {
 .lb-unit {flex:1;background:rgba(0,0,0,0.3);border-radius:12px;padding:10px 4px;text-align:center;border:1px solid rgba(245,158,11,0.1);}
 .lb-num {font-size:22px;font-weight:800;color:#f59e0b;font-family:monospace;display:block;}
 .lb-lbl {font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;display:block;}
-.promo-banner {
-  margin:10px 14px 0;border-radius:16px;padding:12px 16px;
-  background:linear-gradient(135deg,rgba(0,255,136,0.08),rgba(0,240,255,0.05));
-  border:1px solid rgba(0,255,136,0.2);display:none;
-  display:flex;align-items:center;gap:12px;
-}
+
 .promo-icon {font-size:22px;flex-shrink:0;}
 .promo-text .pt {font-size:13px;font-weight:700;color:#00ff88;}
 .promo-text .ps {font-size:11px;color:#64748b;margin-top:2px;}
@@ -515,6 +513,12 @@ async function initBanners(userData) {
 auth.onAuthStateChanged(user => {
   if (!user) { window.location.href = "signin.html"; return; }
 
+  // Hide loader as soon as auth confirms — don't wait for images
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+    document.querySelector(".page-content").style.opacity = "1";
+  }, 800);
+
   // Balance, team, points — live
   db.ref("users/" + uid).on("value", snap => {
     const d = snap.val() || {};
@@ -592,11 +596,11 @@ checkDashFeedBadge();
 // ── SLIDER + LOADER (outside auth — no auth needed) ──────────
 let slideIdx = 0;
 window.addEventListener("load", () => {
-  // Hide loader
+  // Fallback — hide loader after 4s no matter what
   setTimeout(() => {
     document.getElementById("loader").style.display = "none";
     document.querySelector(".page-content").style.opacity = "1";
-  }, 1500);
+  }, 4000);
 
   // Slider
   const slides      = document.querySelector(".slides");
