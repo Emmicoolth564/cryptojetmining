@@ -1197,6 +1197,7 @@ function addJointLabel(parent, text, color) {
 async function initiateJoint(id, perUser) {
   const cfg = JOINT_MINERS[id];
   if (!cfg) return;
+  return alert("🤝 Joint Mining\n\nThis feature is not available for your team yet.\n\nStay tuned — it's coming soon!");
 
   const stockSnap = await db.ref("platformSettings/jointMinerStock").once("value");
   const stock     = stockSnap.val() ?? 30;
