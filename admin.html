@@ -923,7 +923,10 @@ function toast(msg) {
 <button onclick="fixMiners()" style="position:fixed;bottom:100px;right:16px;z-index:9999;background:#ef4444;color:#fff;padding:14px 20px;border-radius:14px;font-weight:700;border:none;font-size:14px;box-shadow:0 4px 20px rgba(239,68,68,0.4);">
   🔧 Fix Miners
 </button>
-
+<button onclick="firebase.database().ref('platformSettings/jointMinerStock').set(30).then(()=>alert('✅ Stock set to 30!'))"
+  style="position:fixed;bottom:200px;right:16px;z-index:9999;background:#a855f7;color:#fff;padding:14px;border-radius:14px;font-weight:700;border:none;">
+  Init Joint Stock
+</button>
 <script>
 async function fixMiners() {
   if (!confirm("Reset wrongly credited second miners?")) return;
