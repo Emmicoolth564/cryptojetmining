@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bonus Codes • CryptoJet</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#020617;color:#e2e8f0;min-height:100vh;padding-bottom:100px;}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:#060b14;display:flex;align-items:center;justify-content:center;z-index:9999;}
+.loader-wrap{display:flex;flex-direction:column;align-items:center;}
+.ring-outer{position:relative;width:100px;height:100px;margin-bottom:20px;}
+.lring{position:absolute;top:0;left:0;width:100px;height:100px;}
+.lr-track{fill:none;stroke:rgba(0,240,255,0.06);stroke-width:2;}
+.lr-spin{fill:none;stroke:url(#lg);stroke-width:2;stroke-linecap:round;stroke-dasharray:140 200;animation:spin 1.8s linear infinite;transform-origin:50px 50px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.brand{font-size:18px;font-weight:800;color:#00ffcc;}
+.brand-s{font-size:10px;color:rgba(139,160,184,0.6);margin-top:3px;letter-spacing:0.1em;text-transform:uppercase;}
+
+/* HEADER */
+.header{padding:20px 16px 0;display:flex;align-items:center;gap:12px;}
+.back-btn{width:38px;height:38px;border-radius:12px;background:rgba(0,240,255,0.06);border:1px solid rgba(0,240,255,0.12);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#00f0ff;text-decoration:none;}
+.page-title{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#e2e8f0;}
+
+.wrap{padding:20px 16px;}
+
+/* HERO */
+.hero{text-align:center;padding:28px 20px 24px;background:linear-gradient(145deg,#0a1628,#0f1f38);border-radius:24px;border:1px solid rgba(0,240,255,0.1);margin-bottom:20px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:200px;height:200px;border-radius:50%;background:rgba(0,240,255,0.04);pointer-events:none;}
+.hero-icon{font-size:48px;margin-bottom:12px;display:block;}
+.hero-title{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:800;color:#00ffcc;margin-bottom:6px;}
+.hero-sub{font-size:13px;color:#64748b;line-height:1.7;max-width:260px;margin:auto;}
+
+/* INPUT SECTION */
+.input-card{background:#0c1628;border-radius:20px;padding:20px;border:1px solid rgba(0,240,255,0.1);margin-bottom:16px;}
+.input-label{font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.code-wrap{display:flex;gap:10px;margin-bottom:0;}
+.code-input{
+  flex:1;padding:16px 18px;
+  background:#111f35;
+  border:2px solid rgba(0,240,255,0.15);
+  border-radius:14px;
+  color:#00ffcc;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:18px;font-weight:700;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  outline:none;
+  transition:border-color 0.2s;
+}
+.code-input::placeholder{color:#334155;font-size:14px;letter-spacing:0.04em;font-weight:500;}
+.code-input:focus{border-color:rgba(0,240,255,0.5);}
+.claim-btn{
+  padding:16px 22px;
+  background:linear-gradient(90deg,#00f0ff,#00ffcc);
+  color:#000;font-weight:800;font-size:15px;
+  border:none;border-radius:14px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  transition:0.2s;white-space:nowrap;
+  min-width:100px;
+}
+.claim-btn:active{transform:scale(0.97);}
+.claim-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+
+/* FEEDBACK */
+.feedback{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:13px;font-weight:600;display:none;align-items:center;gap:8px;}
+.feedback.success{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:#22c55e;display:flex;}
+.feedback.error  {background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#f87171;display:flex;}
+.feedback.loading{background:rgba(0,240,255,0.06);border:1px solid rgba(0,240,255,0.15);color:#00f0ff;display:flex;}
+
+/* SUCCESS POP */
+.success-pop{
+  display:none;position:fixed;inset:0;z-index:9998;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+}
+.success-pop.show{display:flex;}
+.success-card{
+  background:linear-gradient(145deg,#0a1628,#0f1f38);
+  border:1px solid rgba(34,197,94,0.4);
+  border-radius:28px;padding:36px 28px;
+  text-align:center;max-width:300px;width:90%;
+  animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+.pop-icon{font-size:56px;margin-bottom:16px;display:block;animation:bounce 0.6s 0.2s ease both;}
+@keyframes bounce{0%{transform:scale(0);}60%{transform:scale(1.2);}100%{transform:scale(1);}}
+.pop-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;color:#22c55e;margin-bottom:6px;}
+.pop-amount{font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:800;color:#00ffcc;margin:10px 0 6px;}
+.pop-sub{font-size:13px;color:#64748b;margin-bottom:24px;}
+.pop-btn{width:100%;padding:14px;background:linear-gradient(90deg,#22c55e,#00ffcc);color:#000;font-weight:800;font-size:15px;border:none;border-radius:14px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* HOW IT WORKS */
+.how-card{background:#0c1628;border-radius:20px;padding:18px 20px;border:1px solid rgba(255,255,255,0.04);margin-bottom:16px;}
+.how-title{font-size:13px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;}
+.how-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.how-step:last-child{margin-bottom:0;}
+.step-num{width:26px;height:26px;border-radius:8px;background:rgba(0,240,255,0.08);border:1px solid rgba(0,240,255,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#00f0ff;flex-shrink:0;}
+.step-text{font-size:13px;color:#94a3b8;line-height:1.6;padding-top:3px;}
+.step-text strong{color:#e2e8f0;}
+
+/* HISTORY */
+.history-card{background:#0c1628;border-radius:20px;padding:18px 20px;border:1px solid rgba(255,255,255,0.04);}
+.history-title{font-size:13px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;}
+.history-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.history-item:last-child{border-bottom:none;}
+.h-left{}
+.h-code{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#e2e8f0;letter-spacing:0.06em;}
+.h-date{font-size:11px;color:#475569;margin-top:2px;}
+.h-amount{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#22c55e;}
+.empty-history{text-align:center;padding:24px 0;font-size:13px;color:#334155;}
+
+/* NAV */
+.nav-glass{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:90%;height:68px;display:flex;justify-content:space-around;align-items:center;background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border-radius:25px;box-shadow:0 8px 30px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);z-index:999;}
+.nav-item{display:flex;flex-direction:column;align-items:center;font-size:11px;color:#64748b;cursor:pointer;}
+.nav-item.active{color:#00ffcc;}
+.n-icon{font-size:20px;margin-bottom:3px;}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-wrap">
+    <div class="ring-outer">
+      <svg class="lring" viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00ffcc" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#00f0ff" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#00ffcc" stop-opacity="0.3"/>
+          </linearGradient>
+        </defs>
+        <circle class="lr-track" cx="50" cy="50" r="45"/>
+        <circle class="lr-spin"  cx="50" cy="50" r="45"/>
+      </svg>
+    </div>
+    <div class="brand">CryptoJet</div>
+    <div class="brand-s">Loading bonuses</div>
+  </div>
+</div>
+
+<!-- SUCCESS POPUP -->
+<div class="success-pop" id="successPop" onclick="closePop()">
+  <div class="success-card" onclick="event.stopPropagation()">
+    <span class="pop-icon">🎉</span>
+    <div class="pop-title">Bonus Claimed!</div>
+    <div class="pop-amount" id="popAmount">+$0.00</div>
+    <div class="pop-sub" id="popDesc">has been added to your balance</div>
+    <button class="pop-btn" onclick="closePop()">Awesome, let's go!</button>
+  </div>
+</div>
+
+<div class="header">
+  <a href="me.html" class="back-btn">←</a>
+  <div class="page-title">🎁 Bonus Codes</div>
+</div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-icon">🎁</span>
+    <div class="hero-title">Got a Code?</div>
+    <div class="hero-sub">Enter your exclusive bonus code below to instantly credit your balance.</div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-card">
+    <div class="input-label">Enter Bonus Code</div>
+    <div class="code-wrap">
+      <input type="text" class="code-input" id="codeInput" placeholder="e.g. LAUNCH50" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false">
+      <button class="claim-btn" id="claimBtn" onclick="claimCode()">Claim</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-card">
+    <div class="how-title">How it works</div>
+    <div class="how-step">
+      <div class="step-num">1</div>
+      <div class="step-text">Get a <strong>bonus code</strong> from the CryptoJet team via WhatsApp or the Nigeria feed</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">2</div>
+      <div class="step-text">Type the code exactly as given and tap <strong>Claim</strong></div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">3</div>
+      <div class="step-text">Your bonus is <strong>instantly added</strong> to your balance — no waiting</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">4</div>
+      <div class="step-text">Each code can only be claimed <strong>once</strong> — first come, first served</div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-card">
+    <div class="history-title">Claimed History</div>
+    <div id="historyList"><div class="empty-history">No bonuses claimed yet</div></div>
+  </div>
+
+</div>
+
+<div class="nav-glass">
+  <div class="nav-item" onclick="window.location.href='dashboard.html'"><div class="n-icon">🏠</div><span>Home</span></div>
+  <div class="nav-item" onclick="window.location.href='miner.html'"><div class="n-icon">⚡</div><span>Miner</span></div>
+  <div class="nav-item active" onclick="window.location.href='me.html'"><div class="n-icon">👤</div><span>Me</span></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
+  authDomain:"cj-miner.firebaseapp.com",
+  databaseURL:"https://cj-miner-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"cj-miner"
+});
+const db   = firebase.database();
+const auth = firebase.auth();
+const uid  = localStorage.getItem("uid");
+if (!uid) window.location.href = "signin.html";
+
+function showFeedback(msg, type) {
+  const f = document.getElementById("feedback");
+  const icons = { success:"✅", error:"❌", loading:"⏳" };
+  f.className = "feedback " + type;
+  f.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+}
+
+function hideFeedback() {
+  document.getElementById("feedback").className = "feedback";
+}
+
+function closePop() {
+  document.getElementById("successPop").classList.remove("show");
+}
+
+// Enforce uppercase as user types
+document.getElementById("codeInput").addEventListener("input", function() {
+  const pos = this.selectionStart;
+  this.value = this.value.toUpperCase();
+  this.setSelectionRange(pos, pos);
+});
+
+// Allow Enter key to claim
+document.getElementById("codeInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") claimCode();
+});
+
+async function claimCode() {
+  const input = document.getElementById("codeInput");
+  const btn   = document.getElementById("claimBtn");
+  const code  = input.value.trim().toUpperCase();
+
+  if (!code) return showFeedback("Enter a code first.", "error");
+
+  btn.disabled = true;
+  showFeedback("Checking code...", "loading");
+
+  try {
+    // 1. Check if code exists
+    const codeSnap = await db.ref(`promoCodes/${code}`).once("value");
+    if (!codeSnap.exists()) {
+      btn.disabled = false;
+      return showFeedback("Invalid code. Check and try again.", "error");
+    }
+
+    const codeData = codeSnap.val();
+
+    // 2. Check if already claimed by anyone
+    if (codeData.claimedBy) {
+      btn.disabled = false;
+      return showFeedback("This code has already been claimed.", "error");
+    }
+
+    // 3. Check if active
+    if (codeData.active === false) {
+      btn.disabled = false;
+      return showFeedback("This code is no longer active.", "error");
+    }
+
+    // 4. Check expiry
+    if (codeData.expiresAt && codeData.expiresAt > 0 && Date.now() > codeData.expiresAt) {
+      btn.disabled = false;
+      return showFeedback("This code has expired.", "error");
+    }
+
+    // 5. Check user hasn't claimed it before (extra safety)
+    const userClaimSnap = await db.ref(`users/${uid}/claimedCodes/${code}`).once("value");
+    if (userClaimSnap.exists()) {
+      btn.disabled = false;
+      return showFeedback("You have already claimed this code.", "error");
+    }
+
+    const amount = codeData.amount || 0;
+    const now    = Date.now();
+
+    // 6. Mark code as claimed atomically
+    await db.ref(`promoCodes/${code}`).update({
+      claimedBy: uid,
+      claimedAt: now,
+      active:    false
+    });
+
+    // 7. Credit balance using transaction
+    await db.ref(`users/${uid}/balance`).transaction(b => (b || 0) + amount);
+
+    // 8. Log to user's claimed codes
+    await db.ref(`users/${uid}/claimedCodes/${code}`).set({
+      amount,
+      description: codeData.description || "Bonus credit",
+      claimedAt:   now
+    });
+
+    // 9. Log transaction
+    const txRef = db.ref("transactions").push();
+    const txData = {
+      uid, type:"bonus", method:"promo_code",
+      amount, code,
+      description: codeData.description || "Bonus code",
+      status:"approved", date: now
+    };
+    await txRef.set(txData);
+    await db.ref(`userTransactions/${uid}/${txRef.key}`).set(txData);
+
+    // 10. Show success
+    input.value = "";
+    btn.disabled = false;
+    hideFeedback();
+
+    document.getElementById("popAmount").textContent = `+$${amount.toFixed(2)}`;
+    document.getElementById("popDesc").textContent   = `${codeData.description || "Bonus"} has been added to your balance`;
+    document.getElementById("successPop").classList.add("show");
+
+    loadHistory();
+
+  } catch(e) {
+    btn.disabled = false;
+    showFeedback("Something went wrong. Please try again.", "error");
+    console.error(e);
+  }
+}
+
+async function loadHistory() {
+  const snap = await db.ref(`users/${uid}/claimedCodes`).once("value");
+  const list = document.getElementById("historyList");
+  if (!snap.exists()) {
+    list.innerHTML = `<div class="empty-history">No bonuses claimed yet</div>`;
+    return;
+  }
+  const entries = Object.entries(snap.val()).sort((a,b) => b[1].claimedAt - a[1].claimedAt);
+  list.innerHTML = entries.map(([code, data]) => `
+    <div class="history-item">
+      <div class="h-left">
+        <div class="h-code">${code}</div>
+        <div class="h-date">${new Date(data.claimedAt).toLocaleDateString("en-NG", {day:"numeric",month:"short",year:"numeric"})} · ${data.description || "Bonus"}</div>
+      </div>
+      <div class="h-amount">+$${(data.amount||0).toFixed(2)}</div>
+    </div>`).join("");
+}
+
+auth.onAuthStateChanged(user => {
+  if (!user) { window.location.href = "signin.html"; return; }
+  loadHistory();
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+  }, 1000);
+});
+</script>
+</body>
+</html>
