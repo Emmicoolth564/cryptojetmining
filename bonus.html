@@ -37,7 +37,7 @@ body{font-family:'DM Sans',sans-serif;background:#020617;color:#e2e8f0;min-heigh
 /* INPUT SECTION */
 .input-card{background:#0c1628;border-radius:20px;padding:20px;border:1px solid rgba(0,240,255,0.1);margin-bottom:16px;}
 .input-label{font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
-.code-wrap{display:flex;gap:10px;margin-bottom:0;}
+.code-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:0;}
 .code-input{
   flex:1;padding:16px 18px;
   background:#111f35;
@@ -54,13 +54,13 @@ body{font-family:'DM Sans',sans-serif;background:#020617;color:#e2e8f0;min-heigh
 .code-input::placeholder{color:#334155;font-size:14px;letter-spacing:0.04em;font-weight:500;}
 .code-input:focus{border-color:rgba(0,240,255,0.5);}
 .claim-btn{
-  padding:16px 22px;
+  width:100%;
+  padding:16px;
   background:linear-gradient(90deg,#00f0ff,#00ffcc);
   color:#000;font-weight:800;font-size:15px;
   border:none;border-radius:14px;cursor:pointer;
   font-family:'DM Sans',sans-serif;
-  transition:0.2s;white-space:nowrap;
-  min-width:100px;
+  transition:0.2s;
 }
 .claim-btn:active{transform:scale(0.97);}
 .claim-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
