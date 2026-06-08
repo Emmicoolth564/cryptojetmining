@@ -433,12 +433,14 @@ function showBank(d) {
     <div class="card">
       <h3 style="font-size:20px; font-weight:600; margin-bottom:24px;">Add Bank Account</h3>
       <input id="name" placeholder="Account Name">
-      <input id="number" placeholder="Account Number">
-      <input id="search" placeholder="Search bank">
-      <div class="list" id="list"></div>
+      <input id="number" placeholder="Account Number" type="number" inputmode="numeric">
+      <div onclick="openBankPicker()" style="cursor:pointer;margin-top:12px;">
+        <input id="search" placeholder="Tap to select your bank" readonly
+          style="cursor:pointer;caret-color:transparent;"
+          value="${selected || ''}">
+      </div>
       <button onclick="saveBank()" class="button">Save Account</button>
     </div>`;
-    renderList("list", "search");
   } else {
     // SAVED ACCOUNT MODE
     selected = d.bank;
@@ -485,10 +487,12 @@ function renderList(id, searchId) {
 
 /* SAVE BANK */
 function saveBank() {
-  let name = document.getElementById("name").value.trim();
+  let name   = document.getElementById("name").value.trim();
   let number = document.getElementById("number").value.trim();
 
-  if (!name || !number || !selected) return toast("Please complete all fields");
+  if (!name)     return toast("Enter your account name");
+  if (!number)   return toast("Enter your account number");
+  if (!selected) return toast("Tap to select your bank");
 
   db.ref("users/" + uid).update({
     bank: selected,
