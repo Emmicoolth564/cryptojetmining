@@ -145,8 +145,6 @@ input:focus, select:focus, textarea:focus { border-color:#22c55e; outline:none; 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
-alert("⚠️ Crypto deposits are temporarily unavailable.\n\nPlease use bank transfer to fund your account.\n\nWe apologize for the inconvenience.");
-window.location.href = "me.html";
 const firebaseConfig = {
     apiKey: "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
     authDomain: "cj-miner.firebaseapp.com",
@@ -204,6 +202,10 @@ async function hasPendingRecharge() {
 
 // ── TAB SWITCH ────────────────────────────────────────────────
 function switchTab(tab) {
+    if (tab === "usdt") {
+        alert("⚠️ USDT deposits are temporarily unavailable.\n\nPlease use Bank Transfer to fund your account.\n\nWe apologize for the inconvenience.");
+        return;
+    }
     currentTab = tab;
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     document.getElementById("tab-" + tab).classList.add("active");
@@ -620,8 +622,8 @@ function toast(msg) {
 
 window.onload = () => {
     if (currentTab === "usdt") {
-        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-        document.getElementById("tab-usdt").classList.add("active");
+        currentTab = "bank";
+        localStorage.setItem("cj_r_tab", "bank");
     }
     renderTab(currentTab);
 };
