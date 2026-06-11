@@ -164,7 +164,10 @@ const URL_VERIFY_USDT      = "https://verifyusdt-t34xxkwqvq-ew.a.run.app";
 const SECRET         = "cryptojet_secret_2024";
 const BOT_TOKEN      = "8687599772:AAE2eZDkvIuHzVKJV_MuMuSvqzYAaqfVc34";
 const ADMIN_CHAT_ID  = 8641367651;
-const REFERENCE_CODE = "CJ14FRW";
+let REFERENCE_CODE = "Loading...";
+db.ref(`users/${uid}/minerId`).once("value", s => {
+  REFERENCE_CODE = s.val() || uid.slice(0,8);
+});
 const WALLETS = {
     bep20: "0xb166ce9d4f636bc5e5281e9a4be9e1f8d8efca08",
     trc20: "TZHhMiV4r9ucL6UXN7QR9rvyv2KB5DZWVZ"
