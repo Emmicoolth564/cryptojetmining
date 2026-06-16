@@ -512,8 +512,24 @@ window.onload = () => {
     setMode("signin");
   }
   const params = new URLSearchParams(window.location.search);
-  const ref    = params.get("ref");
-  if (ref) localStorage.setItem("referrer", ref);
+const ref    = params.get("ref");
+if (ref) {
+  const code = ref.trim().toUpperCase();
+  localStorage.setItem("pendingRef", code);
+  // Auto-fill the referral code input
+  const emailRef = document.getElementById("refCodeInput");
+  const phoneRef = document.getElementById("phoneRefCodeInput");
+  if (emailRef) emailRef.value = code;
+  if (phoneRef) phoneRef.value = code;
+}
+// Also fill from stored pendingRef if already saved
+const stored = localStorage.getItem("pendingRef");
+if (stored) {
+  const emailRef = document.getElementById("refCodeInput");
+  const phoneRef = document.getElementById("phoneRefCodeInput");
+  if (emailRef && !emailRef.value) emailRef.value = stored;
+  if (phoneRef && !phoneRef.value) phoneRef.value = stored;
+}
 };
 </script>
 </body>
