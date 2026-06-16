@@ -284,6 +284,12 @@ body {
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
+// Auto-capture referral from URL
+const urlParams  = new URLSearchParams(window.location.search);
+const refFromUrl = urlParams.get("ref");
+if (refFromUrl) {
+  localStorage.setItem("pendingRef", refFromUrl.trim().toUpperCase());
+}
 const firebaseConfig = {
   apiKey:      "AIzaSyC6FpkoVyWoDxnzSqC39X8_pqwoEyc7tvw",
   authDomain:  "cj-miner.firebaseapp.com",
@@ -441,18 +447,24 @@ async function createUserProfile(uid, name, emailOrPhone, isPhone = false) {
   };
   if (isPhone) userData.phone = emailOrPhone;
   else         userData.email = emailOrPhone;
-  const params   = new URLSearchParams(window.location.search);
-  // Try URL param first, then localStorage, then manual code input
-const manualCode = (document.getElementById("refCodeInput")?.value.trim() ||
-                   document.getElementById("phoneRefCodeInput")?.value.trim() || "").toUpperCase();
+    // Get ref code — manual input takes priority, then stored pendingRef
+  const manualCode = (
+    document.getElementById("refCodeInput")?.value.trim() ||
+    document.getElementById("phoneRefCodeInput")?.value.trim() ||
+    localStorage.getItem("pendingRef") || ""
+  ).toUpperCase();
 
-let referrer = params.get("ref") || localStorage.getItem("referrer");
+  let referrer = null;
 
-// If no URL ref, look up the manual code in Firebase by minerId
-if (!referrer && manualCode) {
-  const codeSnap = await db.ref("users").orderByChild("minerId").equalTo(manualCode).once("value");
-  const codeData = codeSnap.val();
-  if (codeData) referrer = Object.keys(codeData)[0];
+  // Always look up by minerId to get proper Firebase UID
+  if (manualCode) {
+    const codeSnap = await db.ref("users")
+      .orderByChild("minerId")
+      .equalTo(manualCode)
+      .once("value");
+    if (codeSnap.exists()) {
+      referrer = Object.keys(codeSnap.val())[0]; // This is the real Firebase UID
+    }
 }
   if (referrer && referrer !== uid) {
     userData.referredBy = referrer;
@@ -466,6 +478,7 @@ if (!referrer && manualCode) {
     });
 }
   await db.ref("users/" + uid).set(userData);
+  localStorage.removeItem("pendingRef");
   localStorage.removeItem("referrer");
 }
 

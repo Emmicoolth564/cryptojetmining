@@ -134,7 +134,7 @@ auth.onAuthStateChanged(user => {
   db.ref("users/" + uid).on("value", snap => {
     const d = snap.val() || {};
     myMinerId = d.minerId || "";
-    refLinkVal = window.location.origin + "/index.html?ref=" + uid;
+    refLinkVal = window.location.origin + "/signin.html?ref=" + myMinerId;
 
     document.getElementById("refLink").innerText   = refLinkVal;
     document.getElementById("inviteCode").innerText = myMinerId || "Loading...";
