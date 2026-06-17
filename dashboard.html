@@ -564,10 +564,14 @@ async function loadUser() {
     }
     document.getElementById("minerLevel").innerText = d.level || "Novice Miner";
   } else {
-    document.getElementById("userId").innerText     = uid;
+    const newId = "CJ" + Math.floor(1000 + Math.random() * 9000);
+    document.getElementById("userId").innerText     = newId;
     document.getElementById("minerLevel").innerText = "Novice Miner";
-    await db.ref("users/" + uid).set({ balance:0, level:"Novice Miner", mining:false, lastClaim:Date.now() });
-  }
+    await db.ref("users/" + uid).set({
+      balance: 0, level: "Novice Miner", mining: false, lastClaim: Date.now(),
+      minerId: newId, team: 0, points: 0, createdAt: Date.now(), tutorialDone: false
+    });
+}
   await initBanners(d);
   await checkNewUserTutorial();
 }

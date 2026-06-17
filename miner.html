@@ -1216,10 +1216,9 @@ async function initiateJoint(id, perUser) {
   if (!partnerInput) return;
 
   const partnerMinerId = partnerInput.trim().toUpperCase();
-  const searchSnap     = await db.ref("users").orderByChild("minerId").equalTo(partnerMinerId).once("value");
-  if (!searchSnap.exists()) return alert("Miner ID not found. Check and try again.");
-
-  const partnerUid = Object.keys(searchSnap.val())[0];
+  const indexSnap = await db.ref("minerIdIndex/" + partnerMinerId).once("value");
+  if (!indexSnap.exists()) return alert("Miner ID not found. Check and try again.");
+  const partnerUid = indexSnap.val();
   if (partnerUid === uid) return alert("You can't invite yourself!");
 
   const meSnap  = await db.ref(`users/${uid}`).once("value");

@@ -168,6 +168,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     style="width:100%;padding:13px;background:linear-gradient(90deg,#00ffcc,#00f0ff);color:#000;font-weight:700;border:none;border-radius:12px;cursor:pointer;font-size:14px;">
     💾 Save Launch Date
   </button>
+  <button onclick="backfillIndex()" style="position:fixed;bottom:240px;right:16px;z-index:9999;background:#a855f7;color:#fff;padding:14px;border-radius:14px;font-weight:700;border:none;">
+  🔧 Backfill Index
+</button>
+
+<script>
+async function backfillIndex() {
+  if (!confirm("Backfill minerId and name index for all users?")) return;
+  const snap  = await db.ref("users").once("value");
+  const users = snap.val() || {};
+  const updates = {};
+  Object.entries(users).forEach(([uid, u]) => {
+    if (u.minerId) updates[`minerIdIndex/${u.minerId}`] = uid;
+    if (u.name)    updates[`nameIndex/${u.name}`]        = uid;
+  });
+  await db.ref().update(updates);
+  alert(`✅ Backfilled ${Object.keys(updates).length} index entries`);
+}
+</script>
   <div id="launchDateStatus" style="font-size:12px;color:#22c55e;margin-top:8px;text-align:center;"></div>
 </div>
 <div id="view-users">

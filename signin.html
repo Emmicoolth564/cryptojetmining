@@ -268,7 +268,7 @@ body {
     <button class="main-btn" id="mainBtn" onclick="handleAuth()">Create Account</button>
 </div>
 
-<div class="switch-link">
+<div class="switch-link" id="switchLink">
     Already have an account? <span onclick="setMode('signin')">Sign In</span>
   </div>
 
@@ -354,8 +354,15 @@ async function handleEmailAuth() {
   if (!email || !password) throw { message:"Please fill all fields" };
 
   if (isSignUp) {
+    if (!name) throw { message:"Please enter your full name" };
     if (password.length < 6)  throw { message:"Password must be at least 6 characters" };
     if (password !== confirm) throw { message:"Passwords do not match" };
+
+    // Check for duplicate name
+    // Check for duplicate name using index
+    const nameSnap = await db.ref("nameIndex/" + name).once("value");
+    if (nameSnap.exists()) throw { message:"⚠️ This name is already taken. Please use a different name." };
+
     const cred = await auth.createUserWithEmailAndPassword(email, password);
     await createUserProfile(cred.user.uid, name, email);
     localStorage.setItem("uid", cred.user.uid);
@@ -381,8 +388,15 @@ async function handlePhoneAuth() {
   if (!phone || !password) throw { message:"Please fill all fields" };
   const fakeEmail = phone.replace(/[^0-9]/g,"") + "@phone.cryptojet";
   if (isSignUp) {
+    if (!name) throw { message:"Please enter your full name" };
     if (password.length < 6)  throw { message:"Password must be at least 6 characters" };
     if (password !== confirm) throw { message:"Passwords do not match" };
+
+    // Check for duplicate name
+    // Check for duplicate name using index
+    const nameSnap = await db.ref("nameIndex/" + name).once("value");
+    if (nameSnap.exists()) throw { message:"⚠️ This name is already taken. Please use a different name." };
+
     const cred = await auth.createUserWithEmailAndPassword(fakeEmail, password);
     await createUserProfile(cred.user.uid, name, code + phone, true);
     localStorage.setItem("uid", cred.user.uid);
@@ -458,13 +472,10 @@ async function createUserProfile(uid, name, emailOrPhone, isPhone = false) {
 
   // Always look up by minerId to get proper Firebase UID
   if (manualCode) {
-    const codeSnap = await db.ref("users")
-      .orderByChild("minerId")
-      .equalTo(manualCode)
-      .once("value");
-    if (codeSnap.exists()) {
-      referrer = Object.keys(codeSnap.val())[0]; // This is the real Firebase UID
-    }
+  const indexSnap = await db.ref("minerIdIndex/" + manualCode).once("value");
+  if (indexSnap.exists()) {
+    referrer = indexSnap.val();
+  }
 }
   if (referrer && referrer !== uid) {
     userData.referredBy = referrer;
@@ -478,6 +489,8 @@ async function createUserProfile(uid, name, emailOrPhone, isPhone = false) {
     });
 }
   await db.ref("users/" + uid).set(userData);
+  await db.ref("minerIdIndex/" + userData.minerId).set(uid);
+  await db.ref("nameIndex/" + (name || "miner")).set(uid);
   localStorage.removeItem("pendingRef");
   localStorage.removeItem("referrer");
 }
