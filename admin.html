@@ -250,19 +250,33 @@ window.addEventListener("load", () => {
       window.location.href = "signin.html";
       return;
     }
-    await loadUsers();
+    renderUsersPage(true);
     loadPendingCount();
+    loadFullUsersInBackground();
     const params  = new URLSearchParams(window.location.search);
     const deepUid = params.get("uid");
-    if (deepUid && allUsers[deepUid]) openDetail(deepUid, allUsers[deepUid]);
+    if (deepUid) openDetail(deepUid, null);
   });
 });
 
-async function loadUsers() {
-  const snap = await db.ref("users").once("value");
-  allUsers = snap.val() || {};
-  updateStripStats();
-  renderUsers();
+let usersLoaded = false;
+let usersLoadingPromise = null;
+function loadFullUsersInBackground() {
+  if (usersLoadingPromise) return usersLoadingPromise;
+  usersLoadingPromise = db.ref("users").once("value").then(snap => {
+    allUsers = Object.assign({}, allUsers, snap.val() || {});
+    usersLoaded = true;
+    updateStripStats();
+  });
+  return usersLoadingPromise;
+}
+
+async function getUserCached(uid) {
+  if (allUsers[uid]) return allUsers[uid];
+  const snap = await db.ref("users/" + uid).once("value");
+  const u = snap.val() || {};
+  allUsers[uid] = u;
+  return u;
 }
 
 async function loadPendingCount() {
