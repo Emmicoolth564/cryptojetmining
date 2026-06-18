@@ -355,6 +355,7 @@ async function handleEmailAuth() {
 
   if (isSignUp) {
     if (!name) throw { message:"Please enter your full name" };
+    if (/[.#$\/\[\]]/.test(name)) throw { message:"Your name contains a character that isn't allowed (. # $ / [ ]). Please remove it and try again." };
     if (password.length < 6)  throw { message:"Password must be at least 6 characters" };
     if (password !== confirm) throw { message:"Passwords do not match" };
 
@@ -389,6 +390,7 @@ async function handlePhoneAuth() {
   const fakeEmail = phone.replace(/[^0-9]/g,"") + "@phone.cryptojet";
   if (isSignUp) {
     if (!name) throw { message:"Please enter your full name" };
+    if (/[.#$\/\[\]]/.test(name)) throw { message:"Your name contains a character that isn't allowed (. # $ / [ ]). Please remove it and try again." };
     if (password.length < 6)  throw { message:"Password must be at least 6 characters" };
     if (password !== confirm) throw { message:"Passwords do not match" };
 
@@ -496,7 +498,7 @@ async function createUserProfile(uid, name, emailOrPhone, isPhone = false) {
 }
 
 // ── ERRORS ────────────────────────────────────────────────────
-function friendlyError(code) {
+function friendlyError(codeOrMessage) {
   const map = {
     "auth/email-already-in-use":   "This email is already registered. Try signing in.",
     "auth/user-not-found":         "No account found. Please sign up first.",
@@ -507,7 +509,22 @@ function friendlyError(code) {
     "auth/network-request-failed": "Network error. Check your connection.",
     "auth/invalid-credential":     "Incorrect email or password.",
   };
-  return map[code] || "Something went wrong. Please try again.";
+
+  // Known Firebase Auth error code — translate it
+  if (map[codeOrMessage]) return map[codeOrMessage];
+
+  // Raw Firebase internal errors — give a clear explanation
+  if (typeof codeOrMessage === "string") {
+    if (codeOrMessage.includes("invalid key"))
+      return "Your name contains a character that isn't allowed (like . # $ / [ ]). Please remove it and try again.";
+    if (codeOrMessage.includes("PERMISSION_DENIED"))
+      return "You don't have permission to do that right now. Please contact support.";
+    if (codeOrMessage.toLowerCase().includes("network"))
+      return "Network error. Please check your connection and try again.";
+  }
+
+  // Otherwise this is already a clear message we wrote ourselves — show it as-is
+  return codeOrMessage || "Something went wrong. Please try again.";
 }
 
 // ── TOAST ─────────────────────────────────────────────────────
