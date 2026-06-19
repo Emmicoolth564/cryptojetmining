@@ -391,12 +391,25 @@ async function checkAndUpdateLevel() {
   }
   const membersSnap = await db.ref("users/" + uid + "/teamMembers").once("value");
   const members     = membersSnap.val() || {};
-  const l1Active    = Object.values(members).filter(m => m.hasMiner === true).length;
-  const incomeSnap  = await db.ref("teamIncome/" + uid).once("value");
-  const income      = incomeSnap.val() || {};
+  const l1Uids      = Object.keys(members);
+  const l1Active    = l1Uids.filter(m => members[m].hasMiner === true).length;
+
   const uniqueActive = new Set();
-  Object.keys(members).forEach(mUid => { if (members[mUid].hasMiner) uniqueActive.add(mUid); });
-  Object.values(income).forEach(r => { if (r.fromUid) uniqueActive.add(r.fromUid); });
+  l1Uids.forEach(mUid => { if (members[mUid].hasMiner) uniqueActive.add(mUid); });
+
+  // Walk level 2 and level 3 directly from the referral tree — no longer depends on teamIncome history
+  for (const l1uid of l1Uids) {
+    const l2Snap = await db.ref("users/" + l1uid + "/teamMembers").once("value");
+    const l2Members = l2Snap.val() || {};
+    for (const l2uid of Object.keys(l2Members)) {
+      if (l2Members[l2uid].hasMiner) uniqueActive.add(l2uid);
+      const l3Snap = await db.ref("users/" + l2uid + "/teamMembers").once("value");
+      const l3Members = l3Snap.val() || {};
+      Object.keys(l3Members).forEach(l3uid => {
+        if (l3Members[l3uid].hasMiner) uniqueActive.add(l3uid);
+      });
+    }
+  }
   const totalActive = uniqueActive.size;
   document.getElementById("activeTeamCount").textContent = totalActive;
 

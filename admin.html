@@ -171,7 +171,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <button onclick="backfillIndex()" style="position:fixed;bottom:240px;right:16px;z-index:9999;background:#a855f7;color:#fff;padding:14px;border-radius:14px;font-weight:700;border:none;">
   🔧 Backfill Index
 </button>
-
+<div class="sec-card" style="margin:16px;">
+  <div class="sec-title">🏆 Recalculate All Team Levels</div>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">
+    Fixes any user whose Level 2 / Level 3 team members weren't being recognized. Safe to run anytime — recalculates everyone's level instantly from their real referral tree.
+  </p>
+  <button onclick="recalculateAllLevels()"
+    style="width:100%;padding:13px;background:linear-gradient(90deg,#a855f7,#00f0ff);color:#fff;font-weight:700;border:none;border-radius:12px;cursor:pointer;font-size:14px;">
+    🔄 Recalculate All Levels Now
+  </button>
+  <div id="levelFixStatus" style="font-size:12px;color:#22c55e;margin-top:8px;text-align:center;"></div>
+</div>
 <script>
 async function backfillIndex() {
   if (!confirm("Backfill minerId and name index for all users?")) return;
@@ -1024,6 +1034,79 @@ function loadUserTxs() {
         </div>
       </div>`).join("");
   });
+}
+const LEVEL_THRESHOLDS_ASC = [
+  { dbName:"Novice Miner", l1:0,   total:0   },
+  { dbName:"Junior Miner", l1:5,   total:20  },
+  { dbName:"Pro Miner",    l1:10,  total:50  },
+  { dbName:"Elite Miner",  l1:25,  total:75  },
+  { dbName:"Legend Miner", l1:50,  total:150 },
+  { dbName:"Employee",     l1:100, total:500 }
+];
+
+function computeLevelFromCounts(l1Active, totalActive) {
+  let result = LEVEL_THRESHOLDS_ASC[0].dbName;
+  for (const tier of LEVEL_THRESHOLDS_ASC) {
+    if (l1Active >= tier.l1 && totalActive >= tier.total) result = tier.dbName;
+  }
+  return result;
+}
+
+async function recalculateAllLevels() {
+  if (!confirm("Recalculate every user's level based on their real referral tree? Safe to run anytime.")) return;
+
+  const statusEl = document.getElementById("levelFixStatus");
+  statusEl.textContent = "Loading all users...";
+
+  const snap  = await db.ref("users").once("value");
+  const users = snap.val() || {};
+
+  const l1Counts = {};
+  const totalActiveSets = {};
+  function addActive(map, key, val) {
+    if (!map[key]) map[key] = new Set();
+    map[key].add(val);
+  }
+
+  Object.entries(users).forEach(([uid, u]) => {
+    const isActive = Object.keys(u.minerUnlocked || {}).length > 0;
+    if (!isActive) return;
+    const l1 = u.referredBy;
+    if (!l1) return;
+    l1Counts[l1] = (l1Counts[l1] || 0) + 1;
+    addActive(totalActiveSets, l1, uid);
+    const l2 = users[l1] ? users[l1].referredBy : null;
+    if (l2) {
+      addActive(totalActiveSets, l2, uid);
+      const l3 = users[l2] ? users[l2].referredBy : null;
+      if (l3) addActive(totalActiveSets, l3, uid);
+    }
+  });
+
+  statusEl.textContent = "Calculating levels...";
+
+  const updates = {};
+  let correctedCount = 0;
+
+  Object.entries(users).forEach(([uid, u]) => {
+    if (u.levelOverride) return;
+    const l1Active    = l1Counts[uid] || 0;
+    const totalActive = totalActiveSets[uid] ? totalActiveSets[uid].size : 0;
+    const correctLevel = computeLevelFromCounts(l1Active, totalActive);
+    if ((u.level || "Novice Miner") !== correctLevel) {
+      updates["users/" + uid + "/level"] = correctLevel;
+      correctedCount++;
+    }
+  });
+
+  if (correctedCount === 0) {
+    statusEl.textContent = "✅ All levels were already correct!";
+    return;
+  }
+
+  await db.ref().update(updates);
+  statusEl.textContent = `✅ Fixed ${correctedCount} user level(s)!`;
+  alert(`✅ Done! Corrected ${correctedCount} user level(s).`);
 }
 
 function toast(msg) {
