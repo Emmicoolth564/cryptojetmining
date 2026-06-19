@@ -327,35 +327,111 @@ function switchTab(name, el) {
   if (name === "all-tx")  renderAllTx(true);
 }
 
-function renderUsers(filter = "") {
-  const grid = document.getElementById("usersGrid");
-  grid.innerHTML = "";
-  Object.entries(allUsers).forEach(([uid, u]) => {
-    const id = u.minerId || "N/A";
-    if (filter && !id.toLowerCase().includes(filter.toLowerCase()) && !(u.name||"").toLowerCase().includes(filter.toLowerCase())) return;
-    const teamSize = Object.values(allUsers).filter(x => x.referredBy === uid).length;
-    const card     = document.createElement("div");
-    card.className = "user-card";
-    card.onclick   = () => openDetail(uid, u);
-    card.innerHTML = `
-      <div class="uc-header">
-        <div class="uc-id">${id}</div>
-        <div class="uc-level">${u.level || "Novice"}</div>
-      </div>
-      <div class="uc-row"><span class="uc-lbl">Name</span><span class="uc-val">${u.name||"—"}</span></div>
-      <div class="uc-row"><span class="uc-lbl">Balance</span><span class="uc-val green">$${(u.balance||0).toFixed(2)}</span></div>
-      <div class="uc-row"><span class="uc-lbl">Team Income</span><span class="uc-val gold">$${(u.team||0).toFixed(2)}</span></div>
-      <div class="uc-row"><span class="uc-lbl">Team Size</span><span class="uc-val">${teamSize} members</span></div>
-      <div class="uc-row"><span class="uc-lbl">Referred By</span><span class="uc-val">${getReferrerName(u.referredBy)}</span></div>`;
-    grid.appendChild(card);
-  });
-  if (!grid.children.length) grid.innerHTML = `<div class="empty">No users found</div>`;
+const USERS_PAGE_SIZE = 30;
+let usersOldestKey = null;
+let usersExhausted = false;
+
+function buildUserCard(uid, u) {
+  const id = u.minerId || "N/A";
+  const card = document.createElement("div");
+  card.className = "user-card";
+  card.onclick = () => openDetail(uid, u);
+  card.innerHTML = `
+    <div class="uc-header">
+      <div class="uc-id">${id}</div>
+      <div class="uc-level">${u.level || "Novice"}</div>
+    </div>
+    <div class="uc-row"><span class="uc-lbl">Name</span><span class="uc-val">${u.name||"—"}</span></div>
+    <div class="uc-row"><span class="uc-lbl">Balance</span><span class="uc-val green">$${(u.balance||0).toFixed(2)}</span></div>
+    <div class="uc-row"><span class="uc-lbl">Team Income</span><span class="uc-val gold">$${(u.team||0).toFixed(2)}</span></div>
+    <div class="uc-row"><span class="uc-lbl">Referrals</span><span class="uc-val">${u.referrals||0} members</span></div>
+    <div class="uc-row"><span class="uc-lbl">Referred By</span><span class="uc-val" id="refname-${uid}">${u.referredBy ? "Loading..." : "None"}</span></div>`;
+  if (u.referredBy) resolveReferrerName(uid, u.referredBy);
+  return card;
 }
 
-function filterUsers(v) { renderUsers(v); }
-function getReferrerName(refUid) {
-  if (!refUid) return "None";
-  return (allUsers[refUid] && allUsers[refUid].minerId) || "Unknown";
+async function resolveReferrerName(uid, refUid) {
+  let minerId = allUsers[refUid] && allUsers[refUid].minerId;
+  if (!minerId) {
+    const snap = await db.ref("users/" + refUid + "/minerId").once("value");
+    minerId = snap.val();
+  }
+  const el = document.getElementById("refname-" + uid);
+  if (el) el.textContent = minerId || "Unknown";
+}
+
+async function renderUsersPage(reset = true) {
+  const grid = document.getElementById("usersGrid");
+  if (reset) {
+    usersOldestKey = null;
+    usersExhausted = false;
+    grid.innerHTML = `<div class="empty"><div class="empty-spin"></div></div>`;
+  }
+  if (usersExhausted) return;
+
+  let query = db.ref("users").orderByKey().limitToLast(USERS_PAGE_SIZE + 1);
+  if (usersOldestKey) query = query.endAt(usersOldestKey);
+  const snap = await query.once("value");
+  const entries = [];
+  snap.forEach(c => entries.push([c.key, c.val()]));
+  if (usersOldestKey) entries.shift();
+  entries.reverse();
+
+  if (reset) grid.innerHTML = "";
+  entries.forEach(([uid, u]) => {
+    allUsers[uid] = u;
+    grid.appendChild(buildUserCard(uid, u));
+  });
+
+  const hasMore = entries.length >= USERS_PAGE_SIZE;
+  if (entries.length) usersOldestKey = Object.keys(snap.val() || {})[0];
+  usersExhausted = !hasMore;
+
+  if (!grid.children.length) grid.innerHTML = `<div class="empty">No users found</div>`;
+
+  let moreBtn = document.getElementById("usersLoadMoreBtn");
+  if (!moreBtn) {
+    moreBtn = document.createElement("button");
+    moreBtn.id = "usersLoadMoreBtn";
+    moreBtn.className = "load-more-btn";
+    moreBtn.textContent = "Load More Users";
+    moreBtn.onclick = () => renderUsersPage(false);
+    grid.parentElement.appendChild(moreBtn);
+  }
+  moreBtn.style.display = usersExhausted ? "none" : "block";
+}
+
+let searchDebounce = null;
+function filterUsers(v) {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(() => doSearch(v.trim()), 300);
+}
+
+async function doSearch(query) {
+  const grid = document.getElementById("usersGrid");
+  const moreBtn = document.getElementById("usersLoadMoreBtn");
+  if (!query) { if (moreBtn) moreBtn.remove(); renderUsersPage(true); return; }
+
+  grid.innerHTML = `<div class="empty"><div class="empty-spin"></div></div>`;
+  if (moreBtn) moreBtn.style.display = "none";
+
+  const upper = query.toUpperCase();
+  const midSnap = await db.ref("minerIdIndex").orderByKey().startAt(upper).endAt(upper + "\uf8ff").limitToFirst(20).once("value");
+  const midMatches = [];
+  midSnap.forEach(c => midMatches.push(c.val()));
+
+  const nameSnap = await db.ref("nameIndex").orderByKey().startAt(query).endAt(query + "\uf8ff").limitToFirst(20).once("value");
+  const nameMatches = [];
+  nameSnap.forEach(c => nameMatches.push(c.val()));
+
+  const uids = Array.from(new Set(midMatches.concat(nameMatches)));
+  if (!uids.length) { grid.innerHTML = `<div class="empty">No users found</div>`; return; }
+
+  grid.innerHTML = "";
+  for (const uid of uids) {
+    const u = await getUserCached(uid);
+    grid.appendChild(buildUserCard(uid, u));
+  }
 }
 
 async function renderPending() {
@@ -366,11 +442,15 @@ async function renderPending() {
   snap.forEach(child => entries.push([child.key, child.val()]));
   entries.sort((a, b) => (b[1].date||0) - (a[1].date||0));
   list.innerHTML = entries.length ? "" : `<div class="empty">No pending transactions 🎉</div>`;
-  entries.forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, true)));
+  for (const [txId, tx] of entries) {
+    const u = await getUserCached(tx.uid);
+    list.appendChild(buildTxCard(txId, tx, u, true));
+  }
 }
 async function renderActiveTeams() {
   const container = document.getElementById("view-active-teams");
   container.innerHTML = `<div class="empty"><div class="empty-spin"></div><p style="margin-top:12px;color:var(--muted);">Loading active teams...</p></div>`;
+  await loadFullUsersInBackground();
 
   // Find all users with active miners
   const activeUids = new Set();
@@ -478,7 +558,10 @@ async function renderAllTx(reset = true) {
   const hasMore = entries.length > TX_PAGE_SIZE;
   const page    = hasMore ? entries.slice(0, TX_PAGE_SIZE) : entries;
   if (reset) list.innerHTML = "";
-  page.forEach(([txId, tx]) => list.appendChild(buildTxCard(txId, tx, allUsers[tx.uid]||{}, false)));
+  for (const [txId, tx] of page) {
+    const u = await getUserCached(tx.uid);
+    list.appendChild(buildTxCard(txId, tx, u, false));
+  }
   if (page.length) allTxOldestKey = page[page.length - 1][0];
   allTxExhausted = !hasMore;
   btn.disabled = false; btn.textContent = "Load More Transactions";
@@ -607,8 +690,8 @@ function updateTxCardStatus(txId, status) {
 }
 
 // ── OPEN USER DETAIL ──────────────────────────────────────────
-function openDetail(uid, userData) {
-  if (!userData) userData = allUsers[uid] || {};
+async function openDetail(uid, userData) {
+  if (!userData) userData = await getUserCached(uid);
   document.getElementById("dpTitle").textContent  = userData.minerId || "User Detail";
   document.getElementById("dpTitle").dataset.uid  = uid;
   document.getElementById("dpBody").innerHTML     = buildDetailHTML(uid, userData);
