@@ -487,6 +487,12 @@ async function createUserProfile(uid, name, emailOrPhone, isPhone = false) {
 }
   if (referrer && referrer !== uid) {
     userData.referredBy = referrer;
+
+    // Precompute this user's 3-level upline chain for fast, single-shot commission distribution later
+    const referrerChainSnap = await db.ref("users/" + referrer + "/uplineChain").once("value");
+    const referrerChain = referrerChainSnap.val() || [];
+    userData.uplineChain = [referrer].concat(referrerChain).slice(0, 3);
+
     db.ref("users/" + referrer + "/referrals").set(firebase.database.ServerValue.increment(1));
     db.ref("users/" + referrer + "/pendingRewards/signup").set(firebase.database.ServerValue.increment(3));
     db.ref("users/" + referrer + "/teamMembers/" + uid).set({

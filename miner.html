@@ -763,33 +763,35 @@ async function forceRestart(id, key, mData) {
     }
 }
 async function creditReferralChain(earnerUid, earnedAmount, minerName) {
-  let currentUid    = earnerUid;
-  const earnerSnap  = await db.ref(`users/${earnerUid}/minerId`).once("value");
-  const earnerMiner = earnerSnap.val() || earnerUid.substring(0, 8);
+  const chain = userData.uplineChain || [];
+  if (!chain.length) return;
 
-  for (const { level, pct } of REFERRAL_LEVELS) {
-    const refSnap     = await db.ref(`users/${currentUid}/referredBy`).once("value");
-    const referrerUid = refSnap.val();
-    if (!referrerUid) break;
+  const earnerMiner = userData.minerId || earnerUid.substring(0, 8);
+  const now = Date.now();
+  const updates = {};
+
+  REFERRAL_LEVELS.forEach(({ level, pct }, idx) => {
+    const referrerUid = chain[idx];
+    if (!referrerUid) return;
 
     const teamCredit = parseFloat((earnedAmount * pct).toFixed(4));
-    if (teamCredit <= 0) { currentUid = referrerUid; continue; }
+    if (teamCredit <= 0) return;
 
-    await db.ref(`users/${referrerUid}/team`).set(
-      firebase.database.ServerValue.increment(teamCredit)
-    );
-
-    await db.ref(`teamIncome/${referrerUid}`).push({
+    updates[`users/${referrerUid}/team`] = firebase.database.ServerValue.increment(teamCredit);
+    const key = db.ref(`teamIncome/${referrerUid}`).push().key;
+    updates[`teamIncome/${referrerUid}/${key}`] = {
       fromUid:   earnerUid,
       fromMiner: earnerMiner,
       amount:    teamCredit,
       level,
       miner:     minerName,
       pct:       pct * 100,
-      timestamp: Date.now()
-    });
+      timestamp: now
+    };
+  });
 
-    currentUid = referrerUid;
+  if (Object.keys(updates).length) {
+    await db.ref().update(updates);
   }
 }
 
