@@ -458,18 +458,15 @@ auth.getRedirectResult().then(async result => {
 
 // ── CREATE USER PROFILE ───────────────────────────────────────
 async function createUserProfile(uid, name, emailOrPhone, isPhone = false) {
-  const counterSnap = await db.ref("counter").once("value");
-  const counter     = (counterSnap.val() || 1000) + 1;
-  await db.ref("counter").set(counter);
   const userData = {
     name: name || "miner", balance:0, team:0, level:"Novice Miner",
-    minerId:"CJ" + counter, points:3, referrals:0, createdAt:Date.now(),
+    points:3, referrals:0, createdAt:Date.now(),
     promoExpiry: Date.now() + 259200000,
     tutorialDone: false
   };
   if (isPhone) userData.phone = emailOrPhone;
   else         userData.email = emailOrPhone;
-    // Get ref code — manual input takes priority, then stored pendingRef
+
   const manualCode = (
     document.getElementById("refCodeInput")?.value.trim() ||
     document.getElementById("phoneRefCodeInput")?.value.trim() ||
@@ -477,34 +474,49 @@ async function createUserProfile(uid, name, emailOrPhone, isPhone = false) {
   ).toUpperCase();
 
   let referrer = null;
-
-  // Always look up by minerId to get proper Firebase UID
   if (manualCode) {
-  const indexSnap = await db.ref("minerIdIndex/" + manualCode).once("value");
-  if (indexSnap.exists()) {
-    referrer = indexSnap.val();
+    try {
+      const indexSnap = await db.ref("minerIdIndex/" + manualCode).once("value");
+      if (indexSnap.exists()) referrer = indexSnap.val();
+    } catch (e) {
+      console.warn("Referral code lookup failed:", e.message);
+    }
   }
-}
+
   if (referrer && referrer !== uid) {
     userData.referredBy = referrer;
+    try {
+      const referrerChainSnap = await db.ref("users/" + referrer + "/uplineChain").once("value");
+      const referrerChain = referrerChainSnap.val() || [];
+      userData.uplineChain = [referrer].concat(referrerChain).slice(0, 3);
+    } catch (e) {
+      userData.uplineChain = [referrer];
+    }
+  }
 
-    // Precompute this user's 3-level upline chain for fast, single-shot commission distribution later
-    const referrerChainSnap = await db.ref("users/" + referrer + "/uplineChain").once("value");
-    const referrerChain = referrerChainSnap.val() || [];
-    userData.uplineChain = [referrer].concat(referrerChain).slice(0, 3);
+  const counterResult = await db.ref("counter").transaction(current => (current || 1000) + 1);
+  const counter = counterResult.snapshot.val();
+  userData.minerId = "CJ" + counter;
 
-    db.ref("users/" + referrer + "/referrals").set(firebase.database.ServerValue.increment(1));
-    db.ref("users/" + referrer + "/pendingRewards/signup").set(firebase.database.ServerValue.increment(3));
-    db.ref("users/" + referrer + "/teamMembers/" + uid).set({
-        minerId:  userData.minerId,
-        name:     userData.name || "miner",
-        joinedAt: Date.now(),
-        hasMiner: false
-    });
-}
-  await db.ref("users/" + uid).set(userData);
-  await db.ref("minerIdIndex/" + userData.minerId).set(uid);
-  await db.ref("nameIndex/" + (name || "miner")).set(uid);
+  // Everything goes into ONE atomic update — either all of it saves, or none of it does
+  const updates = {};
+  updates["users/" + uid] = userData;
+  updates["minerIdIndex/" + userData.minerId] = uid;
+  updates["nameIndex/" + (name || "miner")] = uid;
+
+  if (referrer && referrer !== uid) {
+    updates["users/" + referrer + "/referrals"] = firebase.database.ServerValue.increment(1);
+    updates["users/" + referrer + "/pendingRewards/signup"] = firebase.database.ServerValue.increment(3);
+    updates["users/" + referrer + "/teamMembers/" + uid] = {
+      minerId:  userData.minerId,
+      name:     userData.name || "miner",
+      joinedAt: Date.now(),
+      hasMiner: false
+    };
+  }
+
+  await db.ref().update(updates);
+
   localStorage.removeItem("pendingRef");
   localStorage.removeItem("referrer");
 }
