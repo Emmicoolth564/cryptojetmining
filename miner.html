@@ -398,18 +398,25 @@ async function checkAndUpdateLevel() {
   l1Uids.forEach(mUid => { if (members[mUid].hasMiner) uniqueActive.add(mUid); });
 
   // Walk level 2 and level 3 directly from the referral tree — no longer depends on teamIncome history
-  for (const l1uid of l1Uids) {
-    const l2Snap = await db.ref("users/" + l1uid + "/teamMembers").once("value");
-    const l2Members = l2Snap.val() || {};
-    for (const l2uid of Object.keys(l2Members)) {
+  // Fetch all L2 team-member lists in parallel instead of one at a time
+  const l2Snaps = await Promise.all(l1Uids.map(l1uid => db.ref("users/" + l1uid + "/teamMembers").once("value")));
+  const allL2Uids = [];
+  l2Snaps.forEach(snap => {
+    const l2Members = snap.val() || {};
+    Object.keys(l2Members).forEach(l2uid => {
       if (l2Members[l2uid].hasMiner) uniqueActive.add(l2uid);
-      const l3Snap = await db.ref("users/" + l2uid + "/teamMembers").once("value");
-      const l3Members = l3Snap.val() || {};
-      Object.keys(l3Members).forEach(l3uid => {
-        if (l3Members[l3uid].hasMiner) uniqueActive.add(l3uid);
-      });
-    }
-  }
+      allL2Uids.push(l2uid);
+    });
+  });
+
+  // Fetch all L3 team-member lists in parallel
+  const l3Snaps = await Promise.all(allL2Uids.map(l2uid => db.ref("users/" + l2uid + "/teamMembers").once("value")));
+  l3Snaps.forEach(snap => {
+    const l3Members = snap.val() || {};
+    Object.keys(l3Members).forEach(l3uid => {
+      if (l3Members[l3uid].hasMiner) uniqueActive.add(l3uid);
+    });
+  });
   const totalActive = uniqueActive.size;
   document.getElementById("activeTeamCount").textContent = totalActive;
 
