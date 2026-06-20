@@ -400,11 +400,12 @@ body {
       Mining Power
     </div>
 
-    <div class="box" onclick="nav('reward.html')">
+    <div class="box" onclick="nav('reward.html')" style="position:relative;">
       <div class="box-icon">
         <svg viewBox="0 0 24 24"><polyline points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       </div>
       Rewards
+      <div id="dashRewardBadge" style="display:none;position:absolute;top:8px;right:8px;width:10px;height:10px;background:#ef4444;border-radius:50%;box-shadow:0 0 6px rgba(239,68,68,0.6);"></div>
     </div>
 
     <div class="box" onclick="nav('tasks.html')">
@@ -597,6 +598,17 @@ function checkDashFeedBadge() {
   }
 }
 checkDashFeedBadge();
+
+function checkRewardBadge() {
+  if (!uid) return;
+  db.ref("users/" + uid + "/pendingRewards").on("value", snap => {
+    const rewards = snap.val() || {};
+    const hasReward = Object.values(rewards).some(v => v > 0);
+    const badge = document.getElementById("dashRewardBadge");
+    if (badge) badge.style.display = hasReward ? "block" : "none";
+  });
+}
+checkRewardBadge();
 // ── SLIDER + LOADER (outside auth — no auth needed) ──────────
 let slideIdx = 0;
 window.addEventListener("load", () => {
