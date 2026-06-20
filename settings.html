@@ -133,12 +133,19 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text)
     </div>
     <div class="edit-section" id="editSection">
       <div class="field" style="margin-top:12px;">
-        <label>New Display Name</label>
-        <input type="text" id="newNameInput" placeholder="Enter new name">
+        <label>Display Name</label>
+        <input type="text" id="newNameInput" placeholder="Enter your name">
       </div>
-      <button class="btn btn-primary" style="margin-top:8px;" onclick="saveName()">Save Name</button>
+      <div class="field">
+        <label>Email or Phone Number</label>
+        <input type="text" id="newContactInput" placeholder="Enter the email or phone you signed up with">
+      </div>
+      <div class="field">
+        <label>Referred By <span style="color:#475569;font-weight:400;">(only if missing)</span></label>
+        <input type="text" id="newRefCodeInput" placeholder="e.g. CJ1234" style="text-transform:uppercase;">
+      </div>
+      <button class="btn btn-primary" style="margin-top:8px;" onclick="saveProfile()">Save Profile</button>
     </div>
-  </div>
 
   <!-- STATS -->
   <div class="stat-grid">
@@ -206,8 +213,12 @@ const uid = localStorage.getItem("uid");
 if (!uid) { window.location.href = "signin.html"; }
 
 // Load user data
+let currentUserData = {};
+
+// Load user data
 db.ref("users/" + uid).on("value", snap => {
   const d = snap.val() || {};
+  currentUserData = d;
   document.getElementById("minerIdDisplay").textContent = d.minerId || "CJ-XXXX";
   document.getElementById("nameDisplay").textContent    = d.name    || "CryptoJet User";
   document.getElementById("balanceDisplay").textContent = "$" + Math.floor(d.balance || 0);
@@ -218,16 +229,101 @@ db.ref("users/" + uid).on("value", snap => {
 
 function toggleNameEdit() {
   const s = document.getElementById("editSection");
-  s.style.display = s.style.display === "none" || s.style.display === "" ? "block" : "none";
+  const opening = s.style.display === "none" || s.style.display === "";
+  s.style.display = opening ? "block" : "none";
+  if (opening) {
+    document.getElementById("newNameInput").value    = currentUserData.name || "";
+    document.getElementById("newContactInput").value = currentUserData.email || currentUserData.phone || "";
+    document.getElementById("newRefCodeInput").value = "";
+  }
 }
 
-async function saveName() {
-  const newName = document.getElementById("newNameInput").value.trim();
-  if (!newName) return showToast("Please enter a name", "error");
-  await db.ref("users/" + uid).update({ name: newName });
+async function saveProfile() {
+  const newName    = document.getElementById("newNameInput").value.trim();
+  const newContact = document.getElementById("newContactInput").value.trim();
+  const refCode    = document.getElementById("newRefCodeInput").value.trim().toUpperCase();
+
+  if (!newName)    return showToast("Please enter a name", "error");
+  if (!newContact) return showToast("Please enter your email or phone", "error");
+
+  // If they already have a referrer, don't let this form touch it — block until they clear the field
+  if (currentUserData.referredBy && refCode) {
+    return showToast("You're already in the right team. Cancel the Miner ID to continue.", "error");
+  }
+
+  const updates = {};
+  updates["users/" + uid + "/name"] = newName;
+  if (newContact.includes("@")) updates["users/" + uid + "/email"] = newContact;
+  else updates["users/" + uid + "/phone"] = newContact;
+
+  if (!currentUserData.referredBy && refCode) {
+    const idxSnap = await db.ref("minerIdIndex/" + refCode).once("value");
+    if (!idxSnap.exists()) return showToast("Referral ID not found. Check and try again.", "error");
+    const referrer = idxSnap.val();
+    if (referrer === uid) return showToast("You can't refer yourself!", "error");
+
+    updates["users/" + uid + "/referredBy"] = referrer;
+
+    const referrerChainSnap = await db.ref("users/" + referrer + "/uplineChain").once("value");
+    const referrerChain = referrerChainSnap.val() || [];
+    const myChain = [referrer].concat(referrerChain).slice(0, 3);
+    updates["users/" + uid + "/uplineChain"] = myChain;
+
+    const hasMiner = Object.keys(currentUserData.minerUnlocked || {}).length > 0;
+    updates["users/" + referrer + "/referrals"] = firebase.database.ServerValue.increment(1);
+    updates["users/" + referrer + "/pendingRewards/signup"] = firebase.database.ServerValue.increment(3);
+    updates["users/" + referrer + "/teamMembers/" + uid] = {
+      minerId: currentUserData.minerId || "Unknown",
+      name: newName,
+      joinedAt: currentUserData.createdAt || Date.now(),
+      hasMiner: hasMiner
+    };
+
+    const REF_PTS = {
+      S100:20, S244:50, S500:75, S900:100, S1200:200,
+      JX200:300, JX500:500, PX1K:800, PX2K:1500,
+      EX3K:2000, EX5K:3000, LX3K:4000, LX5K:5000,
+      EM4K:6000, EM5K:8000
+    };
+    const unlocked = currentUserData.minerUnlocked || {};
+    Object.keys(unlocked).forEach(minerKey => {
+      if (REF_PTS[minerKey]) {
+        updates["users/" + referrer + "/pendingRewards/" + minerKey] =
+          firebase.database.ServerValue.increment(REF_PTS[minerKey] * unlocked[minerKey]);
+      }
+    });
+
+    const REFERRAL_LEVELS = [{level:1,pct:0.10},{level:2,pct:0.04},{level:3,pct:0.02}];
+    const miners = currentUserData.miners || {};
+    let lifetimeEarned = 0;
+    Object.values(miners).forEach(m => { lifetimeEarned += (m.totalCredited || 0); });
+
+    if (lifetimeEarned > 0) {
+      const now = Date.now();
+      REFERRAL_LEVELS.forEach(({level, pct}, idx) => {
+        const ancestorUid = myChain[idx];
+        if (!ancestorUid) return;
+        const backCredit = parseFloat((lifetimeEarned * pct).toFixed(4));
+        if (backCredit <= 0) return;
+        updates["users/" + ancestorUid + "/team"] = firebase.database.ServerValue.increment(backCredit);
+        const key = db.ref("teamIncome/" + ancestorUid).push().key;
+        updates["teamIncome/" + ancestorUid + "/" + key] = {
+          fromUid: uid,
+          fromMiner: currentUserData.minerId || "Unknown",
+          amount: backCredit,
+          level,
+          miner: "Account Repair (backdated)",
+          pct: pct * 100,
+          timestamp: now,
+          backfilled: true
+        };
+      });
+    }
+  }
+
+  await db.ref().update(updates);
   document.getElementById("editSection").style.display = "none";
-  document.getElementById("newNameInput").value = "";
-  showToast("Name updated! ✅", "success");
+  showToast("Profile updated! ✅", "success");
 }
 
 async function changePassword() {
