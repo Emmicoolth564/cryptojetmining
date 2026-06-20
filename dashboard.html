@@ -553,26 +553,32 @@ auth.onAuthStateChanged(user => {
 // ── USER INFO ────────────────────────────────────────────────
 async function loadUser() {
   const snap = await db.ref("users/" + uid).once("value");
-  let d = {};                          // ← declare here
-  if (snap.exists()) {
-    d = snap.val();                    // ← assign here (no const)
-    if (d.minerId) {
-      document.getElementById("userId").innerText = d.minerId;
-    } else {
-      const newId = "CJ" + Math.floor(1000 + Math.random() * 9000);
-      document.getElementById("userId").innerText = newId;
-      db.ref("users/" + uid).update({ minerId: newId });
-    }
-    document.getElementById("minerLevel").innerText = d.level || "Novice Miner";
+
+  if (!snap.exists()) {
+    // No profile at all — send them to settings to set up properly
+    window.location.href = "settings.html";
+    return;
+  }
+
+  const d = snap.val();
+
+  // Compulsory profile completion before using the app
+  if (!d.name || (!d.email && !d.phone)) {
+    window.location.href = "settings.html";
+    return;
+  }
+
+  if (d.minerId) {
+    document.getElementById("userId").innerText = d.minerId;
   } else {
-    const newId = "CJ" + Math.floor(1000 + Math.random() * 9000);
-    document.getElementById("userId").innerText     = newId;
-    document.getElementById("minerLevel").innerText = "Novice Miner";
-    await db.ref("users/" + uid).set({
-      balance: 0, level: "Novice Miner", mining: false, lastClaim: Date.now(),
-      minerId: newId, team: 0, points: 0, createdAt: Date.now(), tutorialDone: false
-    });
-}
+    const counterResult = await db.ref("counter").transaction(current => (current || 1000) + 1);
+    const newId = "CJ" + counterResult.snapshot.val();
+    document.getElementById("userId").innerText = newId;
+    await db.ref("users/" + uid).update({ minerId: newId });
+    await db.ref("minerIdIndex/" + newId).set(uid);
+  }
+  document.getElementById("minerLevel").innerText = d.level || "Novice Miner";
+
   await initBanners(d);
   await checkNewUserTutorial();
 }
