@@ -768,61 +768,96 @@ async function checkAndCredit(id, key, mData) {
   const cfg = MINERS[id];
   const now = Date.now();
   const purchaseDate = mData.purchaseDate || mData.start;
+  const rate = getDailyRate(id);
 
-  // Mark credited — server will handle actual balance credit
-  // Client just marks it so server picks it up cleanly
-  await db.ref(`users/${uid}/miners/${key}`).update({ credited: true });
-
-  // Update display immediately
-  const newTotalCredited = parseFloat(((mData.totalCredited || 0) + getDailyRate(id)).toFixed(4));
+  const newTotalCredited = parseFloat(((mData.totalCredited || 0) + rate).toFixed(4));
   const planTotalEarn    = cfg.unlimited ? Infinity : parseFloat((cfg.daily * cfg.duration).toFixed(4));
+  const isDone = !cfg.unlimited && newTotalCredited >= planTotalEarn;
 
-  if (cfg.unlimited || newTotalCredited < planTotalEarn) {
-    const newData = {
-      start:         now,
-      purchaseDate:  purchaseDate,
-      lastUpdate:    now,
-      credited:      false,
-      totalCredited: newTotalCredited
-    };
-    await db.ref(`users/${uid}/miners/${key}`).set(newData);
-    userData.miners[key] = newData;
-    delete _credited[key];
-    renderRunning();
+  const updates = {};
+  updates[`users/${uid}/balance`] = firebase.database.ServerValue.increment(rate);
+
+  if (isDone) {
+    updates[`users/${uid}/miners/${key}/totalCredited`] = newTotalCredited;
+    updates[`users/${uid}/miners/${key}/planComplete`]  = true;
+    updates[`users/${uid}/miners/${key}/credited`]      = true;
+    updates[`users/${uid}/miners/${key}/lastUpdate`]    = now;
   } else {
-    await db.ref(`users/${uid}/miners/${key}`).update({
-      totalCredited: newTotalCredited,
-      planComplete:  true
-    });
-    renderRunning();
+    updates[`users/${uid}/miners/${key}/start`]         = now;
+    updates[`users/${uid}/miners/${key}/purchaseDate`]  = purchaseDate;
+    updates[`users/${uid}/miners/${key}/lastUpdate`]    = now;
+    updates[`users/${uid}/miners/${key}/credited`]      = false;
+    updates[`users/${uid}/miners/${key}/totalCredited`] = newTotalCredited;
   }
 
-  
-  // Credit balance via transaction — prevents double credit
-  await db.ref(`users/${uid}/balance`).transaction(bal => (bal || 0) + getDailyRate(id));
+  // Audit trail — so every payout is permanently verifiable in admin.html
+  const recKey = db.ref(`users/${uid}/miningRecords`).push().key;
+  updates[`users/${uid}/miningRecords/${recKey}`] = {
+    miner: cfg.name, minerKey: key, amount: rate, timestamp: now
+  };
 
-  // Fire referral chain in background
-  creditReferralChain(uid, getDailyRate(id), cfg.name).catch(console.error);
+  // ── ONE atomic write — balance + miner state + audit record land together, or not at all ──
+  await db.ref().update(updates);
+
+  if (isDone) {
+    userData.miners[key] = { ...mData, totalCredited: newTotalCredited, planComplete: true, credited: true, lastUpdate: now };
+  } else {
+    userData.miners[key] = { start: now, purchaseDate, lastUpdate: now, credited: false, totalCredited: newTotalCredited };
+  }
+  delete _credited[key];
+  renderRunning();
+
+  creditReferralChain(uid, rate, cfg.name).catch(console.error);
   checkAndUpdateLevel().catch(console.error);
 }
+
 async function forceRestart(id, key, mData) {
+    // Self-heals old stuck records from before this fix — pays the missed cycle instead of just restarting
     if (_credited[key]) return;
     _credited[key] = true;
-    const cfg          = MINERS[id];
-    const now          = Date.now();
-    const purchaseDate = mData.purchaseDate || mData.start;
-    const planTotalEarn  = cfg.unlimited ? Infinity : cfg.daily * cfg.duration;
-    const alreadyCredited = mData.totalCredited || 0;
 
-    if (cfg.unlimited || alreadyCredited < planTotalEarn) {
-        const newData = { start: now, purchaseDate, lastUpdate: now, credited: false, totalCredited: mData.totalCredited || 0 };
-        await db.ref(`users/${uid}/miners/${key}`).set(newData);
-        userData.miners[key] = newData;
-        delete _credited[key];
-        renderRunning();
+    const cfg  = MINERS[id];
+    const now  = Date.now();
+    const purchaseDate = mData.purchaseDate || mData.start;
+    const rate = getDailyRate(id);
+    const planTotalEarn   = cfg.unlimited ? Infinity : cfg.daily * cfg.duration;
+    const alreadyCredited = mData.totalCredited || 0;
+    const newTotalCredited = parseFloat((alreadyCredited + rate).toFixed(4));
+    const isDone = !cfg.unlimited && newTotalCredited >= planTotalEarn;
+
+    const updates = {};
+    updates[`users/${uid}/balance`] = firebase.database.ServerValue.increment(rate);
+
+    if (isDone) {
+      updates[`users/${uid}/miners/${key}/totalCredited`] = newTotalCredited;
+      updates[`users/${uid}/miners/${key}/planComplete`]  = true;
+      updates[`users/${uid}/miners/${key}/credited`]      = true;
+      updates[`users/${uid}/miners/${key}/lastUpdate`]    = now;
     } else {
-        renderRunning();
+      updates[`users/${uid}/miners/${key}/start`]         = now;
+      updates[`users/${uid}/miners/${key}/purchaseDate`]  = purchaseDate;
+      updates[`users/${uid}/miners/${key}/lastUpdate`]    = now;
+      updates[`users/${uid}/miners/${key}/credited`]      = false;
+      updates[`users/${uid}/miners/${key}/totalCredited`] = newTotalCredited;
     }
+
+    const recKey = db.ref(`users/${uid}/miningRecords`).push().key;
+    updates[`users/${uid}/miningRecords/${recKey}`] = {
+      miner: cfg.name + " (recovered cycle)", minerKey: key, amount: rate, timestamp: now
+    };
+
+    await db.ref().update(updates);
+
+    if (isDone) {
+      userData.miners[key] = { ...mData, totalCredited: newTotalCredited, planComplete: true, credited: true, lastUpdate: now };
+    } else {
+      userData.miners[key] = { start: now, purchaseDate, lastUpdate: now, credited: false, totalCredited: newTotalCredited };
+    }
+    delete _credited[key];
+    renderRunning();
+
+    creditReferralChain(uid, rate, cfg.name).catch(console.error);
+    checkAndUpdateLevel().catch(console.error);
 }
 async function creditReferralChain(earnerUid, earnedAmount, minerName) {
   const chain = userData.uplineChain || [];
