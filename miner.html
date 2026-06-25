@@ -310,7 +310,7 @@
 <div class="tabs">
   <button id="runBtn" class="active" onclick="showTab('running')">Running</button>
   <button id="levBtn" onclick="showTab('levels')">Levels</button>
-  <button id="vaultBtn" onclick="showTab('vault')">Vault</button>
+  <button id="vaultBtn" onclick="showTab('vault')"> Vault</button>
 </div>
 
 <div id="runningTab" class="container"></div>
@@ -1073,6 +1073,7 @@ async function renderVault() {
   intro.innerHTML = `
     <div class="vault-intro-icon">💎</div>
     <div class="vault-intro-title">The Vault</div>
+    <div class="vault-intro-sub">A small, limited collection of premium miners.<br>Only 20 units of each exist — once gone, they're gone for good.</div>`;
   container.appendChild(intro);
 
   const vaultEntries = Object.entries(MINERS).filter(([, m]) => m.tier === "vault");
